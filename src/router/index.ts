@@ -11,8 +11,18 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: '/admin',
-    component: () => import('@/components/PathThrough.vue'),
+    component: () => import('@/views/Index.vue'),
     children: [
+      {
+        path: 'home',
+        name: 'admin.home',
+        component: () => import('@/views/Home.vue')
+      },
+      {
+        path: 'realty',
+        name: 'admin.realty',
+        component: () => import('@/views/Realty/Home.vue')
+      }
     ]
   }
 ]

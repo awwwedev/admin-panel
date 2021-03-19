@@ -7,32 +7,44 @@ import UserModel from "@/models/User";
 @Module({ name: 'user', namespaced: true })
 export default class User extends VuexModule {
     user: UserModel = new UserModel()
+    isLogged = false
+    inInitState = false
 
     get getUser(): UserModel {
         return this.user
+    }
+    get getIsLogged(): boolean {
+        return this.isLogged
+    }
+    get getInInitState(): boolean {
+        return this.inInitState
     }
 
     @Mutation
     setUser(user: UserModel): void {
         this.user = user
     }
+    @Mutation
+    setIsLogged(isLogged: boolean): void {
+        this.isLogged = isLogged
+    }
+    @Mutation
+    setInInitState(inLoginState: boolean): void {
+        this.inInitState = inLoginState
+    }
 
     @Action
-    async login (credentials: { email: string, password: string }): Promise<AxiosResponse<UserModel>> {
-        let response
-
-        try {
-            response = await http.post<{ token: string }>('login', credentials)
-
-            http.defaults.headers['Authorization'] = 'Bearer ' + response.data.token
-        } catch (e) {
-            return new Promise<AxiosResponse<UserModel>> ((resolve, reject) => {
-                reject({ message: 'Не верный логин или пароль!'})
-            })
-        }
+    login (credentials: { email: string, password: string }): Promise<AxiosResponse<{ token: string }>> {
+        return http.post<{ token: string }>('login', credentials)
+    }
+    @Action
+    async initUser (): Promise<AxiosResponse<UserModel>> {
+        this.setInInitState(true)
 
         return http.get<UserModel>('me').then(response => {
             this.setUser(response.data)
+            this.setIsLogged(true)
+            this.setInInitState(false)
 
             return response
         })

@@ -49,6 +49,7 @@ import {getModule} from "vuex-module-decorators";
 import UserModule from "@/store/modules/user";
 import Notification from "@/store/modules/notification";
 import store from "@/store";
+import http from "@/common/http";
 
 
 @Component({
@@ -74,9 +75,24 @@ export default class Login extends Mixins<Validation>(validationMixin, Validatio
     this.$v.$touch()
 
     if (!this.$v.$invalid) {
-      getModule(UserModule, this.$store).login(this.formData).catch(() => {
-        getModule(Notification, store).setData({ text: 'Не верный логин или пароль!', title: 'Ошибка авторизации', variant: 'danger' })
-      })
+      const userModule = getModule(UserModule, this.$store)
+
+      userModule.login(this.formData)
+          .then((response) => {
+            const token = response.data.token
+
+            this.$cookies.set('token', token)
+            http.defaults.headers['Authorization'] = 'Bearer ' + token
+
+            userModule.initUser().then(() => {
+              this.$router.push({ name: 'admin.home' })
+            }).catch(() => {
+              getModule(Notification, store).setData({ text: 'Произошла непредвиденная ошибка, обратитесть в администрацию', title: 'Ошибка инициализации пользователя!', variant: 'danger' })
+            })
+          })
+          .catch(() => {
+            getModule(Notification, store).setData({ text: 'Не верный логин или пароль!', title: 'Ошибка авторизации', variant: 'danger' })
+          })
     }
   }
 }
