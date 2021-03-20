@@ -27,7 +27,6 @@
 </template>
 
 <script lang="ts">
-
 import {Component, Vue, Watch} from "vue-property-decorator";
 import {mapGetters} from "vuex";
 import {notification} from "@/common/types";
