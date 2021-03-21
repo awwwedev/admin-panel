@@ -37,6 +37,22 @@
             </b-select-option>
           </b-select>
         </b-form-group>
+        <b-form-group label="Дополнительно"
+                      label-for="equipment"
+        >
+          <b-select
+              id="equipment"
+              v-model="selectedEquipments"
+              multiple
+          >
+            <b-select-option v-for="(equipment, idx) in equipments"
+                             :key="idx"
+                             :value="equipment.id"
+            >
+              {{ equipment.name }}
+            </b-select-option>
+          </b-select>
+        </b-form-group>
       </b-card>
       <b-card class="mb-3" header="Цена">
         <b-form-group label="Площадь (м. кв.)"
@@ -118,6 +134,12 @@ import ValidationMixin from "@/mixins/validation";
 import {required} from "vuelidate/lib/validators";
 import UploadedImage from "@/components/UploadedImage.vue";
 
+
+type equipment = {
+  id: string,
+  name: string
+}
+
 @Component({
   components: {UploadedImage},
   validations: {
@@ -136,12 +158,34 @@ import UploadedImage from "@/components/UploadedImage.vue";
       },
     }
   }
-
 })
 export default class Constructor extends Mixins<Validation>(validationMixin, ValidationMixin) {
   allowSetNameByDesc = true
   imgPreview = ''
+  selectedEquipments = [] as Array<equipment>
   tempPhotos = []
+  equipments = [
+    {
+      id: 'heating',
+      name: 'Отопление'
+    },
+    {
+      id: 'restroom',
+      name: 'Отдельный санузел'
+    },
+    {
+      id: 'energy',
+      name: 'Индивидуальный узел учёта электроэнергии'
+    },
+    {
+      id: 'access',
+      name: 'Круглосуточный доступ'
+    },
+    {
+      id: 'furniture',
+      name: 'Мебелью укомплектован'
+    }
+  ]
   formData = {
     name: '',
     description: '',
@@ -163,17 +207,24 @@ export default class Constructor extends Mixins<Validation>(validationMixin, Val
     }
   ]
 
- get isCreatePage (): boolean { return this.$route.meta.isCreatePage }
- get pageName (): string { return this.$route.meta.isCreatePage ? 'Создание новой недвижимости' : 'Редактирование недвижимости' }
- get totalPrice (): number { return this.formData.area * this.formData.price_per_metr }
- get uploadedIMageNames (): string { return this.formData.photo.map(value => value.name).join(', ') }
+  get isCreatePage(): boolean { return this.$route.meta.isCreatePage }
+  get pageName(): string { return this.$route.meta.isCreatePage ? 'Создание новой недвижимости' : 'Редактирование недвижимости' }
+  get totalPrice(): number { return this.formData.area * this.formData.price_per_metr }
+  get uploadedIMageNames(): string { return this.formData.photo.map(value => value.name).join(', ') }
+  get equipmentsForAddToFormData(): { [key: string]: number } {
+    return this.equipments.reduce((acc, value) => {
+      acc[value.id as string] = 0
 
- onDeleteUploadedImage (image: File): void {
-   this.formData.photo = this.formData.photo.filter(value => value.name !== image.name && value.lastModified !== image.lastModified)
- }
+      return acc
+    }, {} as { [key: string]: number })
+  }
 
- @Watch('formData.description')
- watchFormDataDescription (desc: string, oldDesc: string): void {
+  onDeleteUploadedImage(image: File): void {
+    this.formData.photo = this.formData.photo.filter(value => value.name !== image.name && value.lastModified !== image.lastModified)
+  }
+
+  @Watch('formData.description')
+  watchFormDataDescription(desc: string, oldDesc: string): void {
     if (oldDesc.slice(0, 100) !== this.formData.name && this.formData.name !== '') return
 
     if (desc.length <= 20) {
@@ -185,25 +236,35 @@ export default class Constructor extends Mixins<Validation>(validationMixin, Val
         this.allowSetNameByDesc = false
       }
     }
- }
- @Watch('totalPrice')
- watchTotalPrice (price: number): void {
-   this.formData.price = price
- }
- @Watch('formData.img_path')
- watchFormDataImagePath(file: File): void {
-   const reader = new FileReader();
+  }
+  @Watch('totalPrice')
+  watchTotalPrice(price: number): void {
+    this.formData.price = price
+  }
+  @Watch('formData.img_path')
+  watchFormDataImagePath(file: File): void {
+    const reader = new FileReader();
 
-   reader.onload = () => {
-     this.imgPreview = reader.result as string
-   }
+    reader.onload = () => {
+      this.imgPreview = reader.result as string
+    }
 
-   reader.readAsDataURL(file);
- }
- @Watch('tempPhotos')
- watchTempPhotos(files: Array<File>): void {
+    reader.readAsDataURL(file);
+  }
+  @Watch('tempPhotos')
+  watchTempPhotos(files: Array<File>): void {
     this.formData.photo = [...this.formData.photo, ...files]
- }
+  }
+  @Watch('selectedEquipments')
+  watchSelectedEquipments(equipments: Array<string>): void {
+    const equipmentsSelected = equipments.reduce((acc, value) => {
+      acc[value] = 1
+
+      return acc
+    }, {} as { [key: string]: number })
+
+    this.formData = {...this.formData, ...this.equipmentsForAddToFormData, ...equipmentsSelected}
+  }
 }
 </script>
 

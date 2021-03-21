@@ -1,5 +1,7 @@
 <template>
-<div class="mx-auto d-inline-flex flex-column justify-content-between">
+<div class="mx-auto flex-column justify-content-between"
+     :class="{ 'd-flex':!image, 'd-inline-flex':image }"
+>
   <b-img :src="imagePath"
          thumbnail
          fluid
