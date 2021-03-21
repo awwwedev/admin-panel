@@ -2,7 +2,7 @@
   <div class="section">
     <h1 class="mb-5">{{ pageName }}</h1>
     <b-form>
-      <b-card class="mb-3" header="Описание">
+      <b-card class="mb-3 shadow-sm" header="Описание">
         <b-form-group label="Название"
                       label-for="name"
                       description="Должно быть коротким для корректного отображения в карточках"
@@ -54,7 +54,7 @@
           </b-select>
         </b-form-group>
       </b-card>
-      <b-card class="mb-3" header="Цена">
+      <b-card class="mb-3 shadow-sm" header="Цена">
         <b-form-group label="Площадь (м. кв.)"
                       label-for="area"
         >
@@ -81,7 +81,7 @@
           ></b-form-input>
         </b-form-group>
       </b-card>
-      <b-card class="mb-3" header="Основное изображение">
+      <b-card class="mb-3 shadow-sm" header="Основное изображение">
         <UploadedImage :image="formData.img_path"/>
         <b-file browse-text="Обзор..."
                 v-model="formData.img_path"
@@ -91,7 +91,7 @@
           </template>
         </b-file>
       </b-card>
-      <b-card class="mb-3" header="Изображения для слайдера">
+      <b-card class="mb-3 shadow-sm" header="Изображения для слайдера">
         <div class="images-grid mb-3">
           <UploadedImage v-for="(file, idx) in formData.photo"
                          :key="idx"
@@ -112,6 +112,22 @@
           </template>
         </b-file>
       </b-card>
+      <b-card class="mb-3 shadow-sm" header="Карта">
+        <yandex-map :coords="center"
+                    :zoom="zoom"
+                    :behaviors="['drag', 'scrollZoom', 'multiTouch']"
+                    :controls="['zoomControl', 'searchControl']"
+                    map-type="map"
+                    ref="map"
+                    class="map"
+                    @click="onMapClick"
+        >
+        </yandex-map>
+        <div class="pt-3">
+          <p>Широта: {{ formData.latitude }}</p>
+          <p>Долгота: {{ formData.longitude }}</p>
+        </div>
+      </b-card>
       <div class="d-flex mb-5">
         <template v-if="isCreatePage">
           <b-button variant="success" class="mr-2" type="submit">Создать</b-button>
@@ -128,6 +144,8 @@
 </template>
 
 <script lang="ts">
+// @ts-ignore
+import {yandexMap, ymapMarker} from "vue-yandex-maps";
 import {Component, Mixins, Watch} from "vue-property-decorator";
 import {Validation, validationMixin} from "vuelidate";
 import ValidationMixin from "@/mixins/validation";
@@ -141,7 +159,7 @@ type equipment = {
 }
 
 @Component({
-  components: {UploadedImage},
+  components: {UploadedImage, yandexMap, ymapMarker},
   validations: {
     formData: {
       password: {
@@ -160,6 +178,8 @@ type equipment = {
   }
 })
 export default class Constructor extends Mixins<Validation>(validationMixin, ValidationMixin) {
+  center = [44.583460, 33.482296]
+  zoom = 19
   allowSetNameByDesc = true
   imgPreview = ''
   selectedEquipments = [] as Array<equipment>
@@ -194,7 +214,9 @@ export default class Constructor extends Mixins<Validation>(validationMixin, Val
     price: 0,
     type_id: '',
     img_path: null,
-    photo: [] as Array<File>
+    photo: [] as Array<File>,
+    latitude: 0,
+    longitude: 0
   }
   types = [
     {
@@ -221,6 +243,13 @@ export default class Constructor extends Mixins<Validation>(validationMixin, Val
 
   onDeleteUploadedImage(image: File): void {
     this.formData.photo = this.formData.photo.filter(value => value.name !== image.name && value.lastModified !== image.lastModified)
+  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
+  onMapClick (e: any): void {
+    const coords = e.get('coords')
+
+    this.formData.latitude = coords[0] as number
+    this.formData.longitude = coords[1] as number
   }
 
   @Watch('formData.description')
@@ -269,10 +298,13 @@ export default class Constructor extends Mixins<Validation>(validationMixin, Val
 </script>
 
 <style scoped lang="stylus">
-.images-grid {
+.images-grid
   display grid
   grid-template-columns repeat(3, 1fr)
   grid-column-gap 10px
   grid-row-gap 10px
-}
+
+.map
+  height 600px
+  width auto
 </style>
