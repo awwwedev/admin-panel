@@ -34,6 +34,10 @@ export default class UploadedImage extends Vue {
   onDelete (): File {
     return this.image as File
   }
+  @Emit('imageInitialized')
+  omImageInitialized (): string {
+    return this.imagePath
+  }
 
   @Watch('image', { immediate: true })
   watchImage (image: File | null): void {
@@ -42,6 +46,8 @@ export default class UploadedImage extends Vue {
 
       reader.onload = () => {
         this.imagePath = reader.result as string
+
+        this.omImageInitialized()
       }
 
       reader.readAsDataURL(image);

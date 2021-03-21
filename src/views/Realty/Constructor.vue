@@ -82,7 +82,7 @@
         </b-form-group>
       </b-card>
       <b-card class="mb-3 shadow-sm" header="Основное изображение">
-        <UploadedImage :image="formData.img_path"/>
+        <UploadedImage :image="formData.img_path" @imageInitialized="imgPreviewPath = $event"/>
         <b-file browse-text="Обзор..."
                 v-model="formData.img_path"
         >
@@ -122,6 +122,28 @@
                     class="map"
                     @click="onMapClick"
         >
+          <ymap-marker
+              :coords="[formData.latitude, formData.longitude]"
+              :balloon="{header: 'header', body: 'body', footer: 'footer'}"
+              :icon="{layout: 'islands#32a1d0HomeIcon'}"
+              cluster-name="1"
+              @balloonopen="bus.$emit('yandex-map::open-balloon-' + formData.id)"
+              @balloonclose="bus.$emit('yandex-map::close-balloon-' + formData.id)"
+              :marker-id="formData.id"
+              ref="marker"
+              :key="imgPreviewPath"
+          >
+            <Balloon slot="balloon"
+                     :area="formData.area"
+                     :description="formData.description"
+                     :img-path="imgPreviewPath"
+                     :name="formData.name"
+                     :price="formData.price_per_metr"
+                     :id="formData.id"
+                     disable-link
+            />
+          </ymap-marker>
+
         </yandex-map>
         <div class="pt-3">
           <p>Широта: {{ formData.latitude }}</p>
@@ -151,6 +173,8 @@ import {Validation, validationMixin} from "vuelidate";
 import ValidationMixin from "@/mixins/validation";
 import {required} from "vuelidate/lib/validators";
 import UploadedImage from "@/components/UploadedImage.vue";
+import bus from "@/common/bus";
+import Balloon from "@/components/RealtyCard2.vue";
 
 
 type equipment = {
@@ -159,7 +183,7 @@ type equipment = {
 }
 
 @Component({
-  components: {UploadedImage, yandexMap, ymapMarker},
+  components: {UploadedImage, yandexMap, ymapMarker, Balloon},
   validations: {
     formData: {
       password: {
@@ -175,13 +199,16 @@ type equipment = {
         required
       },
     }
-  }
+  },
+  data: () => ({
+    bus
+  })
 })
 export default class Constructor extends Mixins<Validation>(validationMixin, ValidationMixin) {
   center = [44.583460, 33.482296]
   zoom = 19
   allowSetNameByDesc = true
-  imgPreview = ''
+  imgPreviewPath = ''
   selectedEquipments = [] as Array<equipment>
   tempPhotos = []
   equipments = [
@@ -207,6 +234,7 @@ export default class Constructor extends Mixins<Validation>(validationMixin, Val
     }
   ]
   formData = {
+    id: -1,
     name: '',
     description: '',
     area: 0,
@@ -269,16 +297,6 @@ export default class Constructor extends Mixins<Validation>(validationMixin, Val
   @Watch('totalPrice')
   watchTotalPrice(price: number): void {
     this.formData.price = price
-  }
-  @Watch('formData.img_path')
-  watchFormDataImagePath(file: File): void {
-    const reader = new FileReader();
-
-    reader.onload = () => {
-      this.imgPreview = reader.result as string
-    }
-
-    reader.readAsDataURL(file);
   }
   @Watch('tempPhotos')
   watchTempPhotos(files: Array<File>): void {
