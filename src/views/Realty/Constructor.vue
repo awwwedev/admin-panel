@@ -96,7 +96,7 @@
           </template>
         </b-file>
       </b-card>
-      <div class="d-flex">
+      <div class="d-flex mb-5">
         <template v-if="isCreatePage">
           <b-button variant="success" class="mr-2" type="submit">Создать</b-button>
           <b-button variant="secondary">Отмена</b-button>
