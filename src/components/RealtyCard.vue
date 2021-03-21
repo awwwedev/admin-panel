@@ -17,18 +17,16 @@
                 </div>
             </div>
         </div>
-        <router-link class="stretched-link"
-                     :to="{name: 'viewRealty', params: {category: 'category-name', 'id': this.id}}">
-        </router-link>
     </div>
 </template>
 
 <script lang="ts">
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
 import $ from 'jquery'
+import Ibg from "@/components/Ibg.vue";
 
 @Component({
-    components: {},
+    components: {Ibg},
     props: {
         area: {
             type: Number,
@@ -141,9 +139,9 @@ export default class Item extends Vue {
 </script>
 
 <style scoped lang="stylus">
-@import "~@/stylus/colors.styl"
-@import "~@/stylus/mixins.styl"
-@import "~@/stylus/common.styl";
+@import "~@/assets/stylus/colors.styl"
+@import "~@/assets/stylus/mixins.styl"
+@import "~@/assets/stylus/common.styl";
 
 .object
     position relative

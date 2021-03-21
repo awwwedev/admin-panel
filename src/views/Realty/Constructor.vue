@@ -1,7 +1,12 @@
 <template>
   <div class="section">
     <h1 class="mb-5">{{ pageName }}</h1>
-    <b-form>
+    <b-nav tabs class="mb-3" >
+      <b-nav-item :active="activeTab === 0" @click="activeTab = 0">{{ mainTabName }}</b-nav-item>
+      <b-nav-item :active="activeTab === 1" @click="activeTab = 1">Предпросмотр карточек</b-nav-item>
+      <b-nav-item :active="activeTab === 2" @click="activeTab = 2">Предпросмотр страницы</b-nav-item>
+    </b-nav>
+    <b-form v-if="activeTab === 0">
       <b-card class="mb-3 shadow-sm" header="Описание">
         <b-form-group label="Название"
                       label-for="name"
@@ -162,6 +167,10 @@
         </template>
       </div>
     </b-form>
+    <PreviewTab2 v-if="activeTab === 1"
+                 :form-data="formDataForPreview"
+                 :key="imgPreviewPath"
+    />
   </div>
 </template>
 
@@ -175,6 +184,7 @@ import {required} from "vuelidate/lib/validators";
 import UploadedImage from "@/components/UploadedImage.vue";
 import bus from "@/common/bus";
 import Balloon from "@/components/RealtyCard2.vue";
+import PreviewTab2 from "@/views/Realty/PreviewTab2.vue";
 
 
 type equipment = {
@@ -183,7 +193,7 @@ type equipment = {
 }
 
 @Component({
-  components: {UploadedImage, yandexMap, ymapMarker, Balloon},
+  components: {PreviewTab2, UploadedImage, yandexMap, ymapMarker, Balloon},
   validations: {
     formData: {
       password: {
@@ -209,6 +219,7 @@ export default class Constructor extends Mixins<Validation>(validationMixin, Val
   zoom = 19
   allowSetNameByDesc = true
   imgPreviewPath = ''
+  activeTab = 0
   selectedEquipments = [] as Array<equipment>
   tempPhotos = []
   equipments = [
@@ -246,6 +257,7 @@ export default class Constructor extends Mixins<Validation>(validationMixin, Val
     latitude: 0,
     longitude: 0
   }
+  formDataForPreview = {}
   types = [
     {
       id: '',
@@ -259,6 +271,7 @@ export default class Constructor extends Mixins<Validation>(validationMixin, Val
 
   get isCreatePage(): boolean { return this.$route.meta.isCreatePage }
   get pageName(): string { return this.$route.meta.isCreatePage ? 'Создание новой недвижимости' : 'Редактирование недвижимости' }
+  get mainTabName(): string { return this.$route.meta.isCreatePage ? 'Создание' : 'Редактирование' }
   get totalPrice(): number { return this.formData.area * this.formData.price_per_metr }
   get uploadedIMageNames(): string { return this.formData.photo.map(value => value.name).join(', ') }
   get equipmentsForAddToFormData(): { [key: string]: number } {
@@ -311,6 +324,14 @@ export default class Constructor extends Mixins<Validation>(validationMixin, Val
     }, {} as { [key: string]: number })
 
     this.formData = {...this.formData, ...this.equipmentsForAddToFormData, ...equipmentsSelected}
+  }
+  @Watch('imgPreviewPath')
+  @Watch('formData', { immediate: true, deep: true })
+  watchFormData (): void {
+    this.formDataForPreview = {
+      ...this.formData,
+      img_path: this.imgPreviewPath
+    }
   }
 }
 </script>
