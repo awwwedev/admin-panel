@@ -1,9 +1,9 @@
 <template>
-  <b-container>
+  <div class="section">
     <h1 class="mb-5">Недвижимость</h1>
     <b-card class="mb-4 shadow-sm">
       <div class="d-flex">
-        <b-button variant="primary" class="mr-2">Создать</b-button>
+        <b-button variant="primary" class="mr-2" :to="{ name: 'admin.realty.create' }">Создать</b-button>
         <b-button variant="info" class="mr-3" @click="onSelectAll">{{ selectionBtnText }}</b-button>
         <b-button variant="danger" class="my-2 my-sm-0" :disabled="selected.length === 0">Удалить выбранное</b-button>
       </div>
@@ -70,7 +70,7 @@
         </b-select>
       </div>
     </b-card>
-  </b-container>
+  </div>
 </template>
 
 <script lang="ts">
@@ -116,7 +116,7 @@ export default class Home extends Vue {
 
   @Ref('table') $table!: BTable
 
-  get selectionBtnText (): string { return this.selectedAllRows ? 'Убрать выделение' : 'Выбрать все' }
+  get selectionBtnText (): string { return this.selectedAllRows ? 'Снять выделение' : 'Выбрать все' }
 
   onSelectAll(): void {
     if (this.selectedAllRows) {

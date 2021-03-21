@@ -79,6 +79,8 @@ export default class App extends Vue {
           delete http.defaults.headers['Authorization']
           this.$cookies.remove('token')
         })
+      } else {
+        this.$router.replace({ name: 'admin.login' })
       }
     })
   }
