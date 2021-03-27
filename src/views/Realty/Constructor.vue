@@ -232,12 +232,6 @@ import Notification from "@/store/modules/notification";
 import RealtyType from "@/models/RealtyType";
 import Realty from "@/models/Realty";
 
-
-type equipment = {
-  id: string,
-  name: string
-}
-
 @Component({
   components: {PreviewTab3, PreviewTab2, UploadedImage, yandexMap, ymapMarker, Balloon},
   validations: {
@@ -309,7 +303,7 @@ export default class Constructor extends Mixins<Validation>(validationMixin, Val
     previewImageModel: null as File | null,
     uploadedImagesModel: [] as Array<File>,
     uploadedImages: [] as Array<File>,
-    equipments: [] as Array<equipment>
+    equipments: [] as Array<string>
   }
   formData = {
     id: -1,
@@ -462,6 +456,16 @@ export default class Constructor extends Mixins<Validation>(validationMixin, Val
             this.formData.photo = realty.photo as Array<string>
             this.formData.img_path = realty.img_path as string
             this.formData = {...this.formData, ...realty}
+
+            console.log(realty)
+            console.log(this.formData)
+
+            this.equipments.forEach(value => {
+              // @ts-ignore
+              if (this.formData[value.id] === 1) {
+                this.temp.equipments.push(value.id)
+              }
+            })
           })
     }
 

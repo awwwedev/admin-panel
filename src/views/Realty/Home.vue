@@ -37,7 +37,7 @@
         </template>
         <template #cell(actions)="{ item }">
           <b-button-group>
-            <b-button variant="warning" class="my-2 my-sm-0" @click="$router.replace({ name: 'admin.realty' })">Изменить</b-button>
+            <b-button variant="warning" class="my-2 my-sm-0" @click="$router.replace({ name: 'admin.realty.change', params: { id: item.id } })">Изменить</b-button>
             <b-button variant="danger" class="my-2 my-sm-0" @click="onDeleteTableItem(item)">Удалить</b-button>
           </b-button-group>
         </template>
