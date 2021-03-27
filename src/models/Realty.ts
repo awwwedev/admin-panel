@@ -1,9 +1,8 @@
 import {AxiosResponse} from "axios";
 import api from "@/common/myApi.json";
 import http from "@/common/http";
-import Paginator from "@/common/helpers/Paginator";
 import BaseModel from "@/models/BaseModel";
-import {realtyMinMaxInfo} from "@/common/types";
+import {realtyMinMaxInfo, responseWithPaginator} from "@/common/types";
 
 export default class Realty extends BaseModel {
     id?: number
@@ -36,12 +35,12 @@ export default class Realty extends BaseModel {
         }
     }
 
-    static getList(params: { [key: string]: number | string | undefined } = {}): Promise<AxiosResponse<Paginator<Realty>>> {
+    static getList(params: { [key: string]: any } = {}): Promise<AxiosResponse<responseWithPaginator<Realty>>> {
         if (process.env.VUE_APP_USE_LOCAL_API === 'false') {
-            return http.get<Paginator<Realty>>('realties', { params: params })
+            return http.get<responseWithPaginator<Realty>>('realties', { params: params })
         } else {
-            return new Promise<AxiosResponse<Paginator<Realty>>>((resolve) => {
-                resolve({ data: { data: api.realty } } as AxiosResponse<Paginator<Realty>>)
+            return new Promise<AxiosResponse<responseWithPaginator<Realty>>>((resolve) => {
+                resolve({ data: { data: api.realty } } as AxiosResponse<responseWithPaginator<Realty>>)
             })
         }
     }

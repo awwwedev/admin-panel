@@ -1,3 +1,5 @@
+import BaseModel from "@/models/BaseModel";
+
 export type notification = {
     title?: string;
     text?: string;
@@ -29,6 +31,11 @@ export type paginatorMeta = {
     per_page: number;
     to: number;
     total: number;
+}
+export type responseWithPaginator<T = BaseModel> = {
+    data: Array<T>;
+    meta: paginatorMeta;
+    links: paginatorLinks
 }
 
 export type realtyMinMaxInfo = {
