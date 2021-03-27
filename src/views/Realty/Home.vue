@@ -33,7 +33,7 @@
           </template>
         </template>
         <template #cell(object)="{ item }">
-          <b-link :to="{ name: 'admin.realty' }">{{ item.object }}</b-link>
+          <b-link :to="{ name: 'admin.realty.change', params: { id: item.id } }">{{ item.object }}</b-link>
         </template>
         <template #cell(actions)="{ item }">
           <b-button-group>
@@ -105,11 +105,11 @@ export default class Home extends Vue {
     }
   ]
   items = [
-    {object: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur, sequi.', first_name: 'Dickerson', last_name: 'Macdonald'},
-    {object: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur, sequi.', first_name: 'Larsen', last_name: 'Shaw'},
-    {object: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur, sequi.', first_name: 'Geneva', last_name: 'Wilson',},
-    {object: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur, sequi.', first_name: 'Thor', last_name: 'MacDonald',},
-    {object: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur, sequi.', first_name: 'Dick', last_name: 'Dunlap'}
+    {object: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur, sequi.', first_name: 'Dickerson', last_name: 'Macdonald', id: 1},
+    {object: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur, sequi.', first_name: 'Larsen', last_name: 'Shaw', id: 1},
+    {object: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur, sequi.', first_name: 'Geneva', last_name: 'Wilson', id: 1},
+    {object: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur, sequi.', first_name: 'Thor', last_name: 'MacDonald', id: 1},
+    {object: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur, sequi.', first_name: 'Dick', last_name: 'Dunlap', id: 1}
   ]
   selected: Array<tableItem> = []
   selectedAllRows = false

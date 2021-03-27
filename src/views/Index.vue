@@ -57,8 +57,6 @@ export default class Index extends Vue {
 </script>
 
 <style scoped lang="stylus">
-.wrapper
-  height 100%
 
 .spinner
   height 50px

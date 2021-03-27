@@ -9,7 +9,7 @@
       <div class="balloon__price-wrapper">
         <span class="balloon__price"><span class="p">&#8381;</span> {{ price }} <span class="m2">М2</span></span>
       </div>
-      <button @click="onClick" type="button" class="btn btn_primary btn_sm balloon__btn">
+      <button type="button" class="btn btn_primary btn_sm balloon__btn">
         Подробнее
       </button>
     </div>
@@ -40,13 +40,6 @@ export default class RealtyCard2 extends Vue {
   get descriptionValue (): string {
     return this.description.slice(0, 165) + '...'
   }
-
-  onClick (): void {
-    if (!this.disableLink) {
-      this.$router.push({name: 'viewRealty', params: {category: 'category-name', id: this.id + ''}})
-    }
-  }
-
 }
 
 </script>

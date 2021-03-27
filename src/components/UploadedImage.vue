@@ -1,47 +1,48 @@
 <template>
-<div class="mx-auto flex-column justify-content-between"
-     :class="{ 'd-flex':!image, 'd-inline-flex':image }"
->
-  <b-img :src="imagePath"
-         thumbnail
-         fluid
-         :blank="!imagePath"
-         blank-color="#777"
-         class="mb-2"
-         block
-         style="max-height: 400px"
-         :style="[ `width: ${imagePath ? 'auto' : '100%'}` ]"
-  />
-  <div class="d-flex justify-content-center" v-if="withDelete">
-    <b-button @click="onDelete" variant="danger">Удалить</b-button>
+  <div class="mx-auto flex-column justify-content-between"
+       :class="{ 'd-flex':!image, 'd-inline-flex':image }"
+  >
+    <b-img :src="imagePath"
+           thumbnail
+           fluid
+           :blank="!imagePath"
+           blank-color="#777"
+           class="mb-2"
+           block
+           style="max-height: 400px"
+           :style="[ `width: ${imagePath ? 'auto' : '100%'}` ]"
+    />
+    <div class="d-flex justify-content-center" v-if="withDelete">
+      <b-button @click="onDelete" variant="danger">Удалить</b-button>
+    </div>
   </div>
-</div>
 </template>
 
 <script lang="ts">
 import {Component, Vue, Prop, Watch, Emit} from "vue-property-decorator";
 
-@Component({
+type uploadedImage =  File | null | string
 
-})
+@Component({})
 export default class UploadedImage extends Vue {
   imagePath = ''
 
-  @Prop({ required: true }) image!: File | null
-  @Prop({ required: false, default: false, type: Boolean }) withDelete!: boolean
+  @Prop({required: true}) image!: uploadedImage
+  @Prop({required: false, default: false, type: Boolean}) withDelete!: boolean
 
   @Emit('delete')
-  onDelete (): File {
-    return this.image as File
+  onDelete(): uploadedImage {
+    return this.image
   }
+
   @Emit('imageInitialized')
-  omImageInitialized (): string {
+  omImageInitialized(): string {
     return this.imagePath
   }
 
-  @Watch('image', { immediate: true })
-  watchImage (image: File | null): void {
-    if (image) {
+  @Watch('image', {immediate: true})
+  watchImage(image: uploadedImage): void {
+    if (image instanceof File) {
       const reader = new FileReader();
 
       reader.onload = () => {
@@ -51,6 +52,8 @@ export default class UploadedImage extends Vue {
       }
 
       reader.readAsDataURL(image);
+    } else if (image) {
+      this.imagePath = image
     }
   }
 }

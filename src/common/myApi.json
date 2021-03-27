@@ -1,0 +1,340 @@
+{
+  "realtyMinMax": {
+    "areaMax": 100,
+    "areaMin": 10,
+    "priceMax": 1000,
+    "priceMin": 50,
+    "pricePerMetrMax": 99,
+    "pricePerMetrMin": 3
+  },
+  "realty": [
+    {
+      "id": 1,
+      "img_path": "/img/objects/town.png",
+      "name": "Lorem ipsum dolor sit amet",
+      "area": 19.80,
+      "price": 550,
+      "latitude": 44.58217870865952,
+      "longitude": 33.55737926479875,
+      "price_per_metr": 4000,
+      "access": 0,
+      "energy": 1,
+      "furniture":  0,
+      "renovation": 0,
+      "restroom": 0,
+      "heating": 1,
+      "realtyTypeName": "склад",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorum eos libero minima porro quod! Accusamus animi consectetur dicta doloremque doloribus dolorum, fugit id laboriosam, nemo pariatur quo reprehenderit unde veniam.",
+      "photo": [
+        "/img/objects/town.png",
+        "/img/objects/town1.png",
+        "/img/objects/town2.png",
+        "/img/objects/town3.png",
+        "/img/objects/town4.png"
+      ]
+    },
+    {
+      "id": 2,
+      "img_path": "/img/objects/town1.png",
+      "name": "Lorem ipsum dolor sit amet",
+      "area": 30,
+      "price": 230,
+      "latitude": 44.59677612423578,
+      "longitude": 33.552229423490154,
+      "price_per_metr": 6000,
+      "access": 0,
+      "energy": 1,
+      "furniture":  0,
+      "renovation": 0,
+      "restroom": 1,
+      "heating": 0,
+      "realtyTypeName": "офис",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorum eos libero minima porro quod! Accusamus animi consectetur dicta doloremque doloribus dolorum, fugit id laboriosam, nemo pariatur quo reprehenderit unde veniam.",
+      "photo": [
+        "/img/objects/town.png",
+        "/img/objects/town1.png",
+        "/img/objects/town2.png",
+        "/img/objects/town3.png",
+        "/img/objects/town4.png"
+      ]
+    },
+    {
+      "id": 3,
+      "img_path": "/img/objects/town2.png",
+      "name": "Lorem ipsum dolor sit amet",
+      "area": 10,
+      "price": 450,
+      "latitude": 44.587438877009525,
+      "longitude": 33.47000362392961,
+      "price_per_metr": 5600,
+      "access": 0,
+      "energy": 1,
+      "furniture":  0,
+      "renovation": 1,
+      "restroom": 0,
+      "heating": 0,
+      "realtyTypeName": "ангар",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorum eos libero minima porro quod! Accusamus animi consectetur dicta doloremque doloribus dolorum, fugit id laboriosam, nemo pariatur quo reprehenderit unde veniam.",
+      "photo": [
+        "/img/objects/town.png",
+        "/img/objects/town1.png",
+        "/img/objects/town2.png",
+        "/img/objects/town3.png",
+        "/img/objects/town4.png"
+      ]
+    },
+    {
+      "id": 4,
+      "img_path": "/img/objects/town3.png",
+      "name": "Lorem ipsum dolor sit amet",
+      "area": 15.12,
+      "price": 112,
+      "latitude": 44.60352158169553,
+      "longitude": 33.58467342373429,
+      "price_per_metr": 5674,
+      "access": 1,
+      "energy": 1,
+      "furniture":  1,
+      "renovation": 0,
+      "restroom": 0,
+      "heating": 0,
+      "realtyTypeName": "офис",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorum eos libero minima porro quod! Accusamus animi consectetur dicta doloremque doloribus dolorum, fugit id laboriosam, nemo pariatur quo reprehenderit unde veniam.",
+      "photo": [
+        "/img/objects/town.png",
+        "/img/objects/town1.png",
+        "/img/objects/town2.png",
+        "/img/objects/town3.png",
+        "/img/objects/town4.png"
+      ]
+    },
+    {
+      "id": 5,
+      "img_path": "/img/objects/town4.png",
+      "name": "Lorem ipsum dolor sit amet",
+      "area": 22.3,
+      "price": 760,
+      "latitude": 44.56389606818065,
+      "longitude": 33.48667314754207,
+      "price_per_metr": 3456,
+      "realtyTypeName": "склад",
+      "access": 1,
+      "energy": 0,
+      "furniture": 1,
+      "renovation": 0,
+      "restroom": 1,
+      "heating": 0,
+      "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorum eos libero minima porro quod! Accusamus animi consectetur dicta doloremque doloribus dolorum, fugit id laboriosam, nemo pariatur quo reprehenderit unde veniam.",
+      "photo": [
+        "/img/objects/town.png",
+        "/img/objects/town1.png",
+        "/img/objects/town2.png",
+        "/img/objects/town3.png",
+        "/img/objects/town4.png"
+      ]
+    },
+    {
+      "id": 6,
+      "img_path": "/img/objects/town.png",
+      "name": "Lorem ipsum dolor sit amet",
+      "area": 17.86,
+      "price": 364.34,
+      "latitude": 44.568848774339926,
+      "longitude": 33.59178098780951,
+      "price_per_metr": 8678,
+      "realtyTypeName": "земля",
+      "access": 0,
+      "energy": 1,
+      "furniture":  0,
+      "renovation": 0,
+      "restroom": 0,
+      "heating": 1,
+      "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorum eos libero minima porro quod! Accusamus animi consectetur dicta doloremque doloribus dolorum, fugit id laboriosam, nemo pariatur quo reprehenderit unde veniam.",
+      "photo": [
+        "/img/objects/town.png",
+        "/img/objects/town1.png",
+        "/img/objects/town2.png",
+        "/img/objects/town3.png",
+        "/img/objects/town4.png"
+      ]
+    },
+    {
+      "id": 7,
+      "img_path": "/img/objects/town1.png",
+      "name": "Lorem ipsum dolor sit amet",
+      "area": 11.12,
+      "price": 412,
+      "latitude": 44.52151435223796,
+      "longitude": 33.565744207800485,
+      "price_per_metr": 2456,
+      "realtyTypeName": "ангар",
+      "access": 1,
+      "energy": 0,
+      "furniture":  1,
+      "renovation": 0,
+      "restroom":  1,
+      "heating": 0,
+      "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorum eos libero minima porro quod! Accusamus animi consectetur dicta doloremque doloribus dolorum, fugit id laboriosam, nemo pariatur quo reprehenderit unde veniam.",
+      "photo": [
+        "/img/objects/town.png",
+        "/img/objects/town1.png",
+        "/img/objects/town2.png",
+        "/img/objects/town3.png",
+        "/img/objects/town4.png"
+      ]
+    },
+    {
+      "id": 8,
+      "img_path": "/img/objects/town2.png",
+      "name": "Lorem ipsum dolor sit amet",
+      "area": 33.2,
+      "price": 214,
+      "latitude": 44.57302958713985,
+      "longitude": 33.56103893295109,
+      "price_per_metr": 8765,
+      "realtyTypeName": "офис",
+      "access": 0,
+      "energy": 0,
+      "furniture":  0,
+      "renovation": 1,
+      "restroom": 1,
+      "heating": 0,
+      "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorum eos libero minima porro quod! Accusamus animi consectetur dicta doloremque doloribus dolorum, fugit id laboriosam, nemo pariatur quo reprehenderit unde veniam.",
+      "photo": [
+        "/img/objects/town.png",
+        "/img/objects/town1.png",
+        "/img/objects/town2.png",
+        "/img/objects/town3.png",
+        "/img/objects/town4.png"
+      ]
+    }
+  ],
+  "news": [
+    {
+      "photo": "/img/objects/town.png",
+      "header": "Как правильно составить обращение",
+      "content": "По данным регионального управления Росстата, граждане довольно активно обращаются в органы государственной власти, местного самоуправления и к их должностным лицам. Подавляющее большинство составляют обращения о нарушениях прав граждан в сферах трудового, жилищного законодательства, ЖКХ, здравоохранения, образования, по пенсионным вопросам, на нарушения земельного законодательства, прав малого и среднего бизнеса."
+    },
+    {
+      "photo": "/img/objects/town1.png",
+      "header": "Как правильно составить обращение",
+      "content": "По данным регионального управления Росстата, граждане довольно активно обращаются в органы государственной власти, местного самоуправления и к их должностным лицам. Подавляющее большинство составляют обращения о нарушениях прав граждан в сферах трудового, жилищного законодательства, ЖКХ, здравоохранения, образования, по пенсионным вопросам, на нарушения земельного законодательства, прав малого и среднего бизнеса."
+    },
+    {
+      "photo": "/img/objects/town2.png",
+      "header": "Как правильно составить обращение",
+      "content": "По данным регионального управления Росстата, граждане довольно активно обращаются в органы государственной власти, местного самоуправления и к их должностным лицам. Подавляющее большинство составляют обращения о нарушениях прав граждан в сферах трудового, жилищного законодательства, ЖКХ, здравоохранения, образования, по пенсионным вопросам, на нарушения земельного законодательства, прав малого и среднего бизнеса."
+    },
+    {
+      "photo": "/img/objects/town3.png",
+      "header": "Как правильно составить обращение",
+      "content": "По данным регионального управления Росстата, граждане довольно активно обращаются в органы государственной власти, местного самоуправления и к их должностным лицам. Подавляющее большинство составляют обращения о нарушениях прав граждан в сферах трудового, жилищного законодательства, ЖКХ, здравоохранения, образования, по пенсионным вопросам, на нарушения земельного законодательства, прав малого и среднего бизнеса."
+    },
+    {
+      "photo": "/img/objects/town4.png",
+      "header": "Как правильно составить обращение",
+      "content": "По данным регионального управления Росстата, граждане довольно активно обращаются в органы государственной власти, местного самоуправления и к их должностным лицам. Подавляющее большинство составляют обращения о нарушениях прав граждан в сферах трудового, жилищного законодательства, ЖКХ, здравоохранения, образования, по пенсионным вопросам, на нарушения земельного законодательства, прав малого и среднего бизнеса."
+    }
+  ],
+  "sliderSlides": [
+    {
+      "image": "/img/objects/town.png",
+      "content": "Производственные помещения, цеха, бизнес центр и много других дополнительных зданий и  сооружений в совокупности создают технопарк со всей инфраструктурой.",
+      "header": "Аренда офисов и производсвенных помещений"
+    },
+    {
+      "image": "/img/objects/town.png",
+      "content": "Производственные помещения, цеха, бизнес центр и много других дополнительных зданий и  сооружений в совокупности создают технопарк со всей инфраструктурой.",
+      "header": "Аренда офисов и производсвенных помещений"
+    },
+    {
+      "image": "/img/objects/town.png",
+      "content": "Производственные помещения, цеха, бизнес центр и много других дополнительных зданий и  сооружений в совокупности создают технопарк со всей инфраструктурой.",
+      "header": "Аренда офисов и производсвенных помещений"
+    },
+    {
+      "image": "/img/objects/town.png",
+      "content": "Производственные помещения, цеха, бизнес центр и много других дополнительных зданий и  сооружений в совокупности создают технопарк со всей инфраструктурой.",
+      "header": "Аренда офисов и производсвенных помещений"
+    },
+    {
+      "image": "/img/objects/town.png",
+      "content": "Производственные помещения, цеха, бизнес центр и много других дополнительных зданий и  сооружений в совокупности создают технопарк со всей инфраструктурой.",
+      "header": "Аренда офисов и производсвенных помещений"
+    }
+  ],
+  "contacts": [
+    {
+      "id": 1,
+      "header": "Менеджер проекта",
+      "content": "+7(978) 801-43-83",
+      "type": "phone",
+      "is_rent_depart": false
+    },
+    {
+      "id": 2,
+      "header": "email",
+      "content": "elena@sferos.com",
+      "type": "email",
+      "is_rent_depart": false
+    },
+    {
+      "id": 3,
+      "header": "email",
+      "content": "irina@sferos.com",
+      "type": "email",
+      "is_rent_depart": false
+    },
+    {
+      "id": 4,
+      "header": "",
+      "content": "+7 (978) 734-58-55",
+      "type": "phone",
+      "is_rent_depart": true
+    },
+    {
+      "id": 5,
+      "header": "",
+      "content": "+7 (978) 268-72-55",
+      "type": "phone",
+      "is_rent_depart": true
+    },
+    {
+      "id": 6,
+      "header": "",
+      "content": "+7 (978) 734-58-99",
+      "type": "phone",
+      "is_rent_depart": true
+    },
+    {
+      "id": 7,
+      "header": "",
+      "content": "+7 (918) 473-08-39",
+      "type": "phone",
+      "is_rent_depart": true
+    }
+  ],
+  "realtyType": [
+    {
+      "id": 1,
+      "name": "Ангары"
+    },
+    {
+      "id": 2,
+      "name": "Офисы"
+    },
+
+    {
+      "id": 4,
+      "name": "Офисные блоки"
+    },
+    {
+      "id": 3,
+      "name": "Склады"
+    },
+    {
+      "id": 5,
+      "name": "Офисные блоки"
+    }
+  ]
+}

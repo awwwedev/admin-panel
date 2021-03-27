@@ -1,13 +1,15 @@
 <template>
   <div id="app">
-    <b-container>
+    <b-container style="z-index: 1000; position: sticky; top: 0"
+    >
       <b-alert :show="dismissCounter"
                :variant="$notificationData.variant || 'info'"
                dismissible
                @dismissed="onDismissed"
+               fade
       >
         <h4 class="alert-heading" v-if="$notificationData.title">{{ $notificationData.title }}</h4>
-        <hr v-if="$notificationData.title">
+        <hr v-if="$notificationData.title && $notificationData.text">
         <p class="mb-0">
           {{ $notificationData.text }}
         </p>
@@ -88,6 +90,5 @@ export default class App extends Vue {
 </script>
 
 <style lang="stylus">
-html, body, #app
-  height 100%
+
 </style>

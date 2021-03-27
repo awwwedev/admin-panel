@@ -30,6 +30,14 @@ const routes: Array<RouteConfig> = [
           isCreatePage: true
         },
         component: () => import('@/views/Realty/Constructor.vue')
+      },
+      {
+        path: 'realty/:id/change',
+        name: 'admin.realty.change',
+        meta: {
+          isCreatePage: false
+        },
+        component: () => import('@/views/Realty/Constructor.vue')
       }
     ]
   }
