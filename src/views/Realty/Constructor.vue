@@ -417,7 +417,6 @@ export default class Constructor extends Mixins<Validation>(validationMixin, Val
 
     this.formData = {...this.formData, ...this.equipmentsForAddToFormData, ...equipmentsSelected}
   }
-  @Watch('form.previewImagePath')
   @Watch('formData', { immediate: true, deep: true })
   watchFormData (): void {
     let photo
@@ -455,6 +454,7 @@ export default class Constructor extends Mixins<Validation>(validationMixin, Val
             this.temp.center = [realty.latitude as number, realty.longitude as number]
             this.formData.photo = realty.photo as Array<string>
             this.formData.img_path = realty.img_path as string
+            this.temp.previewImagePath = realty.img_path as string
             this.formData = {...this.formData, ...realty}
 
             console.log(realty)
