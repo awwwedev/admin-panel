@@ -90,5 +90,13 @@ export default class App extends Vue {
 </script>
 
 <style lang="stylus">
+html, body
+  height 100%
 
+body
+  display: flex;
+  flex-direction column
+
+#app
+  flex 1 1 100%
 </style>
