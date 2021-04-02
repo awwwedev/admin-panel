@@ -417,6 +417,7 @@ export default class Constructor extends Mixins<Validation>(validationMixin, Val
 
     this.formData = {...this.formData, ...this.equipmentsForAddToFormData, ...equipmentsSelected}
   }
+  @Watch('temp.previewImagePath')
   @Watch('formData', { immediate: true, deep: true })
   watchFormData (): void {
     let photo
