@@ -38,6 +38,11 @@ const routes: Array<RouteConfig> = [
           isCreatePage: false
         },
         component: () => import('@/views/Realty/Constructor.vue')
+      },
+      {
+        name: 'admin.realtyType',
+        path: 'realty-type',
+        component: () => import('@/views/RealtyType/Index.vue')
       }
     ]
   }

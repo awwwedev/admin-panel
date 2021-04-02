@@ -1,6 +1,5 @@
 <template>
   <div class="section">
-    <h1 class="mb-5">Недвижимость</h1>
     <b-card class="mb-4 shadow-sm">
       <div class="d-flex">
         <b-button variant="primary" class="mr-2" :to="{ name: 'admin.realty.create' }">Создать</b-button>
@@ -89,18 +88,18 @@
 </template>
 
 <script lang="ts">
-import {Component, Mixins, Ref} from "vue-property-decorator";
-import Realty from "@/models/Realty";
+import {Component, Mixins} from "vue-property-decorator";
 import TableStateController from "@/mixins/tableStateController";
-import {BTable} from "bootstrap-vue";
-import {AxiosResponse} from "axios";
+import RealtyType from "@/models/RealtyType";
 import {responseWithPaginator, tableItem} from "@/common/types";
 import SearchHelpers from "@/mixins/searchHelpers";
+import {AxiosResponse} from "axios";
 
 
 @Component({
+
 })
-export default class Home extends Mixins<TableStateController, SearchHelpers>(TableStateController, SearchHelpers) {
+export default class IndexRealtyType extends Mixins<TableStateController, SearchHelpers>(TableStateController, SearchHelpers) {
   fields = [
     {
       key: 'selected',
@@ -114,44 +113,17 @@ export default class Home extends Mixins<TableStateController, SearchHelpers>(Ta
     },
     {
       key: 'name',
-      label: 'Описание',
+      label: 'Название',
       searchable: true,
       sortable: true,
-    },
-    {
-      key: 'realtyTypeName',
-      label: 'Тип',
-      searchable: true
-    },
-    {
-      key: 'area',
-      label: 'Площадь',
-      sortable: true,
-      searchable: true
-    },
-    {
-      key: 'price',
-      label: 'Стоимость',
-      sortable: true,
-      searchable: true
-    },
-    {
-      key: 'created_at',
-      label: 'Создан',
-      sortable: true,
-      searchable: true
-    },
-    {
-      key: 'actions',
-      label: 'Действия'
     }
   ]
-  items = [] as Array<Realty>
+  items = [] as Array<RealtyType>
 
   get selectionBtnText (): string { return this.selectedAllRows ? 'Снять выделение' : 'Выбрать все' }
 
-  updateTableData(): Promise<AxiosResponse<responseWithPaginator<Realty>>> {
-    return Realty.getList(this.tableOptionsCleared)
+  updateTableData(): Promise<AxiosResponse<responseWithPaginator<RealtyType>>> {
+    return RealtyType.getList(this.tableOptionsCleared)
         .then(response => {
           this.items = response.data.data
 
@@ -165,6 +137,6 @@ export default class Home extends Mixins<TableStateController, SearchHelpers>(Ta
 }
 </script>
 
-<style scoped lang="stylus">
+<style scoped>
 
 </style>

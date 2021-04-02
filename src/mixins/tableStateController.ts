@@ -1,6 +1,7 @@
-import {Component, Mixins, Watch} from "vue-property-decorator";
+import {Component, Mixins, Ref, Watch} from "vue-property-decorator";
 import {AxiosResponse} from "axios";
-import {responseWithPaginator} from "@/common/types";
+import {responseWithPaginator, tableItem} from "@/common/types";
+import {BTable} from "bootstrap-vue";
 
 
 @Component({})
@@ -24,6 +25,10 @@ export default class TableStateController extends Mixins() {
         searchField: null as string | null,
         searchValue: null as string | number | null
     }
+    selected: Array<tableItem> = []
+    selectedAllRows = false
+    @Ref('table') $table!: BTable
+
 
     get tableOptionsCleared (): { [key: string]: any } {
         return Object.keys(this.tableOptions).reduce((acc, value) => {
@@ -45,6 +50,18 @@ export default class TableStateController extends Mixins() {
     }
     omSearch (): void {
         this.tableOptions = {...this.tableOptions, page: 1, sortBy: null, sortType: null, searchField: this.tableTemp.searchField, searchValue: this.tableTemp.searchValue }
+    }
+    onRowSelected(items: Array<tableItem>): void {
+        this.selected = items
+    }
+    onSelectAll(): void {
+        if (this.selectedAllRows) {
+            this.$table.clearSelected()
+            this.selectedAllRows = false
+        } else {
+            this.$table.selectAllRows()
+            this.selectedAllRows = true
+        }
     }
 
     @Watch('tableTemp.perPage')
