@@ -49,7 +49,7 @@ export default class Index extends Vue {
       label: 'Катгории недвижимости'
     },
     {
-      routeName: 'admin.home',
+      routeName: 'admin.news',
       label: 'Новости'
     }
   ]

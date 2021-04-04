@@ -59,6 +59,27 @@ const routes: Array<RouteConfig> = [
           isCreatePage: false
         },
         component: () => import('@/views/RealtyType/Constructor.vue')
+      },
+      {
+        name: 'admin.news',
+        path: 'news',
+        component: () => import('@/views/News/Index.vue')
+      },
+      {
+        name: 'admin.news.create',
+        path: 'news/create',
+        meta: {
+          isCreatePage: true
+        },
+        component: () => import('@/views/News/Constructor.vue')
+      },
+      {
+        name: 'admin.news.change',
+        path: 'news/:id/change',
+        meta: {
+          isCreatePage: false
+        },
+        component: () => import('@/views/News/Constructor.vue')
       }
     ]
   }

@@ -4,7 +4,7 @@
 
     <b-card class="mb-4 shadow-sm">
       <div class="d-flex">
-        <b-button variant="primary" class="mr-2" :to="{ name: 'admin.realty.create' }">Создать</b-button>
+        <b-button variant="primary" class="mr-2" :to="{ name: 'admin.realtyType.create' }">Создать</b-button>
         <b-button variant="info" class="mr-3" @click="onSelectAll">{{ selectionBtnText }}</b-button>
         <b-button variant="danger" class="my-2 my-sm-0" :disabled="selectedAllRows">Удалить выбранное</b-button>
       </div>
@@ -52,7 +52,7 @@
         </template>
         <template #cell(actions)="{ item }">
           <b-button-group>
-            <b-button variant="warning" class="my-2 my-sm-0" @click="$router.replace({ name: 'admin.realtyType.change', params: { id: item.id } })">Изменить</b-button>
+            <b-button variant="warning" class="my-2 my-sm-0" :to="{ name: 'admin.realtyType.change', params: { id: item.id } }">Изменить</b-button>
             <b-button variant="danger" class="my-2 my-sm-0" @click="onDeleteTableItem(item)">Удалить</b-button>
           </b-button-group>
         </template>
