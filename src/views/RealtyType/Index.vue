@@ -1,5 +1,7 @@
 <template>
   <div class="section">
+    <h1 class="mb-5">Категория недвижимости</h1>
+
     <b-card class="mb-4 shadow-sm">
       <div class="d-flex">
         <b-button variant="primary" class="mr-2" :to="{ name: 'admin.realty.create' }">Создать</b-button>
@@ -46,43 +48,15 @@
           </template>
         </template>
         <template #cell(name)="{ item }">
-          <b-link :to="{ name: 'admin.realty.change', params: { id: item.id } }" v-html="tableOptions.searchValue ? getValueWithSearchPart(item.name, tableOptions.searchValue) : item.name "></b-link>
+          <b-link :to="{ name: 'admin.realtyType.change', params: { id: item.id } }" v-html="tableOptions.searchValue ? getValueWithSearchPart(item.name, tableOptions.searchValue) : item.name "></b-link>
         </template>
         <template #cell(actions)="{ item }">
           <b-button-group>
-            <b-button variant="warning" class="my-2 my-sm-0" @click="$router.replace({ name: 'admin.realty.change', params: { id: item.id } })">Изменить</b-button>
+            <b-button variant="warning" class="my-2 my-sm-0" @click="$router.replace({ name: 'admin.realtyType.change', params: { id: item.id } })">Изменить</b-button>
             <b-button variant="danger" class="my-2 my-sm-0" @click="onDeleteTableItem(item)">Удалить</b-button>
           </b-button-group>
         </template>
       </b-table>
-      <div class="d-flex justify-content-between align-items-center">
-        <b-pagination
-            v-model="tableOptions.page"
-            :total-rows="tableInfo.totalItems"
-            :per-page="tableOptions.perPage"
-        />
-
-        <b-select v-model="tableTemp.perPage" style="width: auto">
-          <b-select-option :value="10">
-            10
-          </b-select-option>
-          <b-select-option :value="25">
-            25
-          </b-select-option>
-          <b-select-option :value="50">
-            50
-          </b-select-option>
-          <b-select-option :value="75">
-            75
-          </b-select-option>
-          <b-select-option :value="100">
-            100
-          </b-select-option>
-          <b-select-option :value="'all'">
-            ВСЕ
-          </b-select-option>
-        </b-select>
-      </div>
     </b-card>
   </div>
 </template>
@@ -91,7 +65,7 @@
 import {Component, Mixins} from "vue-property-decorator";
 import TableStateController from "@/mixins/tableStateController";
 import RealtyType from "@/models/RealtyType";
-import {responseWithPaginator, tableItem} from "@/common/types";
+import {tableItem} from "@/common/types";
 import SearchHelpers from "@/mixins/searchHelpers";
 import {AxiosResponse} from "axios";
 
@@ -116,16 +90,20 @@ export default class IndexRealtyType extends Mixins<TableStateController, Search
       label: 'Название',
       searchable: true,
       sortable: true,
+    },
+    {
+      key: 'actions',
+      label: 'Действия'
     }
   ]
   items = [] as Array<RealtyType>
 
   get selectionBtnText (): string { return this.selectedAllRows ? 'Снять выделение' : 'Выбрать все' }
 
-  updateTableData(): Promise<AxiosResponse<responseWithPaginator<RealtyType>>> {
+  updateTableData(): Promise<AxiosResponse<Array<RealtyType>>> {
     return RealtyType.getList(this.tableOptionsCleared)
         .then(response => {
-          this.items = response.data.data
+          this.items = response.data
 
           return response
         })

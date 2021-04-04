@@ -194,17 +194,7 @@
           </b-form-group>
         </div>
       </b-card>
-      <div class="d-flex mb-5">
-        <template v-if="isCreatePage">
-          <b-button variant="primary" class="mr-2" type="submit">Создать</b-button>
-          <b-button :to="{ name: 'admin.realty' }" variant="secondary">Отмена</b-button>
-        </template>
-        <template v-else>
-          <b-button variant="primary" class="mr-2" @click="onSubmit">Сохранить</b-button>
-          <b-button variant="success" class="mr-2" @click="onSubmit(false)">Применить</b-button>
-          <b-button :to="{ name: 'admin.realty' }" class="mr-2" variant="secondary">Отмена</b-button>
-        </template>
-      </div>
+      <ConstructorActions :cancel-to="{ name: 'admin.realtyType' }" :is-create-page="isCreatePage" @submit="onSubmit"/>
     </b-form>
     <PreviewTab2 v-if="activeTab === 1"
                  :form-data="formDataForPreview"
@@ -231,9 +221,11 @@ import {getModule} from "vuex-module-decorators";
 import Notification from "@/store/modules/notification";
 import RealtyType from "@/models/RealtyType";
 import Realty from "@/models/Realty";
+import ConstructorHelpers from "@/mixins/constructorHelpers";
+import ConstructorActions from "@/components/widget/ConstructorActions.vue";
 
 @Component({
-  components: {PreviewTab3, PreviewTab2, UploadedImage, yandexMap, ymapMarker, Balloon},
+  components: {ConstructorActions, PreviewTab3, PreviewTab2, UploadedImage, yandexMap, ymapMarker, Balloon},
   validations: {
     formData: {
       name: {
@@ -271,7 +263,8 @@ import Realty from "@/models/Realty";
     bus
   })
 })
-export default class Constructor extends Mixins<Validation>(validationMixin, ValidationMixin) {
+export default class Constructor extends Mixins<Validation, ValidationMixin, ConstructorHelpers>(validationMixin, ValidationMixin, ConstructorHelpers) {
+  entityName = 'недвижимости'
   zoom = 19
   allowSetNameByDesc = true
   activeTab = 0
@@ -321,9 +314,6 @@ export default class Constructor extends Mixins<Validation>(validationMixin, Val
   }
   formDataForPreview = {}
   types = [] as Array <RealtyType>
-
-  get isCreatePage(): boolean { return this.$route.meta.isCreatePage }
-  get pageName(): string { return this.$route.meta.isCreatePage ? 'Создание новой недвижимости' : 'Редактирование недвижимости' }
   get mainTabName(): string { return this.$route.meta.isCreatePage ? 'Создание' : 'Редактирование' }
   get totalPrice(): number { return (this.formData.area as number )* (this.formData.price_per_metr as number) }
   get uploadedIMageNames(): string { return this.temp.uploadedImages.map(value => value.name).join(', ') }

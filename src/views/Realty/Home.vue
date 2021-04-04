@@ -89,10 +89,9 @@
 </template>
 
 <script lang="ts">
-import {Component, Mixins, Ref} from "vue-property-decorator";
+import {Component, Mixins} from "vue-property-decorator";
 import Realty from "@/models/Realty";
 import TableStateController from "@/mixins/tableStateController";
-import {BTable} from "bootstrap-vue";
 import {AxiosResponse} from "axios";
 import {responseWithPaginator, tableItem} from "@/common/types";
 import SearchHelpers from "@/mixins/searchHelpers";
