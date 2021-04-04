@@ -1,6 +1,8 @@
-import {Component, Mixins, Watch} from "vue-property-decorator";
+import {Component, Mixins, Ref, Watch} from "vue-property-decorator";
 import {AxiosResponse} from "axios";
-import {responseWithPaginator} from "@/common/types";
+import {responseWithPaginator, tableItem} from "@/common/types";
+import {BTable} from "bootstrap-vue";
+import BaseModel from "@/models/BaseModel";
 
 
 @Component({})
@@ -24,6 +26,10 @@ export default class TableStateController extends Mixins() {
         searchField: null as string | null,
         searchValue: null as string | number | null
     }
+    selected: Array<tableItem> = []
+    selectedAllRows = false
+    @Ref('table') $table!: BTable
+
 
     get tableOptionsCleared (): { [key: string]: any } {
         return Object.keys(this.tableOptions).reduce((acc, value) => {
@@ -37,7 +43,7 @@ export default class TableStateController extends Mixins() {
         }, {} as { [key: string]: any })
     }
 
-    updateTableData(): Promise<AxiosResponse<responseWithPaginator>> | null {
+    updateTableData(): Promise<AxiosResponse<responseWithPaginator>> | null | Promise<AxiosResponse<Array<BaseModel>>> {
         return null
     }
     onChangeSort (sortOptions: { sortBy: string, sortDesc: boolean }): void {
@@ -45,6 +51,18 @@ export default class TableStateController extends Mixins() {
     }
     omSearch (): void {
         this.tableOptions = {...this.tableOptions, page: 1, sortBy: null, sortType: null, searchField: this.tableTemp.searchField, searchValue: this.tableTemp.searchValue }
+    }
+    onRowSelected(items: Array<tableItem>): void {
+        this.selected = items
+    }
+    onSelectAll(): void {
+        if (this.selectedAllRows) {
+            this.$table.clearSelected()
+            this.selectedAllRows = false
+        } else {
+            this.$table.selectAllRows()
+            this.selectedAllRows = true
+        }
     }
 
     @Watch('tableTemp.perPage')
@@ -62,11 +80,14 @@ export default class TableStateController extends Mixins() {
         const response = this.updateTableData()
 
         if (response) {
-            response
-                .then(response => {
-                    const meta = response.data.meta
 
-                    this.tableInfo = {totalItems: meta.total, totalPages: meta.last_page}
+            // @ts-ignore
+            response.then((response) => {
+                    if (!(response.data instanceof Array)) {
+                        const meta = (response as AxiosResponse<responseWithPaginator>).data.meta
+
+                        this.tableInfo = {totalItems: meta.total, totalPages: meta.last_page}
+                    }
                 })
                 .finally(() => {
                     this.inRequestState = false

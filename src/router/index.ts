@@ -38,6 +38,27 @@ const routes: Array<RouteConfig> = [
           isCreatePage: false
         },
         component: () => import('@/views/Realty/Constructor.vue')
+      },
+      {
+        name: 'admin.realtyType',
+        path: 'realty-type',
+        component: () => import('@/views/RealtyType/Index.vue')
+      },
+      {
+        name: 'admin.realtyType.create',
+        path: 'realty-type/create',
+        meta: {
+          isCreatePage: true
+        },
+        component: () => import('@/views/RealtyType/Constructor.vue')
+      },
+      {
+        name: 'admin.realtyType.change',
+        path: 'realty-type/:id/change',
+        meta: {
+          isCreatePage: false
+        },
+        component: () => import('@/views/RealtyType/Constructor.vue')
       }
     ]
   }
