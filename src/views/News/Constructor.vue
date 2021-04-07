@@ -100,9 +100,10 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
       News.get(({ id: Number(this.$route.params.id) }))
           .then(response => {
             const news = response.data
-            this.formData.photo = news.photo as string
-            this.temp.previewImagePath = news.photo as string
             this.formData = {...this.formData, ...news}
+            this.temp.previewImagePath = process.env.VUE_APP_URL + news.photo as string
+            this.formData.photo = process.env.VUE_APP_URL + news.photo as string
+
           })
     }
   }

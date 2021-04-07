@@ -443,13 +443,10 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
           .then(response => {
             const realty = response.data
             this.temp.center = [realty.latitude as number, realty.longitude as number]
-            this.formData.photo = realty.photo as Array<string>
-            this.formData.img_path = realty.img_path as string
-            this.temp.previewImagePath = realty.img_path as string
+            this.temp.previewImagePath = process.env.VUE_APP_URL + realty.img_path as string
             this.formData = {...this.formData, ...realty}
-
-            console.log(realty)
-            console.log(this.formData)
+            this.formData.img_path = process.env.VUE_APP_URL + realty.img_path as string
+            this.formData.photo = (realty.photo as Array<string>).map(img => process.env.VUE_APP_URL + img)
 
             this.equipments.forEach(value => {
               // @ts-ignore
