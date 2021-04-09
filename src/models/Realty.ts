@@ -27,7 +27,7 @@ export default class Realty extends BaseModel {
 
     static getMinMax() : Promise<AxiosResponse<realtyMinMaxInfo>> {
         if (process.env.VUE_APP_USE_LOCAL_API === 'false') {
-            return http.get<realtyMinMaxInfo>('realties/minmax')
+            return http.get<realtyMinMaxInfo>('realty/minMax')
         } else {
             return new Promise<AxiosResponse<realtyMinMaxInfo>>((resolve) => {
                 resolve({ data: api.realtyMinMax } as AxiosResponse<realtyMinMaxInfo>)
@@ -37,7 +37,7 @@ export default class Realty extends BaseModel {
 
     static getList(params: { [key: string]: any } = {}): Promise<AxiosResponse<responseWithPaginator<Realty>>> {
         if (process.env.VUE_APP_USE_LOCAL_API === 'false') {
-            return http.get<responseWithPaginator<Realty>>('realties', { params: params })
+            return http.get<responseWithPaginator<Realty>>('realty', { params: params })
         } else {
             return new Promise<AxiosResponse<responseWithPaginator<Realty>>>((resolve) => {
                 resolve({ data: { data: api.realty } } as AxiosResponse<responseWithPaginator<Realty>>)
@@ -46,7 +46,7 @@ export default class Realty extends BaseModel {
     }
     static getListMap(params: { [key: string]: number | string | undefined | Array<number> } = {}): Promise<AxiosResponse<Array<Realty>>> {
         if (process.env.VUE_APP_USE_LOCAL_API === 'false') {
-            return http.get<Array<Realty>>('realties/map', { params: params })
+            return http.get<Array<Realty>>('realty/map', { params: params })
         } else {
             return new Promise<AxiosResponse<Array<Realty>>>((resolve) => {
                 resolve({ data: api.realty } as AxiosResponse<Array<Realty>>)

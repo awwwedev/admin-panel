@@ -41,7 +41,7 @@ export default class User extends VuexModule {
     async initUser (): Promise<AxiosResponse<UserModel>> {
         this.setInInitState(true)
 
-        return http.get<UserModel>('me').then(response => {
+        return http.get<UserModel>('user/byToken').then(response => {
             this.setUser(response.data)
             this.setIsLogged(true)
             this.setInInitState(false)
