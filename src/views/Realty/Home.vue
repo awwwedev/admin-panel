@@ -5,7 +5,7 @@
       <div class="d-flex">
         <b-button variant="primary" class="mr-2" :to="{ name: 'admin.realty.create' }">Создать</b-button>
         <b-button variant="info" class="mr-3" @click="onSelectAll">{{ selectionBtnText }}</b-button>
-        <b-button variant="danger" class="my-2 my-sm-0" :disabled="selectedAllRows">Удалить выбранное</b-button>
+        <b-button variant="danger" class="my-2 my-sm-0" :disabled="selectedAllRows" @click="onDelete">Удалить выбранное</b-button>
       </div>
     </b-card>
     <b-card class="shadow-sm">
@@ -26,6 +26,7 @@
         <b-button variant="outline-primary" class="my-2 my-sm-0" type="submit">Найти</b-button>
       </b-form>
       <b-table
+          sort-icon-left
           :fields="fields"
           :items="items"
           responsive="md"
@@ -48,12 +49,6 @@
         </template>
         <template #cell(name)="{ item }">
           <b-link :to="{ name: 'admin.realty.change', params: { id: item.id } }" v-html="tableOptions.searchValue ? getValueWithSearchPart(item.name, tableOptions.searchValue) : item.name "></b-link>
-        </template>
-        <template #cell(actions)="{ item }">
-          <b-button-group>
-            <b-button variant="warning" class="my-2 my-sm-0" :to="{ name: 'admin.realty.change', params: { id: item.id } }">Изменить</b-button>
-            <b-button variant="danger" class="my-2 my-sm-0" @click="onDeleteTableItem(item)">Удалить</b-button>
-          </b-button-group>
         </template>
       </b-table>
       <div class="d-flex justify-content-between align-items-center">
@@ -93,8 +88,10 @@ import {Component, Mixins} from "vue-property-decorator";
 import Realty from "@/models/Realty";
 import TableStateController from "@/mixins/tableStateController";
 import {AxiosResponse} from "axios";
-import {responseWithPaginator, tableItem} from "@/common/types";
+import {responseWithPaginator} from "@/common/types";
 import SearchHelpers from "@/mixins/searchHelpers";
+import {getModule} from "vuex-module-decorators";
+import Notification from "@/store/modules/notification";
 
 
 @Component({
@@ -104,12 +101,6 @@ export default class Home extends Mixins<TableStateController, SearchHelpers>(Ta
     {
       key: 'selected',
       label: 'Выбрано'
-    },
-    {
-      key: 'id',
-      label: 'ID',
-      sortable: true,
-      searchable: true
     },
     {
       key: 'name',
@@ -135,19 +126,28 @@ export default class Home extends Mixins<TableStateController, SearchHelpers>(Ta
       searchable: true
     },
     {
-      key: 'created_at',
-      label: 'Создан',
+      key: 'price_per_metr',
+      label: 'Стоимость за м. кв.',
       sortable: true,
       searchable: true
     },
     {
-      key: 'actions',
-      label: 'Действия'
+      key: 'created_at',
+      label: 'Создан',
+      sortable: true,
+      searchable: true
     }
   ]
   items = [] as Array<Realty>
 
   get selectionBtnText (): string { return this.selectedAllRows ? 'Снять выделение' : 'Выбрать все' }
+
+  onDelete (): void {
+    Realty.destroy(this.selected.map(value => value.id as number)).then(() => {
+      getModule(Notification, this.$store).setData({ title: 'Удаление прошло успешно', variant: 'success' })
+      this.updateTableData();
+    })
+  }
 
   updateTableData(): Promise<AxiosResponse<responseWithPaginator<Realty>>> {
     return Realty.getList(this.tableOptionsCleared)
@@ -156,10 +156,6 @@ export default class Home extends Mixins<TableStateController, SearchHelpers>(Ta
 
           return response
         })
-  }
-
-  onDeleteTableItem(items: tableItem): void {
-    console.log(items)
   }
 }
 </script>

@@ -3,6 +3,7 @@ import api from "@/common/myApi.json";
 import http from "@/common/http";
 import BaseModel from "@/models/BaseModel";
 import {realtyMinMaxInfo, responseWithPaginator} from "@/common/types";
+import Equipment from "@/models/Equipment";
 
 export default class Realty extends BaseModel {
     id?: number
@@ -17,13 +18,7 @@ export default class Realty extends BaseModel {
     price_per_metr?: number
     type_id?: number
     photo?: Array<string>
-
-    access?: number
-    energy?: number
-    furniture?: number
-    renovation?: number
-    restroom?: number
-    heating?: number
+    equipments?: Array<Equipment>
 
     static getMinMax() : Promise<AxiosResponse<realtyMinMaxInfo>> {
         if (process.env.VUE_APP_USE_LOCAL_API === 'false') {
@@ -62,5 +57,12 @@ export default class Realty extends BaseModel {
                 resolve({ data: api.realty[0] } as AxiosResponse<Realty>)
             })
         }
+    }
+
+    static create (params: { [key: string]: any }): Promise<AxiosResponse<Realty>> {
+        return http.post<Realty>('realty', Realty.prepareFormData(params))
+    }
+    static destroy (data: { [key: string]: any }): Promise<AxiosResponse> {
+        return http.delete('realty', { params: { id: data } })
     }
 }

@@ -50,12 +50,6 @@
         <template #cell(name)="{ item }">
           <b-link :to="{ name: 'admin.realtyType.change', params: { id: item.id } }" v-html="tableOptions.searchValue ? getValueWithSearchPart(item.name, tableOptions.searchValue) : item.name "></b-link>
         </template>
-        <template #cell(actions)="{ item }">
-          <b-button-group>
-            <b-button variant="warning" class="my-2 my-sm-0" :to="{ name: 'admin.realtyType.change', params: { id: item.id } }">Изменить</b-button>
-            <b-button variant="danger" class="my-2 my-sm-0" @click="onDeleteTableItem(item)">Удалить</b-button>
-          </b-button-group>
-        </template>
       </b-table>
     </b-card>
   </div>
@@ -65,7 +59,6 @@
 import {Component, Mixins} from "vue-property-decorator";
 import TableStateController from "@/mixins/tableStateController";
 import RealtyType from "@/models/RealtyType";
-import {tableItem} from "@/common/types";
 import SearchHelpers from "@/mixins/searchHelpers";
 import {AxiosResponse} from "axios";
 
@@ -90,10 +83,6 @@ export default class IndexRealtyType extends Mixins<TableStateController, Search
       label: 'Название',
       searchable: true,
       sortable: true,
-    },
-    {
-      key: 'actions',
-      label: 'Действия'
     }
   ]
   items = [] as Array<RealtyType>
@@ -107,10 +96,6 @@ export default class IndexRealtyType extends Mixins<TableStateController, Search
 
           return response
         })
-  }
-
-  onDeleteTableItem(items: tableItem): void {
-    console.log(items)
   }
 }
 </script>

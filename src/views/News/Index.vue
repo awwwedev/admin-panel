@@ -50,12 +50,6 @@
         <template #cell(header)="{ item }">
           <b-link :to="{ name: 'admin.news.change', params: { id: item.id } }" v-html="tableOptions.searchValue ? getValueWithSearchPart(item.header, tableOptions.searchValue) : item.header "></b-link>
         </template>
-        <template #cell(actions)="{ item }">
-          <b-button-group>
-            <b-button variant="warning" class="my-2 my-sm-0" :to="{ name: 'admin.news.change', params: { id: item.id } }">Изменить</b-button>
-            <b-button variant="danger" class="my-2 my-sm-0" @click="onDeleteTableItem(item)">Удалить</b-button>
-          </b-button-group>
-        </template>
       </b-table>
     </b-card>
   </div>
@@ -65,7 +59,7 @@
 import {Component, Mixins} from "vue-property-decorator";
 import TableStateController from "@/mixins/tableStateController";
 import RealtyType from "@/models/RealtyType";
-import {responseWithPaginator, tableItem} from "@/common/types";
+import {responseWithPaginator} from "@/common/types";
 import SearchHelpers from "@/mixins/searchHelpers";
 import {AxiosResponse} from "axios";
 import News from "@/models/News";
@@ -91,10 +85,6 @@ export default class Index extends Mixins<TableStateController, SearchHelpers>(T
       label: 'Название',
       searchable: true,
       sortable: true,
-    },
-    {
-      key: 'actions',
-      label: 'Действия'
     }
   ]
   items = [] as Array<RealtyType>
@@ -108,10 +98,6 @@ export default class Index extends Mixins<TableStateController, SearchHelpers>(T
 
           return response
         })
-  }
-
-  onDeleteTableItem(items: tableItem): void {
-    console.log(items)
   }
 }
 </script>

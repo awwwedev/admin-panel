@@ -48,21 +48,22 @@
             </b-select-option>
           </b-select>
         </b-form-group>
-        <b-form-group label="Дополнительно"
+        <b-form-group label="Оснащение"
                       label-for="equipment"
+                      v-if="equipments.length && formData.type_id"
         >
-          <b-select
+          <b-checkbox-group
               id="equipment"
-              v-model="temp.equipments"
-              multiple
           >
-            <b-select-option v-for="(equipment, idx) in equipments"
-                             :key="idx"
-                             :value="equipment.id"
+            <b-checkbox v-for="(equipment, idx) in equipments"
+                        :key="idx"
+                        :value="equipment.id"
+                        v-model="formData.equipments"
+
             >
-              {{ equipment.name }}
-            </b-select-option>
-          </b-select>
+              {{ equipment.display_name }}
+            </b-checkbox>
+          </b-checkbox-group>
         </b-form-group>
       </b-card>
       <b-card class="mb-3 shadow-sm" header="Цена">
@@ -223,6 +224,7 @@ import RealtyType from "@/models/RealtyType";
 import Realty from "@/models/Realty";
 import ConstructorHelpers from "@/mixins/constructorHelpers";
 import ConstructorActions from "@/components/widget/ConstructorActions.vue";
+import Equipment from "@/models/Equipment";
 
 @Component({
   components: {ConstructorActions, PreviewTab3, PreviewTab2, UploadedImage, yandexMap, ymapMarker, Balloon},
@@ -268,35 +270,13 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
   zoom = 19
   allowSetNameByDesc = true
   activeTab = 0
-  equipments = [
-    {
-      id: 'heating',
-      name: 'Отопление'
-    },
-    {
-      id: 'restroom',
-      name: 'Отдельный санузел'
-    },
-    {
-      id: 'energy',
-      name: 'Индивидуальный узел учёта электроэнергии'
-    },
-    {
-      id: 'access',
-      name: 'Круглосуточный доступ'
-    },
-    {
-      id: 'furniture',
-      name: 'Мебелью укомплектован'
-    }
-  ]
+  equipments = [] as Array<Equipment>
   temp = {
     center: [44.583460, 33.482296],
     previewImagePath: '',
     previewImageModel: null as File | null,
     uploadedImagesModel: [] as Array<File>,
     uploadedImages: [] as Array<File>,
-    equipments: [] as Array<string>
   }
   formData = {
     id: -1,
@@ -304,6 +284,7 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
     description: '',
     area: 0,
     price_per_metr: 0,
+    equipments: [] as Array<number>,
     price: 0,
     type_id: null as null | number,
     img_path: null as File | string | null,
@@ -317,19 +298,18 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
   get mainTabName(): string { return this.$route.meta.isCreatePage ? 'Создание' : 'Редактирование' }
   get totalPrice(): number { return (this.formData.area as number )* (this.formData.price_per_metr as number) }
   get uploadedIMageNames(): string { return this.temp.uploadedImages.map(value => value.name).join(', ') }
-  get equipmentsForAddToFormData(): { [key: string]: number } {
-    return this.equipments.reduce((acc, value) => {
-      acc[value.id as string] = 0
-
-      return acc
-    }, {} as { [key: string]: number })
-  }
   get sliderImagesToDisplay (): Array<File|string> {
     if (this.isCreatePage) {
       return this.formData.photo
     } else {
       return [...this.formData.photo, ...this.temp.uploadedImages]
     }
+  }
+
+  updateEquipments (): void {
+    Equipment.getList({ realtyTypeId: this.formData.type_id as number }).then(response => {
+      this.equipments = response.data
+    })
   }
 
   onDeleteUploadedImage(image: File | string): void {
@@ -346,16 +326,19 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
     this.formData.latitude = coords[0] as number
     this.formData.longitude = coords[1] as number
   }
-  onSubmit (redirect = true): void {
+  onSubmit (redirect = false): void {
     this.$v.$touch()
 
     if (!this.$v.$invalid) {
       if (this.isCreatePage) {
-        getModule(Notification, this.$store).setData({ title: 'Запись успешно создана', variant: 'success' })
+        Realty.create(this.formData)
+            .then((response) => {
+              getModule(Notification, this.$store).setData({ title: 'Запись успешно создана', variant: 'success' })
+              this.$router.push({ name: 'admin.realty.change', params: { id: response.data.id as unknown as string } })
+            })
       } else {
         getModule(Notification, this.$store).setData({ title: 'Запись успешно изменена', variant: 'success' })
       }
-
       if (redirect) {
         this.$router.push({ name: 'admin.realty' })
       }
@@ -377,6 +360,10 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
       }
     }
   }
+  @Watch('formData.type_id')
+  watchFormDataTypeId(): void {
+    this.updateEquipments()
+  }
   @Watch('totalPrice')
   watchTotalPrice(price: number): void {
     this.formData.price = price
@@ -396,16 +383,6 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
   @Watch('temp.previewImageModel')
   watchTempPreviewImageModel(file: File): void {
     this.formData.img_path = file
-  }
-  @Watch('temp.equipments')
-  watchSelectedEquipments(equipments: Array<string>): void {
-    const equipmentsSelected = equipments.reduce((acc, value) => {
-      acc[value] = 1
-
-      return acc
-    }, {} as { [key: string]: number })
-
-    this.formData = {...this.formData, ...this.equipmentsForAddToFormData, ...equipmentsSelected}
   }
   @Watch('temp.previewImagePath')
   @Watch('formData', { immediate: true, deep: true })
@@ -435,25 +412,20 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
 
   created (): void {
     RealtyType.getList().then(response => {
-      this.types = [ new RealtyType({ name: '--- Выберите тип ---', id: '' }) , ...response.data ]
+      this.types = response.data
     })
+    this.updateEquipments()
 
     if (!this.isCreatePage) {
       Realty.get(({ id: Number(this.$route.params.id) }))
           .then(response => {
             const realty = response.data
+
             this.temp.center = [realty.latitude as number, realty.longitude as number]
             this.temp.previewImagePath = process.env.VUE_APP_URL + realty.img_path as string
-            this.formData = {...this.formData, ...realty}
+            this.formData = {...this.formData, ...realty, equipments: realty.equipments?.map(value => value.id) as Array<number>}
             this.formData.img_path = process.env.VUE_APP_URL + realty.img_path as string
             this.formData.photo = (realty.photo as Array<string>).map(img => process.env.VUE_APP_URL + img)
-
-            this.equipments.forEach(value => {
-              // @ts-ignore
-              if (this.formData[value.id] === 1) {
-                this.temp.equipments.push(value.id)
-              }
-            })
           })
     }
 
