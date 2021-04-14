@@ -2,7 +2,7 @@
   <div class="mx-auto flex-column justify-content-between"
        :class="{ 'd-flex':!image, 'd-inline-flex':image }"
   >
-    <b-img :src="imagePath"
+    <b-img :src="basePath + imagePath"
            thumbnail
            fluid
            :blank="!imagePath"
@@ -23,7 +23,11 @@ import {Component, Vue, Prop, Watch, Emit} from "vue-property-decorator";
 
 type uploadedImage =  File | null | string
 
-@Component({})
+@Component({
+  data: () => ({
+    basePath: process.env.VUE_APP_URL
+  })
+})
 export default class UploadedImage extends Vue {
   imagePath = ''
 

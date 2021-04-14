@@ -62,6 +62,9 @@ export default class Realty extends BaseModel {
     static create (params: { [key: string]: any }): Promise<AxiosResponse<Realty>> {
         return http.post<Realty>('realty', Realty.prepareFormData(params))
     }
+    static update (params: { [key: string]: any }): Promise<AxiosResponse<Realty>> {
+        return http.post<Realty>('realty/' + params.id, Realty.prepareFormData({...params, "_method": "PUT"}))
+    }
     static destroy (data: { [key: string]: any }): Promise<AxiosResponse> {
         return http.delete('realty', { params: { id: data } })
     }

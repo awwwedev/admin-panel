@@ -123,12 +123,12 @@
           />
         </div>
         <b-form-group label-for="img_path"
-                      :invalid-feedback="getValidationMessage($v.formData.photo)"
+                      :invalid-feedback="getValidationMessage($v.formData.photo.$invalid ? $v.formData.photo : $v.formData.newPhoto)"
         >
           <b-file v-model="temp.uploadedImagesModel"
                   browse-text="Обзор..."
                   multiple
-                  :state="getFieldState($v.formData.photo)"
+                  :state="getFieldState($v.formData.photo.$invalid ? $v.formData.photo : $v.formData.newPhoto)"
         >
           <template #placeholder>
             Нет файлов
@@ -212,7 +212,7 @@ import {yandexMap, ymapMarker} from "vue-yandex-maps";
 import {Component, Mixins, Watch} from "vue-property-decorator";
 import {Validation, validationMixin} from "vuelidate";
 import ValidationMixin from "@/mixins/validation";
-import {required, minValue} from "vuelidate/lib/validators";
+import {required, minValue, requiredIf} from "vuelidate/lib/validators";
 import UploadedImage from "@/components/UploadedImage.vue";
 import bus from "@/common/bus";
 import Balloon from "@/components/RealtyCard2.vue";
@@ -228,37 +228,48 @@ import Equipment from "@/models/Equipment";
 
 @Component({
   components: {ConstructorActions, PreviewTab3, PreviewTab2, UploadedImage, yandexMap, ymapMarker, Balloon},
-  validations: {
-    formData: {
-      name: {
-        required
-      },
-      description: {
-        required
-      },
-      area: {
-        required,
-        minValue: minValue(1)
-      },
-      price_per_metr: {
-        required,
-        minValue: minValue(1)
-      },
-      type_id: {
-        required
-      },
-      longitude: {
-        required
-      },
-      latitude: {
-        required
-      },
-      img_path: {
-        required
-      },
-      photo: {
-        required
-      },
+  validations () {
+    return {
+      formData: {
+        name: {
+          required
+        },
+        description: {
+          required
+        },
+        area: {
+          required,
+          minValue: minValue(1)
+        },
+        price_per_metr: {
+          required,
+          minValue: minValue(1)
+        },
+        type_id: {
+          required
+        },
+        longitude: {
+          required
+        },
+        latitude: {
+          required
+        },
+        img_path: {
+          required
+        },
+        photo: {
+          requiredIf: requiredIf (() => {
+            // @ts-ignore
+            return !this.formData.newPhoto.length
+          })
+        },
+        newPhoto: {
+          requiredIf: requiredIf (() => {
+            // @ts-ignore
+            return !this.formData.photo.length
+          })
+        },
+      }
     }
   },
   data: () => ({
@@ -277,6 +288,8 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
     previewImageModel: null as File | null,
     uploadedImagesModel: [] as Array<File>,
     uploadedImages: [] as Array<File>,
+    equipments: [] as Array<Equipment>,
+    type_id: 0
   }
   formData = {
     id: -1,
@@ -309,6 +322,11 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
   updateEquipments (): void {
     Equipment.getList({ realtyTypeId: this.formData.type_id as number }).then(response => {
       this.equipments = response.data
+      if (this.formData.type_id === this.temp.type_id) {
+        this.$nextTick(() => {
+          this.formData.equipments = this.temp.equipments.map(equip => equip.id as number)
+        })
+      }
     })
   }
 
@@ -337,7 +355,11 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
               this.$router.push({ name: 'admin.realty.change', params: { id: response.data.id as unknown as string } })
             })
       } else {
-        getModule(Notification, this.$store).setData({ title: 'Запись успешно изменена', variant: 'success' })
+        Realty.update(this.formData)
+            .then((response) => {
+              this.initFormData(response.data)
+              getModule(Notification, this.$store).setData({ title: 'Запись успешно изменена', variant: 'success' })
+            })
       }
       if (redirect) {
         this.$router.push({ name: 'admin.realty' })
@@ -345,6 +367,16 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
     } else {
       getModule(Notification, this.$store).setData({ title: 'Ошибка валидации!', text: 'Проверте корректность и запоолненость полей', variant: 'danger' })
     }
+  }
+
+  initFormData (realty: Realty): void {
+    this.temp = { type_id: realty.type_id as number, equipments: realty.equipments as Array<Equipment>, center: [realty.latitude as number, realty.longitude as number], uploadedImages: [], uploadedImagesModel: [], previewImagePath: realty.img_path as string, previewImageModel: null}
+    this.$nextTick(() => {
+      this.formData = {...this.formData, ...realty, equipments: realty.equipments?.map(value => value.id) as Array<number>}
+      this.formData.newPhoto = []
+      this.formData.img_path = realty.img_path as string
+      this.formData.photo = realty.photo as Array<string>
+    })
   }
 
   @Watch('formData.description')
@@ -419,13 +451,7 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
     if (!this.isCreatePage) {
       Realty.get(({ id: Number(this.$route.params.id) }))
           .then(response => {
-            const realty = response.data
-
-            this.temp.center = [realty.latitude as number, realty.longitude as number]
-            this.temp.previewImagePath = process.env.VUE_APP_URL + realty.img_path as string
-            this.formData = {...this.formData, ...realty, equipments: realty.equipments?.map(value => value.id) as Array<number>}
-            this.formData.img_path = process.env.VUE_APP_URL + realty.img_path as string
-            this.formData.photo = (realty.photo as Array<string>).map(img => process.env.VUE_APP_URL + img)
+            this.initFormData(response.data)
           })
     }
 
