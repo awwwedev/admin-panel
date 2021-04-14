@@ -6,7 +6,7 @@
       <div class="d-flex">
         <b-button variant="primary" class="mr-2" :to="{ name: 'admin.realtyType.create' }">Создать</b-button>
         <b-button variant="info" class="mr-3" @click="onSelectAll">{{ selectionBtnText }}</b-button>
-        <b-button variant="danger" class="my-2 my-sm-0" :disabled="selectedAllRows">Удалить выбранное</b-button>
+        <b-button variant="danger" class="my-2 my-sm-0" :disabled="selectedAllRows" @click="onDelete">Удалить выбранное</b-button>
       </div>
     </b-card>
     <b-card class="shadow-sm">
@@ -61,6 +61,8 @@ import TableStateController from "@/mixins/tableStateController";
 import RealtyType from "@/models/RealtyType";
 import SearchHelpers from "@/mixins/searchHelpers";
 import {AxiosResponse} from "axios";
+import {getModule} from "vuex-module-decorators";
+import Notification from "@/store/modules/notification";
 
 
 @Component({
@@ -88,6 +90,13 @@ export default class IndexRealtyType extends Mixins<TableStateController, Search
   items = [] as Array<RealtyType>
 
   get selectionBtnText (): string { return this.selectedAllRows ? 'Снять выделение' : 'Выбрать все' }
+
+  onDelete (): void {
+    RealtyType.destroy(this.selected.map(value => value.id as number)).then(() => {
+      getModule(Notification, this.$store).setData({ title: 'Удаление прошло успешно', variant: 'success' })
+      this.updateTableData();
+    })
+  }
 
   updateTableData(): Promise<AxiosResponse<Array<RealtyType>>> {
     return RealtyType.getList(this.tableOptionsCleared)

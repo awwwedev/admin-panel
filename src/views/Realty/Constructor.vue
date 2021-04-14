@@ -195,7 +195,7 @@
           </b-form-group>
         </div>
       </b-card>
-      <ConstructorActions :cancel-to="{ name: 'admin.realtyType' }" :is-create-page="isCreatePage" @submit="onSubmit"/>
+      <ConstructorActions :cancel-to="{ name: 'admin.realty' }" :is-create-page="isCreatePage" @submit="onSubmit"/>
     </b-form>
     <PreviewTab2 v-if="activeTab === 1"
                  :form-data="formDataForPreview"

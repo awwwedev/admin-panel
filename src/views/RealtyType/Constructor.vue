@@ -13,25 +13,48 @@
           />
         </b-form-group>
       </b-card>
+      <b-card class="mb-3 shadow-sm" header="Основное изображение">
+        <UploadedImage :image="formData.img_path" @imageInitialized="temp.previewImagePath = $event"/>
+        <b-form-group label-for="img_path"
+                      :invalid-feedback="getValidationMessage($v.formData.img_path)"
+        >
+          <b-file browse-text="Обзор..."
+                  id="img_path"
+                  v-model="temp.previewImageModel"
+                  :state="getFieldState($v.formData.img_path)"
+          >
+            <template #placeholder>
+              Нет файлов
+            </template>
+          </b-file>
+        </b-form-group>
+      </b-card>
     </b-form>
     <ConstructorActions :cancel-to="{ name: 'admin.realtyType' }" :is-create-page="isCreatePage" @submit="onSubmit"/>
   </div>
 </template>
 
 <script lang="ts">
-import {Component, Mixins} from "vue-property-decorator";
+import {Component, Mixins, Watch} from "vue-property-decorator";
 import ConstructorHelpers from "@/mixins/constructorHelpers";
 import {Validation, validationMixin} from "vuelidate";
 import ValidationMixin from "@/mixins/validation";
 import {required} from "vuelidate/lib/validators";
 import ConstructorActions from "@/components/widget/ConstructorActions.vue";
+import RealtyType from "@/models/RealtyType";
+import {getModule} from "vuex-module-decorators";
+import Notification from "@/store/modules/notification";
+import UploadedImage from "@/components/UploadedImage.vue";
 
 
 @Component({
-  components: {ConstructorActions},
+  components: {UploadedImage, ConstructorActions},
   validations: {
     formData: {
       name: {
+        required
+      },
+      img_path: {
         required
       }
     }
@@ -42,14 +65,61 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
 
   formData = {
     id: null as null | number,
-    name: ''
+    name: '',
+    img_path: null as null | string | File
+  }
+  temp = {
+    previewImagePath: null as string | null,
+    previewImageModel: null as File | null
   }
 
-  onSubmit (): void {
+  onSubmit(redirect = false): void {
     this.$v.$touch()
 
     if (!this.$v.$invalid) {
-      console.log(123)
+      if (this.isCreatePage) {
+        RealtyType.create(this.formData)
+            .then((response) => {
+              getModule(Notification, this.$store).setData({title: 'Запись успешно создана', variant: 'success'})
+              this.$router.push({name: 'admin.realtyType.change', params: {id: response.data.id as unknown as string}})
+            })
+      } else {
+        RealtyType.update(this.formData)
+            .then((response) => {
+              getModule(Notification, this.$store).setData({title: 'Запись успешно изменена', variant: 'success'})
+              this.updateFormData(response.data)
+            })
+      }
+
+      if (redirect) {
+        this.$router.push({name: 'admin.realty'})
+      }
+
+    } else {
+      getModule(Notification, this.$store).setData({
+        title: 'Ошибка валидации!',
+        text: 'Проверте корректность и запоолненость полей',
+        variant: 'danger'
+      })
+    }
+  }
+
+  @Watch('temp.previewImageModel')
+  watchTempPreviewImageModel(file: File): void {
+    if (!file) return
+
+    this.formData.img_path = file
+  }
+
+  updateFormData (type: RealtyType): void {
+    this.temp = { previewImageModel: null, previewImagePath: type.img_path as string }
+    this.formData = { name: type.name as string, id: type.id as number, img_path: type.img_path as string }
+  }
+
+  created(): void {
+    if (!this.isCreatePage) {
+      RealtyType.get({id: this.$route.params.id as unknown as number})
+          .then(response => this.updateFormData(response.data))
     }
   }
 }
