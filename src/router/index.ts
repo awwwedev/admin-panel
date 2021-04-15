@@ -80,6 +80,27 @@ const routes: Array<RouteConfig> = [
           isCreatePage: false
         },
         component: () => import('@/views/News/Constructor.vue')
+      },
+      {
+        name: 'admin.equipment',
+        path: 'equipment',
+        component: () => import('@/views/Equipment/Index.vue')
+      },
+      {
+        name: 'admin.equipment.create',
+        path: 'equipment/create',
+        meta: {
+          isCreatePage: true
+        },
+        component: () => import('@/views/Equipment/Constructor.vue')
+      },
+      {
+        name: 'admin.equipment.change',
+        path: 'equipment/:id/change',
+        meta: {
+          isCreatePage: false
+        },
+        component: () => import('@/views/Equipment/Constructor.vue')
       }
     ]
   }

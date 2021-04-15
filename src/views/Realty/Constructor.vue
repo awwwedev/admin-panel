@@ -61,7 +61,7 @@
                         v-model="formData.equipments"
 
             >
-              {{ equipment.display_name }}
+              {{ equipment.name }}
             </b-checkbox>
           </b-checkbox-group>
         </b-form-group>

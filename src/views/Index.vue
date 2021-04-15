@@ -51,6 +51,10 @@ export default class Index extends Vue {
     {
       routeName: 'admin.news',
       label: 'Новости'
+    },
+    {
+      routeName: 'admin.equipment',
+      label: 'Комплектация недвижимости'
     }
   ]
 }
