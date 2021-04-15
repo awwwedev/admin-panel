@@ -59,6 +59,10 @@ export default class Index extends Vue {
     {
       routeName: 'admin.slide',
       label: 'Слайды для слайдера'
+    },
+    {
+      routeName: 'admin.contact',
+      label: 'Контакты'
     }
   ]
 }

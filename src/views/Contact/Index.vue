@@ -1,10 +1,10 @@
 <template>
   <div class="section">
-    <h1 class="mb-5">Комплектация</h1>
+    <h1 class="mb-5">Категория недвижимости</h1>
 
     <b-card class="mb-4 shadow-sm">
       <div class="d-flex">
-        <b-button variant="primary" class="mr-2" :to="{ name: 'admin.equipment.create' }">Создать</b-button>
+        <b-button variant="primary" class="mr-2" :to="{ name: 'admin.contact.create' }">Создать</b-button>
         <b-button variant="info" class="mr-3" @click="onSelectAll">{{ selectionBtnText }}</b-button>
         <b-button variant="danger" class="my-2 my-sm-0" :disabled="!selected.length" @click="onDelete">Удалить выбранное</b-button>
       </div>
@@ -47,8 +47,17 @@
             <span>&nbsp;</span>
           </template>
         </template>
+        <template #cell(value)="{ item }">
+          <b-link :to="{ name: 'admin.contact.change', params: { id: item.id } }" v-html="tableOptions.searchValue ? getValueWithSearchPart(item.value, tableOptions.searchValue) : item.value "></b-link>
+        </template>
+        <template #cell(is_rent_department)="{ item }">
+          {{ item.is_rent_department ? 'Да' : 'Нет' }}
+        </template>
+        <template #cell(type)="{ item }">
+          {{ item.type ==='email' ? 'Почта' : 'Телефон' }}
+        </template>
         <template #cell(header)="{ item }">
-          <b-link :to="{ name: 'admin.equipment.change', params: { id: item.id } }" v-html="tableOptions.searchValue ? getValueWithSearchPart(item.name, tableOptions.searchValue) : item.header "></b-link>
+          {{ item.header }}
         </template>
       </b-table>
     </b-card>
@@ -58,18 +67,18 @@
 <script lang="ts">
 import {Component, Mixins} from "vue-property-decorator";
 import TableStateController from "@/mixins/tableStateController";
-import RealtyType from "@/models/RealtyType";
 import SearchHelpers from "@/mixins/searchHelpers";
 import {AxiosResponse} from "axios";
 import {getModule} from "vuex-module-decorators";
 import Notification from "@/store/modules/notification";
-import Equipment from "@/models/Equipment";
+import Slide from "@/models/Slide";
+import Contact from "@/models/Contact";
 
 
 @Component({
 
 })
-export default class IndexRealtyType extends Mixins<TableStateController, SearchHelpers>(TableStateController, SearchHelpers) {
+export default class Index extends Mixins<TableStateController, SearchHelpers>(TableStateController, SearchHelpers) {
   fields = [
     {
       key: 'selected',
@@ -82,31 +91,43 @@ export default class IndexRealtyType extends Mixins<TableStateController, Search
       searchable: true
     },
     {
-      key: 'realtyTypeName',
-      label: 'Тип',
+      key: 'header',
+      label: 'Название',
+      searchable: true,
       sortable: true,
-      searchable: true
     },
     {
-      key: 'name',
-      label: 'Название',
+      key: 'type',
+      label: 'Тип',
+      searchable: true,
+      sortable: true,
+    },
+    {
+      key: 'is_rent_department',
+      label: 'Контак филиала',
+      searchable: true,
+      sortable: true,
+    },
+    {
+      key: 'value',
+      label: 'Значение',
       searchable: true,
       sortable: true,
     }
   ]
-  items = [] as Array<Equipment>
+  items = [] as Array<Contact>
 
   get selectionBtnText (): string { return this.selectedAllRows ? 'Снять выделение' : 'Выбрать все' }
 
   onDelete (): void {
-    Equipment.destroy(this.selected.map(value => value.id as number)).then(() => {
+    Contact.destroy(this.selected.map(value => value.id as number)).then(() => {
       getModule(Notification, this.$store).setData({ title: 'Удаление прошло успешно', variant: 'success' })
       this.updateTableData();
     })
   }
 
-  updateTableData(): Promise<AxiosResponse<Array<Equipment>>> {
-    return Equipment.getList(this.tableOptionsCleared)
+  updateTableData(): Promise<AxiosResponse<Array<Slide>>> {
+    return Contact.getList(this.tableOptionsCleared)
         .then(response => {
           this.items = response.data
 

@@ -122,6 +122,27 @@ const routes: Array<RouteConfig> = [
           isCreatePage: false
         },
         component: () => import('@/views/Slide/Constructor.vue')
+      },
+      {
+        name: 'admin.contact',
+        path: 'contact',
+        component: () => import('@/views/Contact/Index.vue')
+      },
+      {
+        name: 'admin.contact.create',
+        path: 'contact/create',
+        meta: {
+          isCreatePage: true
+        },
+        component: () => import('@/views/Contact/Constructor.vue')
+      },
+      {
+        name: 'admin.contact.change',
+        path: 'contact/:id/change',
+        meta: {
+          isCreatePage: false
+        },
+        component: () => import('@/views/Contact/Constructor.vue')
       }
     ]
   }

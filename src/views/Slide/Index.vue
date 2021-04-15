@@ -6,7 +6,7 @@
       <div class="d-flex">
         <b-button variant="primary" class="mr-2" :to="{ name: 'admin.slide.create' }">Создать</b-button>
         <b-button variant="info" class="mr-3" @click="onSelectAll">{{ selectionBtnText }}</b-button>
-        <b-button variant="danger" class="my-2 my-sm-0" :disabled="!selectedAllRows" @click="onDelete">Удалить выбранное</b-button>
+        <b-button variant="danger" class="my-2 my-sm-0" :disabled="!selected.length" @click="onDelete">Удалить выбранное</b-button>
       </div>
     </b-card>
     <b-card class="shadow-sm">
@@ -101,7 +101,6 @@ export default class Index extends Mixins<TableStateController, SearchHelpers>(T
   updateTableData(): Promise<AxiosResponse<Array<Slide>>> {
     return Slide.getList(this.tableOptionsCleared)
         .then(response => {
-          console.log()
           this.items = response.data
 
           return response

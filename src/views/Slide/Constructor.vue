@@ -119,10 +119,7 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
     if (!this.isCreatePage) {
       Slide.get(({ id: Number(this.$route.params.id) }))
           .then(response => {
-            const news = response.data
-            this.formData = {...this.formData, ...news}
-            this.temp.previewImagePath = news.image as string
-            this.formData.image = news.image as string
+            this.updateFormData(response.data)
           })
     }
   }

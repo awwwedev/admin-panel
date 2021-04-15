@@ -1,9 +1,9 @@
 export default class BaseModel {
     // eslint-disable-next-line
-    static prepareFormData (data: any): FormData {
+    static prepareFormData (data: any, filter=false): FormData {
         const formData = new FormData;
 
-        Object.keys(data).forEach(key => {
+        Object.keys(filter ? this.filterData(data) : data).forEach(key => {
             const currentDataItem = data[key]
 
             if (Array.isArray(currentDataItem)) {
@@ -16,5 +16,16 @@ export default class BaseModel {
         })
 
         return formData
+    }
+
+    // eslint-disable-next-line
+    static filterData (data: any): Object {
+        return Object.keys(data).reduce((acc, key) => {
+            const currentDataItem = data[key];
+            if (currentDataItem === null || currentDataItem === undefined)
+                return acc;
+
+            return {...acc, [key]: currentDataItem};
+        }, {});
     }
 }
