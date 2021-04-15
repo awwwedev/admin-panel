@@ -37,7 +37,7 @@
 </template>
 
 <script lang="ts">
-import {Component, Mixins, Watch} from "vue-property-decorator";
+import {Component, Mixins} from "vue-property-decorator";
 import ConstructorHelpers from "@/mixins/constructorHelpers";
 import {Validation, validationMixin} from "vuelidate";
 import ValidationMixin from "@/mixins/validation";
