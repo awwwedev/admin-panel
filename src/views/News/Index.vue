@@ -6,7 +6,7 @@
       <div class="d-flex">
         <b-button variant="primary" class="mr-2" :to="{ name: 'admin.news.create' }">Создать</b-button>
         <b-button variant="info" class="mr-3" @click="onSelectAll">{{ selectionBtnText }}</b-button>
-        <b-button variant="danger" class="my-2 my-sm-0" :disabled="selectedAllRows" @click="onDelete">Удалить выбранное</b-button>
+        <b-button variant="danger" class="my-2 my-sm-0" :disabled="!selectedAllRows" @click="onDelete">Удалить выбранное</b-button>
       </div>
     </b-card>
     <b-card class="shadow-sm">
@@ -58,7 +58,6 @@
 <script lang="ts">
 import {Component, Mixins} from "vue-property-decorator";
 import TableStateController from "@/mixins/tableStateController";
-import RealtyType from "@/models/RealtyType";
 import {responseWithPaginator} from "@/common/types";
 import SearchHelpers from "@/mixins/searchHelpers";
 import {AxiosResponse} from "axios";
@@ -89,7 +88,7 @@ export default class Index extends Mixins<TableStateController, SearchHelpers>(T
       sortable: true,
     }
   ]
-  items = [] as Array<RealtyType>
+  items = [] as Array<News>
 
   get selectionBtnText (): string { return this.selectedAllRows ? 'Снять выделение' : 'Выбрать все' }
 

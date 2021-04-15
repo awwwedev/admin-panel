@@ -1,10 +1,10 @@
 <template>
   <div class="section">
-    <h1 class="mb-5">Комплектация</h1>
+    <h1 class="mb-5">Категория недвижимости</h1>
 
     <b-card class="mb-4 shadow-sm">
       <div class="d-flex">
-        <b-button variant="primary" class="mr-2" :to="{ name: 'admin.equipment.create' }">Создать</b-button>
+        <b-button variant="primary" class="mr-2" :to="{ name: 'admin.slide.create' }">Создать</b-button>
         <b-button variant="info" class="mr-3" @click="onSelectAll">{{ selectionBtnText }}</b-button>
         <b-button variant="danger" class="my-2 my-sm-0" :disabled="!selectedAllRows" @click="onDelete">Удалить выбранное</b-button>
       </div>
@@ -48,7 +48,7 @@
           </template>
         </template>
         <template #cell(header)="{ item }">
-          <b-link :to="{ name: 'admin.equipment.change', params: { id: item.id } }" v-html="tableOptions.searchValue ? getValueWithSearchPart(item.name, tableOptions.searchValue) : item.header "></b-link>
+          <b-link :to="{ name: 'admin.slide.change', params: { id: item.id } }" v-html="tableOptions.searchValue ? getValueWithSearchPart(item.header, tableOptions.searchValue) : item.header "></b-link>
         </template>
       </b-table>
     </b-card>
@@ -58,18 +58,17 @@
 <script lang="ts">
 import {Component, Mixins} from "vue-property-decorator";
 import TableStateController from "@/mixins/tableStateController";
-import RealtyType from "@/models/RealtyType";
 import SearchHelpers from "@/mixins/searchHelpers";
 import {AxiosResponse} from "axios";
 import {getModule} from "vuex-module-decorators";
 import Notification from "@/store/modules/notification";
-import Equipment from "@/models/Equipment";
+import Slide from "@/models/Slide";
 
 
 @Component({
 
 })
-export default class IndexRealtyType extends Mixins<TableStateController, SearchHelpers>(TableStateController, SearchHelpers) {
+export default class Index extends Mixins<TableStateController, SearchHelpers>(TableStateController, SearchHelpers) {
   fields = [
     {
       key: 'selected',
@@ -82,32 +81,27 @@ export default class IndexRealtyType extends Mixins<TableStateController, Search
       searchable: true
     },
     {
-      key: 'realtyTypeName',
-      label: 'Тип',
-      sortable: true,
-      searchable: true
-    },
-    {
-      key: 'name',
+      key: 'header',
       label: 'Название',
       searchable: true,
       sortable: true,
     }
   ]
-  items = [] as Array<Equipment>
+  items = [] as Array<Slide>
 
   get selectionBtnText (): string { return this.selectedAllRows ? 'Снять выделение' : 'Выбрать все' }
 
   onDelete (): void {
-    Equipment.destroy(this.selected.map(value => value.id as number)).then(() => {
+    Slide.destroy(this.selected.map(value => value.id as number)).then(() => {
       getModule(Notification, this.$store).setData({ title: 'Удаление прошло успешно', variant: 'success' })
       this.updateTableData();
     })
   }
 
-  updateTableData(): Promise<AxiosResponse<Array<Equipment>>> {
-    return Equipment.getList(this.tableOptionsCleared)
+  updateTableData(): Promise<AxiosResponse<Array<Slide>>> {
+    return Slide.getList(this.tableOptionsCleared)
         .then(response => {
+          console.log()
           this.items = response.data
 
           return response

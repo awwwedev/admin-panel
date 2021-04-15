@@ -101,6 +101,27 @@ const routes: Array<RouteConfig> = [
           isCreatePage: false
         },
         component: () => import('@/views/Equipment/Constructor.vue')
+      },
+      {
+        name: 'admin.slide',
+        path: 'slide',
+        component: () => import('@/views/Slide/Index.vue')
+      },
+      {
+        name: 'admin.slide.create',
+        path: 'slide/create',
+        meta: {
+          isCreatePage: true
+        },
+        component: () => import('@/views/Slide/Constructor.vue')
+      },
+      {
+        name: 'admin.slide.change',
+        path: 'slide/:id/change',
+        meta: {
+          isCreatePage: false
+        },
+        component: () => import('@/views/Slide/Constructor.vue')
       }
     ]
   }

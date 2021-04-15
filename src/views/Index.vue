@@ -46,15 +46,19 @@ export default class Index extends Vue {
     },
     {
       routeName: 'admin.realtyType',
-      label: 'Катгории недвижимости'
+      label: 'Категории недвижимости'
+    },
+    {
+      routeName: 'admin.equipment',
+      label: 'Комплектация недвижимости'
     },
     {
       routeName: 'admin.news',
       label: 'Новости'
     },
     {
-      routeName: 'admin.equipment',
-      label: 'Комплектация недвижимости'
+      routeName: 'admin.slide',
+      label: 'Слайды для слайдера'
     }
   ]
 }
