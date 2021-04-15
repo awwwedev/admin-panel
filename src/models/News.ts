@@ -31,6 +31,16 @@ class News extends BaseModel{
         }
     }
 
+    static create (params: { [key: string]: any }): Promise<AxiosResponse<News>> {
+        return http.post<News>('news', News.prepareFormData(params))
+    }
+    static update (params: { [key: string]: any }): Promise<AxiosResponse<News>> {
+        return http.post<News>('news/' + params.id, News.prepareFormData({...params, "_method": "PUT"}))
+    }
+    static destroy (data: { [key: string]: any }): Promise<AxiosResponse> {
+        return http.delete('news', { params: { id: data } })
+    }
+
 }
 
 export default News

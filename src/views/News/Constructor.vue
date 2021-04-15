@@ -56,6 +56,8 @@ import {required} from "vuelidate/lib/validators";
 import ConstructorActions from "@/components/widget/ConstructorActions.vue";
 import UploadedImage from "@/components/UploadedImage.vue";
 import News from "@/models/News";
+import {getModule} from "vuex-module-decorators";
+import Notification from "@/store/modules/notification";
 
 
 @Component({
@@ -91,8 +93,26 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
     this.$v.$touch()
 
     if (!this.$v.$invalid) {
-      console.log(123)
+      if (this.isCreatePage) {
+        News.create(this.formData)
+            .then((response) => {
+              getModule(Notification, this.$store).setData({title: 'Запись успешно создана', variant: 'success'})
+              this.$router.push({name: 'admin.news.change', params: {id: response.data.id as unknown as string}})
+            })
+      } else {
+        News.update(this.formData)
+            .then((response) => {
+              getModule(Notification, this.$store).setData({title: 'Запись успешно изменена', variant: 'success'})
+              this.updateFormData(response.data)
+            })
+      }
+
     }
+  }
+
+  updateFormData(news: News): void {
+    this.temp = { previewImageModel: null, previewImagePath: news.photo as string }
+    this.formData = { content: news.content as string, header: news.header as string, id: news.id as number, photo: news.photo as string }
   }
 
   created (): void {
@@ -101,15 +121,16 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
           .then(response => {
             const news = response.data
             this.formData = {...this.formData, ...news}
-            this.temp.previewImagePath = process.env.VUE_APP_URL + news.photo as string
-            this.formData.photo = process.env.VUE_APP_URL + news.photo as string
-
+            this.temp.previewImagePath = news.photo as string
+            this.formData.photo = news.photo as string
           })
     }
   }
 
   @Watch('temp.previewImageModel')
   watchTempPreviewImageModel(file: File): void {
+    if (!file) return
+
     this.formData.photo = file
   }
 }
