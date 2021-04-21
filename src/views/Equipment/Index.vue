@@ -47,8 +47,8 @@
             <span>&nbsp;</span>
           </template>
         </template>
-        <template #cell(header)="{ item }">
-          <b-link :to="{ name: 'admin.equipment.change', params: { id: item.id } }" v-html="tableOptions.searchValue ? getValueWithSearchPart(item.name, tableOptions.searchValue) : item.header "></b-link>
+        <template #cell(name)="{ item }">
+          <b-link :to="{ name: 'admin.equipment.change', params: { id: item.id } }" v-html="tableOptions.searchValue ? getValueWithSearchPart(item.name, tableOptions.searchValue) : item.name "></b-link>
         </template>
       </b-table>
     </b-card>

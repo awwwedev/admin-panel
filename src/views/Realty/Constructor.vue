@@ -7,6 +7,7 @@
       <b-nav-item :active="activeTab === 2" @click="activeTab = 2">Предпросмотр страницы</b-nav-item>
     </b-nav>
     <b-form v-if="activeTab === 0" @submit.prevent="onSubmit">
+      <Dates :form-data="formData"/>
       <b-card class="mb-3 shadow-sm" header="Описание">
         <b-form-group label="Название"
                       label-for="name"
@@ -222,9 +223,12 @@ import Realty from "@/models/Realty";
 import ConstructorHelpers from "@/mixins/constructorHelpers";
 import ConstructorActions from "@/components/widget/ConstructorActions.vue";
 import Equipment from "@/models/Equipment";
+import Dates from "@/components/constructor/Dates.vue";
 
 @Component({
-  components: {ConstructorActions, PreviewTab3, PreviewTab2, UploadedImage, yandexMap, ymapMarker, Balloon, VueEditor},
+  components: {
+    Dates,
+    ConstructorActions, PreviewTab3, PreviewTab2, UploadedImage, yandexMap, ymapMarker, Balloon, VueEditor},
   validations () {
     return {
       formData: {

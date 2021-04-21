@@ -2,6 +2,7 @@
   <div class="section">
     <h1 class="mb-5">{{ pageName }}</h1>
     <b-form>
+      <Dates :form-data="formData"/>
       <b-card class="mb-3 shadow-sm" header="Основное">
         <b-form-group label="Название"
                       label-for="name"
@@ -45,10 +46,11 @@ import RealtyType from "@/models/RealtyType";
 import {getModule} from "vuex-module-decorators";
 import Notification from "@/store/modules/notification";
 import UploadedImage from "@/components/UploadedImage.vue";
+import Dates from "@/components/constructor/Dates.vue";
 
 
 @Component({
-  components: {UploadedImage, ConstructorActions},
+  components: {Dates, UploadedImage, ConstructorActions},
   validations: {
     formData: {
       name: {
