@@ -467,9 +467,9 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
       photo,
       realtyTypeName: realtyTypeName ? realtyTypeName.name : '',
       equipments: this.equipments.reduce((acc, equip) => {
-        if (this.formData.equipments.includes(equip.id)) return [...acc, equip]
+        if (this.formData.equipments.includes(equip.id as number)) return [...acc, equip]
         else return acc
-      }, [])
+      }, [] as Array<Equipment>)
     }
   }
 

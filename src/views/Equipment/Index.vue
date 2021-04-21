@@ -58,7 +58,6 @@
 <script lang="ts">
 import {Component, Mixins} from "vue-property-decorator";
 import TableStateController from "@/mixins/tableStateController";
-import RealtyType from "@/models/RealtyType";
 import SearchHelpers from "@/mixins/searchHelpers";
 import {AxiosResponse} from "axios";
 import {getModule} from "vuex-module-decorators";
