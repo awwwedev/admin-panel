@@ -22,13 +22,8 @@
                       label-for="description"
                       :invalid-feedback="getValidationMessage($v.formData.description)"
         >
-          <b-form-textarea
-              id="textarea"
-              v-model.trim="formData.description"
-              rows="3"
-              max-rows="10"
-              :state="getFieldState($v.formData.description)"
-          ></b-form-textarea>
+          <vue-editor class="text-editor" id="description" v-model.trim="formData.description"
+                      :editor-toolbar="customToolbar" :class="{ 'is-invalid': $v.formData.description.$error }"/>
         </b-form-group>
         <b-form-group label="Тип"
                       label-for="type"
@@ -209,6 +204,8 @@
 <script lang="ts">
 // @ts-ignore
 import {yandexMap, ymapMarker} from "vue-yandex-maps";
+// @ts-ignore
+import {VueEditor} from 'vue2-editor'
 import {Component, Mixins, Watch} from "vue-property-decorator";
 import {Validation, validationMixin} from "vuelidate";
 import ValidationMixin from "@/mixins/validation";
@@ -227,7 +224,7 @@ import ConstructorActions from "@/components/widget/ConstructorActions.vue";
 import Equipment from "@/models/Equipment";
 
 @Component({
-  components: {ConstructorActions, PreviewTab3, PreviewTab2, UploadedImage, yandexMap, ymapMarker, Balloon},
+  components: {ConstructorActions, PreviewTab3, PreviewTab2, UploadedImage, yandexMap, ymapMarker, Balloon, VueEditor},
   validations () {
     return {
       formData: {
@@ -273,7 +270,37 @@ import Equipment from "@/models/Equipment";
     }
   },
   data: () => ({
-    bus
+    bus,
+    customToolbar: [[{
+      header: [false, 2, 3, 4, 5, 6]
+    }], ["bold", "italic", "underline", "strike"], // toggled buttons
+      [{
+        align: ""
+      }, {
+        align: "center"
+      }, {
+        align: "right"
+      }, {
+        align: "justify"
+      }], ["blockquote", "code-block"], [{
+        list: "ordered"
+      }, {
+        list: "bullet"
+      }, {
+        list: "check"
+      }], [{
+        indent: "-1"
+      }, {
+        indent: "+1"
+      }],
+      [{
+        color: []
+      }, {
+        background: []
+      }],
+      ["link"], ["clean"]
+    ]
+
   })
 })
 export default class Constructor extends Mixins<Validation, ValidationMixin, ConstructorHelpers>(validationMixin, ValidationMixin, ConstructorHelpers) {
@@ -438,7 +465,11 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
       ...this.formData,
       img_path: this.temp.previewImagePath,
       photo,
-      realtyTypeName: realtyTypeName ? realtyTypeName.name : ''
+      realtyTypeName: realtyTypeName ? realtyTypeName.name : '',
+      equipments: this.equipments.reduce((acc, equip) => {
+        if (this.formData.equipments.includes(equip.id)) return [...acc, equip]
+        else return acc
+      }, [])
     }
   }
 
@@ -469,4 +500,10 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
 .map
   height 600px
   width auto
+
+@import "~@/assets/stylus/fonts.styl"
+@import "~@/assets/stylus/text-editor.styl"
+::v-deep .text-editor
+  .ql-editor
+    font-family Inter-Regular
 </style>

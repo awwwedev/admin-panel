@@ -18,9 +18,10 @@
     "vue-cookies-ts": "^1.5.19",
     "vue-property-decorator": "^9.1.2",
     "vue-router": "^3.2.0",
+    "vue-yandex-maps": "^0.10.10",
+    "vue2-editor": "^2.10.2",
     "vuelidate": "^0.7.6",
-    "vuex": "^3.4.0",
-    "vue-yandex-maps": "^0.10.10"
+    "vuex": "^3.4.0"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.18.0",

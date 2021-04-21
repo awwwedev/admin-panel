@@ -16,15 +16,9 @@
                       label-for="description"
                       :invalid-feedback="getValidationMessage($v.formData.content)"
         >
-          <b-form-textarea
-              id="textarea"
-              v-model.trim="formData.content"
-              rows="3"
-              max-rows="10"
-              :state="getFieldState($v.formData.content)"
-          ></b-form-textarea>
+          <vue-editor class="text-editor" id="textarea" v-model.trim="formData.content"
+                      :editor-toolbar="customToolbar" :class="{ 'is-invalid': $v.formData.content.$error }"/>
         </b-form-group>
-
       </b-card>
       <b-card class="mb-3 shadow-sm" header="Основное изображение">
         <UploadedImage :image="formData.photo" @imageInitialized="temp.previewImagePath = $event"/>
@@ -58,10 +52,12 @@ import UploadedImage from "@/components/UploadedImage.vue";
 import News from "@/models/News";
 import {getModule} from "vuex-module-decorators";
 import Notification from "@/store/modules/notification";
+// @ts-ignore
+import {VueEditor} from 'vue2-editor'
 
 
 @Component({
-  components: {UploadedImage, ConstructorActions},
+  components: {UploadedImage, ConstructorActions, VueEditor},
   validations: {
     formData: {
       header: {
@@ -74,7 +70,38 @@ import Notification from "@/store/modules/notification";
         required
       },
     },
-  }
+  },
+  data: () => ({
+    customToolbar: [[{
+      header: [false, 2, 3, 4, 5, 6]
+    }], ["bold", "italic", "underline", "strike"], // toggled buttons
+      [{
+        align: ""
+      }, {
+        align: "center"
+      }, {
+        align: "right"
+      }, {
+        align: "justify"
+      }], ["blockquote", "code-block"], [{
+        list: "ordered"
+      }, {
+        list: "bullet"
+      }, {
+        list: "check"
+      }], [{
+        indent: "-1"
+      }, {
+        indent: "+1"
+      }],
+      [{
+        color: []
+      }, {
+        background: []
+      }],
+      ["link"], ["clean"]
+    ]
+  })
 })
 export default class Constructor extends Mixins<Validation, ValidationMixin, ConstructorHelpers>(validationMixin, ValidationMixin, ConstructorHelpers) {
   entityName = 'новости'
@@ -89,7 +116,7 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
     previewImageModel: null as File | null,
   }
 
-  onSubmit (): void {
+  onSubmit(): void {
     this.$v.$touch()
 
     if (!this.$v.$invalid) {
@@ -111,13 +138,18 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
   }
 
   updateFormData(news: News): void {
-    this.temp = { previewImageModel: null, previewImagePath: news.photo as string }
-    this.formData = { content: news.content as string, header: news.header as string, id: news.id as number, photo: news.photo as string }
+    this.temp = {previewImageModel: null, previewImagePath: news.photo as string}
+    this.formData = {
+      content: news.content as string,
+      header: news.header as string,
+      id: news.id as number,
+      photo: news.photo as string
+    }
   }
 
-  created (): void {
+  created(): void {
     if (!this.isCreatePage) {
-      News.get(({ id: Number(this.$route.params.id) }))
+      News.get(({id: Number(this.$route.params.id)}))
           .then(response => {
             this.updateFormData(response.data)
           })
@@ -134,6 +166,8 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
 </script>
 
 <style scoped lang="stylus">
+@import "~@/assets/stylus/fonts.styl"
+@import "~@/assets/stylus/text-editor.styl"
 .images-grid
   display grid
   grid-template-columns repeat(3, 1fr)
@@ -143,5 +177,9 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
 .map
   height 600px
   width auto
+
+::v-deep .text-editor
+  .ql-editor
+    font-family Inter-Regular
 </style>
 

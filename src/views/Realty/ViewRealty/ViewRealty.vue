@@ -37,7 +37,15 @@
                             }} руб.</span>
                         </li>
                     </ul>
-                    <p class="object-info__description fw-600">{{ viewRealty.description }}</p>
+                  <h2 class="title">Оснащение</h2>
+                  <ul v-if="viewRealty.equipments" class="object-info__parameters parameters fw-600">
+                    <li class="parameters__item parameters__item_doted" v-for="(equipment, idx) in viewRealty.equipments"
+                        :key="idx"
+                    >
+                      {{ equipment.name }}
+                    </li>
+                  </ul>
+                  <p class="object-info__description fw-600" v-html="viewRealty.description"/>
                 </div>
             </div>
           <div class="view-object__btn-wrapper">
@@ -74,7 +82,16 @@ export default class ViewObject extends Mixins<Validation>(validationMixin) {
 @import "~@/assets/stylus/colors.styl"
 @import "~@/assets/stylus/button.styl"
 
+h1
+  font-family Inter-Bold !important
+
+.fw-600
+  font-weight: 600;
+
 .view-object
+    font-family Inter-Regular !important
+    font-size 20px
+
     &__nav
         margin-bottom 40px
 
@@ -119,14 +136,30 @@ export default class ViewObject extends Mixins<Validation>(validationMixin) {
         margin-bottom 25px
 
 .parameters
-    &__item
-        margin-bottom 20px
+  &__item
+    margin-bottom 20px
 
-        &:last-child
-            margin-bottom 0
+    &_doted
+      padding-left 15px
+      display flex
+      align-items center
+      position relative
 
-    &__value
-        margin-left 10px
+      &:before
+        position absolute
+        content ''
+        display block
+        background-color mainColor
+        width 8px
+        height 8px
+        border-radius 60%
+        left 0
+
+    &:last-child
+      margin-bottom 0
+
+  &__value
+    margin-left 10px
 
 .offers
     &__title
