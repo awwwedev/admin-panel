@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-    <b-container style="z-index: 1000; position: sticky; top: 0"
+    <div  style="z-index: 1000; position: fixed; top: 0"
+                 class="alert-container d-flex justify-content-center align-items-center w-100"
     >
       <b-alert :show="dismissCounter"
                :variant="$notificationData.variant || 'info'"
@@ -14,15 +15,8 @@
           {{ $notificationData.text }}
         </p>
       </b-alert>
-    </b-container>
-    <div v-if="!$userIsLogged && $userInInitState && allowInitUser"
-         class="text-center h-100 d-flex align-items-center justify-content-center"
-    >
-      <b-spinner
-          variant="primary"
-          class="spinner"
-      />
     </div>
+    <Login v-if="!$userIsLogged"/>
     <router-view v-else/>
   </div>
 
@@ -36,24 +30,27 @@ import {getModule} from "vuex-module-decorators";
 import Notification from '@/store/modules/notification'
 import User from "@/store/modules/user";
 import http from "@/common/http";
+import Login from "@/components/Login.vue";
 
 @Component({
+  components: {Login},
   computed: {
     ...mapGetters('notification', {
       $notificationData: 'getData'
     }),
-      ...mapGetters('user', {
-        $userIsLogged: 'getIsLogged',
-        $userInInitState: 'getInInitState'
-      })
+    ...mapGetters('user', {
+      $userIsLogged: 'getIsLogged'
+    })
   }
 })
 export default class App extends Vue {
   $notificationData!: notification
   $userIsLogged!: boolean
-  $userInInitState!: boolean
   dismissCounter = 0
-  get allowInitUser (): boolean { return this.$cookies.isKey('token') }
+
+  get allowInitUser(): boolean {
+    return this.$cookies.isKey('token')
+  }
 
   onDismissed(): void {
     this.dismissCounter = 0
@@ -67,24 +64,16 @@ export default class App extends Vue {
     }
   }
 
-  created (): void {
-    this.$router.onReady(() => {
-      if (this.allowInitUser) {
-        http.defaults.headers['Authorization'] = 'Bearer ' + this.$cookies.get('token')
+  created(): void {
+    if (this.allowInitUser) {
+      http.defaults.headers['Authorization'] = 'Bearer ' + this.$cookies.get('token')
 
-        getModule(User, this.$store).initUser().then(() => {
-          if (this.$userIsLogged && this.$route.name === 'admin.login') {
-
-            this.$router.replace({ name: 'admin.home' })
-          }
-        }).catch(() => {
-          delete http.defaults.headers['Authorization']
-          this.$cookies.remove('token')
-        })
-      } else {
-        this.$router.replace({ name: 'admin.login' })
-      }
-    })
+      getModule(User, this.$store).initUser()
+          .catch(() => {
+            delete http.defaults.headers['Authorization']
+            this.$cookies.remove('token')
+          })
+    }
   }
 }
 </script>
@@ -99,4 +88,16 @@ body
 
 #app
   flex 1 1 100%
+
+.alert-container
+
+  & .alert
+    width 50%
+
+    @media (max-width 768px)
+      width 75%
+
+    @media (max-width 576px)
+      width 98%
+      margin 0 auto
 </style>

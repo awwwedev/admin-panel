@@ -118,7 +118,7 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
     previewImageModel: null as File | null,
   }
 
-  onSubmit(): void {
+  onSubmit(redirect = false): void {
     this.$v.$touch()
 
     if (!this.$v.$invalid) {
@@ -135,7 +135,11 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
               this.updateFormData(response.data)
             })
       }
-
+      if (redirect) {
+        this.$router.push({ name: 'admin.realty' })
+      }
+    } else {
+      getModule(Notification, this.$store).setData({ title: 'Ошибка валидации!', text: 'Проверте корректность и запоолненость полей', variant: 'danger' })
     }
   }
 

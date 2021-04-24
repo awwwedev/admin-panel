@@ -20,7 +20,7 @@
           </div>
           <template #footer>
             <div class="px-2 py-2 bg-dark d-flex justify-content-end">
-              <b-button>Выход</b-button>
+              <b-button @click="onLogout">Выход</b-button>
             </div>
           </template>
         </b-sidebar>
@@ -34,6 +34,9 @@
 
 <script lang="ts">
 import {Component, Vue} from "vue-property-decorator";
+import {getModule} from "vuex-module-decorators";
+import User from "@/store/modules/user";
+import http from "@/common/http";
 
 @Component({
 
@@ -65,6 +68,13 @@ export default class Index extends Vue {
       label: 'Контакты'
     }
   ]
+
+  onLogout (): void {
+    getModule(User, this.$store).logout()
+
+    delete http.defaults.headers['Authorization']
+    this.$cookies.remove('token')
+  }
 }
 </script>
 

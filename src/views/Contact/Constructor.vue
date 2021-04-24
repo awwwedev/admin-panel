@@ -129,6 +129,16 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
             })
       }
 
+      if (redirect) {
+        this.$router.push({name: 'admin.contact'})
+      }
+
+    } else {
+      getModule(Notification, this.$store).setData({
+        title: 'Ошибка валидации!',
+        text: 'Проверте корректность и запоолненость полей',
+        variant: 'danger'
+      })
     }
   }
 

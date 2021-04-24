@@ -108,7 +108,11 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
               this.updateFormData(response.data)
             })
       }
-
+      if (redirect) {
+        this.$router.push({ name: 'admin.slide' })
+      }
+    } else {
+      getModule(Notification, this.$store).setData({ title: 'Ошибка валидации!', text: 'Проверте корректность и запоолненость полей', variant: 'danger' })
     }
   }
 
