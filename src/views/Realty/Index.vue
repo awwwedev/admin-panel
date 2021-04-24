@@ -122,7 +122,7 @@ export default class Home extends Mixins<TableStateController, SearchHelpers>(Ta
   fields = [
     {
       key: 'selected',
-      label: 'Выбрано'
+      label: ''
     },
     {
       key: 'name',

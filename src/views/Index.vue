@@ -9,12 +9,31 @@
           <div class="px-2">
             <nav class="mb-3">
               <b-nav vertical>
-                <b-nav-item v-for="(link, idx) in navLinks"
-                            :key="idx"
-                            :to="{ name: link.routeName }"
-                            :disabled="$route.name === link.routeName"
-
-                >{{ link.label }}</b-nav-item>
+                <b-card no-body>
+                  <template #header >
+                    <span type="button" class="d-block" @click="accordionIdx = 1">Основной контент</span>
+                  </template>
+                  <b-collapse id="collapseNavContent" :visible="accordionIdx === 1">
+                    <b-list-group>
+                      <b-list-group-item  v-for="(link, idx) in navLinks"
+                                          :key="idx"
+                                          :active="$route.name === link.routeName"
+                                          :to="{ name: link.routeName, query: { accordionIdx } }"
+                      >
+                        {{ link.label }}
+                      </b-list-group-item>
+                    </b-list-group>
+                  </b-collapse>
+                </b-card>
+                <b-card no-body>
+                  <template #header >
+                    <span type="button" class="d-block" @click="accordionIdx = 2">Пользователь</span>
+                  </template>
+                  <b-collapse id="collapseNavContent" :visible="accordionIdx === 2">
+                    <b-list-group>
+                    </b-list-group>
+                  </b-collapse>
+                </b-card>
               </b-nav>
             </nav>
           </div>
@@ -33,7 +52,7 @@
 </template>
 
 <script lang="ts">
-import {Component, Vue} from "vue-property-decorator";
+import {Component, Vue, Watch} from "vue-property-decorator";
 import {getModule} from "vuex-module-decorators";
 import User from "@/store/modules/user";
 import http from "@/common/http";
@@ -42,6 +61,7 @@ import http from "@/common/http";
 
 })
 export default class Index extends Vue {
+  accordionIdx = 1
   navLinks = [
     {
       routeName: 'admin.realty',
@@ -74,6 +94,20 @@ export default class Index extends Vue {
 
     delete http.defaults.headers['Authorization']
     this.$cookies.remove('token')
+  }
+
+  created(): void {
+    const accordionIdx = this.$route.query.accordionIdx
+
+    this.accordionIdx = accordionIdx ? Number(accordionIdx) : 1
+  }
+
+  @Watch('accordionIdx')
+  watchAccordionIdx(): void {
+    this.$router.replace({
+      name: this.$route.name as string,
+      query: { ...this.$route.query, accordionIdx: String(this.accordionIdx) }
+    }).catch(() => {})
   }
 }
 </script>

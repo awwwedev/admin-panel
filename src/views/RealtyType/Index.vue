@@ -72,7 +72,7 @@ export default class IndexRealtyType extends Mixins<TableStateController, Search
   fields = [
     {
       key: 'selected',
-      label: 'Выбрано'
+      label: ''
     },
     {
       key: 'id',

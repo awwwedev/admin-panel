@@ -82,7 +82,7 @@ export default class Index extends Mixins<TableStateController, SearchHelpers>(T
   fields = [
     {
       key: 'selected',
-      label: 'Выбрано'
+      label: ''
     },
     {
       key: 'id',
