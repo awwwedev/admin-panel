@@ -2,7 +2,8 @@
   <div class="wrapper">
     <div class="grid">
       <div class="grid__side-bar">
-        <b-sidebar class="" visible no-close-on-route-change no-close-on-backdrop no-close-on-esc no-header-close :z-index="2" shadow>
+        <b-sidebar class="" visible no-close-on-route-change no-close-on-backdrop no-close-on-esc no-header-close
+                   :z-index="2" shadow>
           <template #title>
             <span class="d-block mb-sm-0 mb-md-5 "></span>
           </template>
@@ -10,23 +11,35 @@
             <nav class="mb-3">
               <b-nav vertical>
                 <b-card no-body>
-                  <template #header >
+                  <template #header>
                     <span type="button" class="d-block" @click="accordionIdx = 1">Основной контент</span>
                   </template>
                   <b-collapse id="collapseNavContent" :visible="accordionIdx === 1">
                     <b-list-group>
-                      <b-list-group-item  v-for="(link, idx) in navLinks"
-                                          :key="idx"
-                                          :active="$route.name === link.routeName"
-                                          :to="{ name: link.routeName, query: { accordionIdx } }"
-                      >
-                        {{ link.label }}
+                      <b-list-group-item v-for="(link, idx) in navLinks" :key="idx">
+                        <template v-if="!isActiveRoute(link.routeName)">
+                          <b-link class="d-block" type="button" :to="{ name: link.routeName, query: { accordionIdx } }">{{ link.label }}</b-link>
+                        </template>
+                        <template v-else>
+                          <span class="d-block" :class="{ 'mb-2': $route.name.includes(link.routeName) }">{{ link.label }}</span>
+                          <b-list-group>
+                            <b-list-group-item :active="!$route.meta.hasOwnProperty('isCreatePage')" :to="{ name: link.routeName, query: { accordionIdx } }">
+                              Все записи
+                            </b-list-group-item>
+                            <b-list-group-item :to="{ name: link.routeName + '.create', query: { accordionIdx } }" :active="$route.meta.isCreatePage">
+                              Создание
+                            </b-list-group-item>
+                            <b-list-group-item :active="$route.meta.hasOwnProperty('isCreatePage') && !$route.meta.isCreatePage" disabled>
+                              Изменение
+                            </b-list-group-item>
+                          </b-list-group>
+                        </template>
                       </b-list-group-item>
                     </b-list-group>
                   </b-collapse>
                 </b-card>
                 <b-card no-body>
-                  <template #header >
+                  <template #header>
                     <span type="button" class="d-block" @click="accordionIdx = 2">Пользователь</span>
                   </template>
                   <b-collapse id="collapseNavContent" :visible="accordionIdx === 2">
@@ -45,7 +58,7 @@
         </b-sidebar>
       </div>
       <div class="grid__content">
-        <router-view class="d-flex justify-content-center flex-column" />
+        <router-view class="d-flex justify-content-center flex-column"/>
       </div>
     </div>
   </div>
@@ -57,9 +70,7 @@ import {getModule} from "vuex-module-decorators";
 import User from "@/store/modules/user";
 import http from "@/common/http";
 
-@Component({
-
-})
+@Component({})
 export default class Index extends Vue {
   accordionIdx = 1
   navLinks = [
@@ -89,7 +100,7 @@ export default class Index extends Vue {
     }
   ]
 
-  onLogout (): void {
+  onLogout(): void {
     getModule(User, this.$store).logout()
 
     delete http.defaults.headers['Authorization']
@@ -102,12 +113,17 @@ export default class Index extends Vue {
     this.accordionIdx = accordionIdx ? Number(accordionIdx) : 1
   }
 
+  isActiveRoute (routeName: string): boolean {
+    return  routeName === (this.$route.name as string).replace(/\.create|\.change/, '')
+  }
+
   @Watch('accordionIdx')
   watchAccordionIdx(): void {
     this.$router.replace({
       name: this.$route.name as string,
-      query: { ...this.$route.query, accordionIdx: String(this.accordionIdx) }
-    }).catch(() => {})
+      query: {...this.$route.query, accordionIdx: String(this.accordionIdx)}
+    }).catch(() => {
+    })
   }
 }
 </script>
