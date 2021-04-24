@@ -1,6 +1,6 @@
 <template>
   <div class="section">
-    <h1 class="mb-5">Категория недвижимости</h1>
+    <h1 class="mb-5">Новости</h1>
 
     <b-card class="mb-4 shadow-sm">
       <div class="d-flex">
@@ -51,6 +51,34 @@
           <b-link :to="{ name: 'admin.news.change', params: { id: item.id } }" v-html="tableOptions.searchValue ? getValueWithSearchPart(item.header, tableOptions.searchValue) : item.header "></b-link>
         </template>
       </b-table>
+      <div class="d-flex justify-content-between align-items-center">
+        <b-pagination
+            v-model="tableOptions.page"
+            :total-rows="tableInfo.totalItems"
+            :per-page="tableOptions.perPage"
+        />
+
+        <b-select v-model="tableTemp.perPage" style="width: auto">
+          <b-select-option :value="10">
+            10
+          </b-select-option>
+          <b-select-option :value="25">
+            25
+          </b-select-option>
+          <b-select-option :value="50">
+            50
+          </b-select-option>
+          <b-select-option :value="75">
+            75
+          </b-select-option>
+          <b-select-option :value="100">
+            100
+          </b-select-option>
+          <b-select-option :value="'all'">
+            ВСЕ
+          </b-select-option>
+        </b-select>
+      </div>
     </b-card>
   </div>
 </template>

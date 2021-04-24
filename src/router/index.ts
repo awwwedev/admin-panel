@@ -21,7 +21,7 @@ const routes: Array<RouteConfig> = [
       {
         path: 'realty',
         name: 'admin.realty',
-        component: () => import('@/views/Realty/Home.vue')
+        component: () => import('@/views/Realty/Index.vue')
       },
       {
         path: 'realty/new',

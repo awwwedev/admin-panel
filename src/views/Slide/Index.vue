@@ -1,6 +1,6 @@
 <template>
   <div class="section">
-    <h1 class="mb-5">Категория недвижимости</h1>
+    <h1 class="mb-5">Слайды</h1>
 
     <b-card class="mb-4 shadow-sm">
       <div class="d-flex">
