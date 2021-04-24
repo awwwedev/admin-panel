@@ -164,10 +164,9 @@ export default class Home extends Mixins<TableStateController, SearchHelpers>(Ta
   tableOptionsRealty = {
     equipments: [] as Array<number>,
     types: [] as Array<number>,
-    areaMin: null as number || null,
-    priceMin: null as number || null,
-    pricePerMetrMin: null as number || null,
-    totalItems: null as number || null,
+    areaMin: null as number | null,
+    priceMin: null as number | null,
+    pricePerMetrMin: null as number | null,
   }
   realtyMinMax = {} as realtyMinMaxInfo
   equipments = [] as Array<Equipment>
