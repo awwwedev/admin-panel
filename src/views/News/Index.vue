@@ -36,6 +36,7 @@
           selectable
           @row-selected="onRowSelected"
           @sort-changed="onChangeSort"
+          sort-icon-left
           ref="table"
           :busy="inRequestState"
       >
@@ -46,6 +47,9 @@
           <template v-else>
             <span>&nbsp;</span>
           </template>
+        </template>
+        <template #cell(photo)="{ item }">
+          <b-img fluid width="150" :src="basePath + item.photo"/>
         </template>
         <template #cell(header)="{ item }">
           <b-link :to="{ name: 'admin.news.change', params: { id: item.id } }" v-html="tableOptions.searchValue ? getValueWithSearchPart(item.header, tableOptions.searchValue) : item.header "></b-link>
@@ -98,9 +102,14 @@ import Notification from "@/store/modules/notification";
 
 })
 export default class Index extends Mixins<TableStateController, SearchHelpers>(TableStateController, SearchHelpers) {
+  basePath = process.env.VUE_APP_URL
   fields = [
     {
       key: 'selected',
+      label: ''
+    },
+    {
+      key: 'photo',
       label: ''
     },
     {
@@ -113,6 +122,11 @@ export default class Index extends Mixins<TableStateController, SearchHelpers>(T
       key: 'header',
       label: 'Название',
       searchable: true,
+      sortable: true,
+    },
+    {
+      key: 'created_at',
+      label: 'Создан',
       sortable: true,
     }
   ]

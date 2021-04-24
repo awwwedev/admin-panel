@@ -67,6 +67,9 @@
             <span>&nbsp;</span>
           </template>
         </template>
+        <template #cell(img_path)="{ item }">
+          <b-img fluid width="150" :src="basePath + item.img_path"/>
+        </template>
         <template #cell(name)="{ item }">
           <b-link :to="{ name: 'admin.realty.change', params: { id: item.id } }"
                   v-html="tableOptions.searchValue ? getValueWithSearchPart(item.name, tableOptions.searchValue) : item.name "></b-link>
@@ -125,6 +128,10 @@ export default class Home extends Mixins<TableStateController, SearchHelpers>(Ta
       label: ''
     },
     {
+      key: 'img_path',
+      label: ''
+    },
+    {
       key: 'name',
       label: 'Описание',
       searchable: true,
@@ -171,6 +178,7 @@ export default class Home extends Mixins<TableStateController, SearchHelpers>(Ta
   realtyMinMax = {} as realtyMinMaxInfo
   equipments = [] as Array<Equipment>
   types = [] as Array<RealtyType>
+  basePath = process.env.VUE_APP_URL
 
   get selectionBtnText(): string {
     return this.selectedAllRows ? 'Снять выделение' : 'Выбрать все'

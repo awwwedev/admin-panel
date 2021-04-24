@@ -49,7 +49,7 @@ export default class TableStateController extends Mixins() {
         return null
     }
     onChangeSort (sortOptions: { sortBy: string, sortDesc: boolean }): void {
-        this.tableOptions = { ...this.tableOptions, sortBy: sortOptions.sortBy, sortType: sortOptions.sortDesc ? 'desc' : 'asc' }
+        this.tableOptions = { ...this.tableOptions, sortBy: sortOptions.sortBy, sortType: sortOptions.sortDesc ? 'desc' : 'asc', page: 1 }
     }
     omSearch (): void {
         this.tableOptions = {...this.tableOptions, page: 1, sortBy: null, sortType: null, searchField: this.tableTemp.searchField, searchValue: this.tableTemp.searchValue }

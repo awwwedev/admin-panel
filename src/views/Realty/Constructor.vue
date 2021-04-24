@@ -145,9 +145,8 @@
                     class="map"
                     @click="onMapClick"
         >
-          <ymap-marker
+          <ymap-marker v-if="formData.latitude && formData.longitude"
               :coords="[formData.latitude, formData.longitude]"
-              :balloon="{header: 'header', body: 'body', footer: 'footer'}"
               :icon="{layout: 'islands#32a1d0HomeIcon'}"
               cluster-name="1"
               @balloonopen="bus.$emit('yandex-map::open-balloon-' + formData.id)"
@@ -224,6 +223,7 @@ import ConstructorHelpers from "@/mixins/constructorHelpers";
 import ConstructorActions from "@/components/widget/ConstructorActions.vue";
 import Equipment from "@/models/Equipment";
 import Dates from "@/components/constructor/Dates.vue";
+import {removeHtmlTags} from "@/common";
 
 
 @Component({
@@ -417,6 +417,9 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
 
   @Watch('formData.description')
   watchFormDataDescription(desc: string, oldDesc: string): void {
+    desc = removeHtmlTags(desc)
+    oldDesc = removeHtmlTags(oldDesc)
+
     if (oldDesc.slice(0, 100) !== this.formData.name && this.formData.name !== '') return
 
     if (desc.length <= 20) {

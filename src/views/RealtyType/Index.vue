@@ -33,6 +33,7 @@
           select-mode="multi"
           striped
           hover
+          sort-icon-left
           selectable
           @row-selected="onRowSelected"
           @sort-changed="onChangeSort"

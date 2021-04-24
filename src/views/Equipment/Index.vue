@@ -34,6 +34,7 @@
           striped
           hover
           selectable
+          sort-icon-left
           @row-selected="onRowSelected"
           @sort-changed="onChangeSort"
           ref="table"

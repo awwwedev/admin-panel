@@ -1,7 +1,11 @@
 <template>
   <div class="section">
     <h1 class="mb-5">{{ pageName }}</h1>
-    <b-form>
+    <b-nav tabs class="mb-3" >
+      <b-nav-item :active="activeTab === 0" @click="activeTab = 0">{{ mainTabName }}</b-nav-item>
+      <b-nav-item :active="activeTab === 1" @click="activeTab = 1">Предпросмотр карточек</b-nav-item>
+    </b-nav>
+    <b-form v-if="activeTab === 0">
       <Dates :form-data="formData"/>
       <b-card class="mb-3 shadow-sm" header="Основное">
         <b-form-group label="Заголовок"
@@ -37,8 +41,9 @@
           </b-file>
         </b-form-group>
       </b-card>
+      <ConstructorActions :cancel-to="{ name: 'admin.news' }" :is-create-page="isCreatePage" @submit="onSubmit"/>
     </b-form>
-    <ConstructorActions :cancel-to="{ name: 'admin.news' }" :is-create-page="isCreatePage" @submit="onSubmit"/>
+    <PreviewTab v-else-if="activeTab === 1" :form-data="formData"/>
   </div>
 </template>
 
@@ -56,10 +61,11 @@ import Notification from "@/store/modules/notification";
 // @ts-ignore
 import {VueEditor} from 'vue2-editor'
 import Dates from "@/components/constructor/Dates.vue";
+import PreviewTab from "@/views/News/PreviewTab.vue";
 
 
 @Component({
-  components: {Dates, UploadedImage, ConstructorActions, VueEditor},
+  components: {PreviewTab, Dates, UploadedImage, ConstructorActions, VueEditor},
   validations: {
     formData: {
       header: {
@@ -107,6 +113,7 @@ import Dates from "@/components/constructor/Dates.vue";
 })
 export default class Constructor extends Mixins<Validation, ValidationMixin, ConstructorHelpers>(validationMixin, ValidationMixin, ConstructorHelpers) {
   entityName = 'новости'
+  activeTab = 0
   formData = {
     id: null as null | number,
     header: '',
@@ -117,6 +124,7 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
     previewImagePath: '',
     previewImageModel: null as File | null,
   }
+  get mainTabName(): string { return this.$route.meta.isCreatePage ? 'Создание' : 'Редактирование' }
 
   onSubmit(redirect = true): void {
     let request

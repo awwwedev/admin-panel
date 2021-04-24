@@ -10,11 +10,11 @@
           <div class="px-2">
             <nav class="mb-3">
               <b-nav vertical>
-                <b-card no-body>
+                <b-card no-body class="mb-1">
                   <template #header>
                     <span type="button" class="d-block" @click="accordionIdx = 1">Основной контент</span>
                   </template>
-                  <b-collapse id="collapseNavContent" :visible="accordionIdx === 1">
+                  <b-collapse :visible="accordionIdx === 1">
                     <b-list-group>
                       <b-list-group-item v-for="(link, idx) in navLinks" :key="idx">
                         <template v-if="!isActiveRoute(link.routeName)">
