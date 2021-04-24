@@ -111,7 +111,7 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
     is_rent_department: 1
   }
 
-  onSubmit (): void {
+  onSubmit (redirect = false): void {
     this.$v.$touch()
 
     if (!this.$v.$invalid) {

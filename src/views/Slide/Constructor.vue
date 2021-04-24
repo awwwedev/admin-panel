@@ -91,7 +91,7 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
     previewImageModel: null as File | null,
   }
 
-  onSubmit (): void {
+  onSubmit (redirect = false): void {
     this.$v.$touch()
 
     if (!this.$v.$invalid) {
