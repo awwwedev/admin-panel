@@ -34,7 +34,9 @@ export default class TableStateController extends Mixins() {
     get tableOptionsCleared (): { [key: string]: any } {
         return Object.keys(this.tableOptions).reduce((acc, value) => {
             // @ts-ignore
-            if (this.tableOptions[value]) {
+            const data = this.tableOptions[value]
+
+            if (data || (data instanceof Array && data.length)) {
                 // @ts-ignore
                 acc[value] = this.tableOptions[value]
             }
