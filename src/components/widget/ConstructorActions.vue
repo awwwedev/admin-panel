@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex mb-5">
     <template v-if="isCreatePage">
-      <b-button variant="primary" class="mr-2" @click.prevent="onSubmit">Создать</b-button>
+      <b-button variant="primary" class="mr-2" @click.prevent="onSubmit(false)">Создать</b-button>
       <b-button :to="cancelTo" variant="secondary">Отмена</b-button>
     </template>
     <template v-else>

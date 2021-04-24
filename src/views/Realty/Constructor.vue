@@ -162,7 +162,7 @@
                      :img-path="temp.previewImagePath"
                      :name="formData.name"
                      :price="formData.price_per_metr"
-                     :id="formData.id"
+                     :id="formData.id + temp.previewImagePath"
                      disable-link
             />
           </ymap-marker>
@@ -224,6 +224,7 @@ import ConstructorHelpers from "@/mixins/constructorHelpers";
 import ConstructorActions from "@/components/widget/ConstructorActions.vue";
 import Equipment from "@/models/Equipment";
 import Dates from "@/components/constructor/Dates.vue";
+
 
 @Component({
   components: {
@@ -375,26 +376,30 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
     this.formData.latitude = coords[0] as number
     this.formData.longitude = coords[1] as number
   }
-  onSubmit (redirect = false): void {
+  onSubmit (redirect = true): void {
+    let request
+
     this.$v.$touch()
 
     if (!this.$v.$invalid) {
       if (this.isCreatePage) {
-        Realty.create(this.formData)
+        request = Realty.create(this.formData)
             .then((response) => {
               getModule(Notification, this.$store).setData({ title: 'Запись успешно создана', variant: 'success' })
               this.$router.push({ name: 'admin.realty.change', params: { id: response.data.id as unknown as string } })
             })
       } else {
-        Realty.update(this.formData)
+        request = Realty.update(this.formData)
             .then((response) => {
               this.initFormData(response.data)
               getModule(Notification, this.$store).setData({ title: 'Запись успешно изменена', variant: 'success' })
             })
       }
-      if (redirect) {
-        this.$router.push({ name: 'admin.realty' })
-      }
+      request.then(() => {
+        if (redirect) {
+          this.$router.push({ name: 'admin.realty' })
+        }
+      })
     } else {
       getModule(Notification, this.$store).setData({ title: 'Ошибка валидации!', text: 'Проверте корректность и запоолненость полей', variant: 'danger' })
     }
@@ -477,19 +482,21 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
     }
   }
 
-  created (): void {
-    RealtyType.getList().then(response => {
-      this.types = response.data
-    })
-    this.updateEquipments()
-
-    if (!this.isCreatePage) {
+  @Watch('$route.meta.isCreatePage', { immediate: true })
+  watchIsCreatePage(isCreatePage: boolean): void {
+    if (!isCreatePage) {
       Realty.get(({ id: Number(this.$route.params.id) }))
           .then(response => {
             this.initFormData(response.data)
           })
     }
+  }
 
+  created (): void {
+    RealtyType.getList().then(response => {
+      this.types = response.data
+    })
+    this.updateEquipments()
   }
 }
 </script>

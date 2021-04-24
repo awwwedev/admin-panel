@@ -112,27 +112,29 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
   }
 
   onSubmit (redirect = false): void {
+    let request
+
     this.$v.$touch()
 
     if (!this.$v.$invalid) {
       if (this.isCreatePage) {
-        Contact.create(this.formData)
+        request = Contact.create(this.formData)
             .then((response) => {
               getModule(Notification, this.$store).setData({title: 'Запись успешно создана', variant: 'success'})
               this.$router.push({name: 'admin.contact.change', params: {id: response.data.id as unknown as string}})
             })
       } else {
-        Contact.update(this.formData)
+        request = Contact.update(this.formData)
             .then((response) => {
               getModule(Notification, this.$store).setData({title: 'Запись успешно изменена', variant: 'success'})
               this.updateFormData(response.data)
             })
       }
-
-      if (redirect) {
-        this.$router.push({name: 'admin.contact'})
-      }
-
+      request.then(() => {
+        if (redirect) {
+          this.$router.push({name: 'admin.contact'})
+        }
+      })
     } else {
       getModule(Notification, this.$store).setData({
         title: 'Ошибка валидации!',
@@ -146,22 +148,21 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
     this.formData = { header: contact.header as string, value: contact.value as string, id: contact.id as number, type: contact.type as string, is_rent_department: Number(contact.is_rent_department) }
   }
 
-  created (): void {
-    if (!this.isCreatePage) {
-      Contact.get(({ id: Number(this.$route.params.id) }))
-          .then(response => {
-            this.updateFormData(response.data)
-          })
-    } else {
-      this.formData.type = this.types[0].id
-    }
-  }
-
   @Watch('formData.is_rent_department')
   watchFormDataDepart (val: number): void {
     if (val) {
       this.formData.type = this.types[1].id
       this.formData.header = null
+    }
+  }
+
+  @Watch('$route.meta.isCreatePage', { immediate: true })
+  watchIsCreatePage(isCreatePage: boolean): void {
+    if (!isCreatePage) {
+      Contact.get(({ id: Number(this.$route.params.id) }))
+          .then(response => {
+            this.updateFormData(response.data)
+          })
     }
   }
 }

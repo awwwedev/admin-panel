@@ -38,7 +38,7 @@
 </template>
 
 <script lang="ts">
-import {Component, Mixins} from "vue-property-decorator";
+import {Component, Mixins, Watch} from "vue-property-decorator";
 import ConstructorHelpers from "@/mixins/constructorHelpers";
 import {Validation, validationMixin} from "vuelidate";
 import ValidationMixin from "@/mixins/validation";
@@ -75,28 +75,30 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
     realty_type_id: null as null | number
   }
 
-  onSubmit(redirect = false): void {
+  onSubmit(redirect = true): void {
+    let request
+
     this.$v.$touch()
 
     if (!this.$v.$invalid) {
       if (this.isCreatePage) {
-        Equipment.create(this.formData)
+        request = Equipment.create(this.formData)
             .then((response) => {
               getModule(Notification, this.$store).setData({title: 'Запись успешно создана', variant: 'success'})
               this.$router.push({name: 'admin.equipment.change', params: {id: response.data.id as unknown as string}})
             })
       } else {
-        Equipment.update(this.formData)
+        request = Equipment.update(this.formData)
             .then((response) => {
               getModule(Notification, this.$store).setData({title: 'Запись успешно изменена', variant: 'success'})
               this.updateFormData(response.data)
             })
       }
-
-      if (redirect) {
-        this.$router.push({name: 'admin.equipment'})
-      }
-
+      request.then(() => {
+        if (redirect) {
+          this.$router.push({name: 'admin.equipment'})
+        }
+      })
     } else {
       getModule(Notification, this.$store).setData({
         title: 'Ошибка валидации!',
@@ -114,7 +116,11 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
     RealtyType.getList().then(response => {
       this.types = response.data
     })
-    if (!this.isCreatePage) {
+  }
+
+  @Watch('$route.meta.isCreatePage', { immediate: true })
+  watchIsCreatePage(isCreatePage: boolean): void {
+    if (!isCreatePage) {
       Equipment.get({id: this.$route.params.id as unknown as number})
           .then(response => this.updateFormData(response.data))
     }

@@ -91,42 +91,45 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
     previewImageModel: null as File | null,
   }
 
-  onSubmit (redirect = false): void {
+  onSubmit(redirect = true): void {
+    let request
     this.$v.$touch()
 
     if (!this.$v.$invalid) {
       if (this.isCreatePage) {
-        Slide.create(this.formData)
+        request = Slide.create(this.formData)
             .then((response) => {
               getModule(Notification, this.$store).setData({title: 'Запись успешно создана', variant: 'success'})
               this.$router.push({name: 'admin.slide.change', params: {id: response.data.id as unknown as string}})
             })
       } else {
-        Slide.update(this.formData)
+        request = Slide.update(this.formData)
             .then((response) => {
               getModule(Notification, this.$store).setData({title: 'Запись успешно изменена', variant: 'success'})
               this.updateFormData(response.data)
             })
       }
-      if (redirect) {
-        this.$router.push({ name: 'admin.slide' })
-      }
+      request.then(() => {
+        if (redirect) {
+          this.$router.push({name: 'admin.slide'})
+        }
+      })
     } else {
-      getModule(Notification, this.$store).setData({ title: 'Ошибка валидации!', text: 'Проверте корректность и запоолненость полей', variant: 'danger' })
+      getModule(Notification, this.$store).setData({
+        title: 'Ошибка валидации!',
+        text: 'Проверте корректность и запоолненость полей',
+        variant: 'danger'
+      })
     }
   }
 
   updateFormData(slide: Slide): void {
-    this.temp = { previewImageModel: null, previewImagePath: slide.image as string }
-    this.formData = { content: slide.content as string, header: slide.header as string, id: slide.id as number, image: slide.image as string }
-  }
-
-  created (): void {
-    if (!this.isCreatePage) {
-      Slide.get(({ id: Number(this.$route.params.id) }))
-          .then(response => {
-            this.updateFormData(response.data)
-          })
+    this.temp = {previewImageModel: null, previewImagePath: slide.image as string}
+    this.formData = {
+      content: slide.content as string,
+      header: slide.header as string,
+      id: slide.id as number,
+      image: slide.image as string
     }
   }
 
@@ -135,6 +138,16 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
     if (!file) return
 
     this.formData.image = file
+  }
+
+  @Watch('$route.meta.isCreatePage', { immediate: true })
+  watchIsCreatePage(isCreatePage: boolean): void {
+    if (!isCreatePage) {
+      Slide.get(({id: Number(this.$route.params.id)}))
+          .then(response => {
+            this.updateFormData(response.data)
+          })
+    }
   }
 }
 </script>

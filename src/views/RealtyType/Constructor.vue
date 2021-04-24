@@ -75,27 +75,36 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
     previewImageModel: null as File | null
   }
 
-  onSubmit(redirect = false): void {
+  onSubmit(redirect = true): void {
+    let request
+
     this.$v.$touch()
 
     if (!this.$v.$invalid) {
       if (this.isCreatePage) {
-        RealtyType.create(this.formData)
+        request = RealtyType.create(this.formData)
             .then((response) => {
               getModule(Notification, this.$store).setData({title: 'Запись успешно создана', variant: 'success'})
               this.$router.push({name: 'admin.realtyType.change', params: {id: response.data.id as unknown as string}})
             })
       } else {
-        RealtyType.update(this.formData)
+        request = RealtyType.update(this.formData)
             .then((response) => {
               getModule(Notification, this.$store).setData({title: 'Запись успешно изменена', variant: 'success'})
               this.updateFormData(response.data)
             })
       }
-      if (redirect) { this.$router.push({name: 'admin.realtyType'}) }
+      request.then(() => {
+        if (redirect) { this.$router.push({name: 'admin.realtyType'}) }
+      })
     } else {
       getModule(Notification, this.$store).setData({ title: 'Ошибка валидации!',  text: 'Проверте корректность и запоолненость полей',  variant: 'danger' })
     }
+  }
+
+  updateFormData (type: RealtyType): void {
+    this.temp = { previewImageModel: null, previewImagePath: type.img_path as string }
+    this.formData = { name: type.name as string, id: type.id as number, img_path: type.img_path as string }
   }
 
   @Watch('temp.previewImageModel')
@@ -105,13 +114,9 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
     this.formData.img_path = file
   }
 
-  updateFormData (type: RealtyType): void {
-    this.temp = { previewImageModel: null, previewImagePath: type.img_path as string }
-    this.formData = { name: type.name as string, id: type.id as number, img_path: type.img_path as string }
-  }
-
-  created(): void {
-    if (!this.isCreatePage) {
+  @Watch('$route.meta.isCreatePage', { immediate: true })
+  watchIsCreatePage(isCreatePage: boolean): void {
+    if (!isCreatePage) {
       RealtyType.get({id: this.$route.params.id as unknown as number})
           .then(response => this.updateFormData(response.data))
     }

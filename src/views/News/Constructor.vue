@@ -118,26 +118,31 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
     previewImageModel: null as File | null,
   }
 
-  onSubmit(redirect = false): void {
+  onSubmit(redirect = true): void {
+    let request
+
     this.$v.$touch()
 
     if (!this.$v.$invalid) {
       if (this.isCreatePage) {
-        News.create(this.formData)
+        request = News.create(this.formData)
             .then((response) => {
               getModule(Notification, this.$store).setData({title: 'Запись успешно создана', variant: 'success'})
               this.$router.push({name: 'admin.news.change', params: {id: response.data.id as unknown as string}})
             })
       } else {
-        News.update(this.formData)
+        request = News.update(this.formData)
             .then((response) => {
               getModule(Notification, this.$store).setData({title: 'Запись успешно изменена', variant: 'success'})
               this.updateFormData(response.data)
             })
       }
-      if (redirect) {
-        this.$router.push({ name: 'admin.realty' })
-      }
+      request.then(() => {
+        if (redirect) {
+          this.$router.push({ name: 'admin.realty' })
+        }
+      })
+
     } else {
       getModule(Notification, this.$store).setData({ title: 'Ошибка валидации!', text: 'Проверте корректность и запоолненость полей', variant: 'danger' })
     }
@@ -153,20 +158,21 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
     }
   }
 
-  created(): void {
-    if (!this.isCreatePage) {
-      News.get(({id: Number(this.$route.params.id)}))
-          .then(response => {
-            this.updateFormData(response.data)
-          })
-    }
-  }
-
   @Watch('temp.previewImageModel')
   watchTempPreviewImageModel(file: File): void {
     if (!file) return
 
     this.formData.photo = file
+  }
+
+  @Watch('$route.meta.isCreatePage', { immediate: true })
+  watchIsCreatePage(isCreatePage: boolean): void {
+    if (!isCreatePage) {
+      News.get(({id: Number(this.$route.params.id)}))
+          .then(response => {
+            this.updateFormData(response.data)
+          })
+    }
   }
 }
 </script>
