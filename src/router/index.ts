@@ -188,7 +188,12 @@ const routes: Array<RouteConfig> = [
           {
             name: 'relationship.realtyType',
             path: 'realty-type/:id',
-            component: () => import('@/views/Relationships/RealtyTypeRelationship.vue')
+            component: () => import('@/views/Relationships/RealtyType.vue')
+          },
+          {
+            name: 'relationship.equipments',
+            path: 'equipments/:id',
+            component: () => import('@/views/Relationships/Equipment.vue')
           }
         ]
       }
