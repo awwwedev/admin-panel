@@ -181,6 +181,17 @@ const routes: Array<RouteConfig> = [
           }
         ]
       },
+      {
+        path: 'relationship',
+        component: PathThrough,
+        children: [
+          {
+            name: 'relationship.realtyType',
+            path: 'realty-type/:id',
+            component: () => import('@/views/Relationships/RealtyTypeRelationship.vue')
+          }
+        ]
+      }
     ]
   }
 ]

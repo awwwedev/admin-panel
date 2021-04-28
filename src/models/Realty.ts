@@ -59,6 +59,18 @@ export default class Realty extends BaseModel {
         }
     }
 
+    static count(params: { [key: string]: any } = {}): Promise<AxiosResponse<{ amount: number }>> {
+        if (process.env.VUE_APP_USE_LOCAL_API === 'false') {
+            return http.get<{ amount: number }>('realty/count', { params: params })
+        } else {
+            return new Promise<AxiosResponse<{ amount: number }>>((resolve) => {
+                resolve({ data: { amount: 10 } } as AxiosResponse<{ amount: number }>)
+            })
+        }
+    }
+
+
+
     static create (params: { [key: string]: any }): Promise<AxiosResponse<Realty>> {
         return http.post<Realty>('realty', Realty.prepareFormData(params))
     }
