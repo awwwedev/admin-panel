@@ -84,7 +84,7 @@ import Notification from "@/store/modules/notification";
 })
 export default class Equipment extends Mixins<TableStateController>(TableStateController) {
   realty = [] as Array<Realty>
-  equip = null | EquipmentModel
+  equip = null as null | EquipmentModel
   basePath = process.env.VUE_APP_URL
   fieldsRealty = [    {
     key: 'selected',
@@ -152,7 +152,7 @@ export default class Equipment extends Mixins<TableStateController>(TableStateCo
   }
 
   created (): void {
-    EquipmentModel.get({ id: this.$route.params.id }).then(res => { this.equip = res.data })
+    EquipmentModel.get({ id: this.$route.params.id as unknown as number }).then(res => { this.equip = res.data })
   }
 
 }
