@@ -14,6 +14,15 @@
         <p class="mb-0">
           {{ $notificationData.text }}
         </p>
+        <template v-if="$notificationData.links" @click="dismissCounter = 0">
+          <b-link v-for="(link, idx) in $notificationData.links" :key="idx"
+                  class="alert-link"
+                  :to="{ name: link.routeName, params: link.params }"
+                  @click="dismissCounter = 0"
+          >
+            {{ link.label }}
+          </b-link>
+        </template>
       </b-alert>
     </div>
     <Login v-if="!$userIsLogged"/>

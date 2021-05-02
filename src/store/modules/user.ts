@@ -39,8 +39,8 @@ export default class User extends VuexModule {
 
         return http.post<{ token: string }>('login', credentials)
             .finally(() => {
-            this.setInInitState(false)
-        })
+                this.setInInitState(false)
+            })
     }
     @Action
     logout (): void {

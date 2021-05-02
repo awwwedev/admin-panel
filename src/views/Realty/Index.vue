@@ -75,6 +75,9 @@
                   v-html="tableOptions.searchValue ? getValueWithSearchPart(item.name, tableOptions.searchValue) : item.name "></b-link>
         </template>
       </b-table>
+      <div class="text-secondary mb-3">
+        {{ (tableOptions.perPage * tableOptions.page) }} / {{ tableInfo.totalItems }}
+      </div>
       <div class="d-flex justify-content-between align-items-center">
         <b-pagination
             v-model="tableOptions.page"

@@ -6,7 +6,9 @@
       <div class="d-flex">
         <b-button variant="primary" class="mr-2" :to="{ name: 'admin.realtyType.create' }">Создать</b-button>
         <b-button variant="info" class="mr-3" @click="onSelectAll">{{ selectionBtnText }}</b-button>
-        <b-button variant="danger" class="my-2 my-sm-0" :disabled="!selected.length" @click="onDelete">Удалить выбранное</b-button>
+        <b-button variant="danger" class="my-2 my-sm-0" :disabled="!selected.length" @click="onDelete">Удалить
+          выбранное
+        </b-button>
       </div>
     </b-card>
     <b-card class="shadow-sm">
@@ -49,7 +51,8 @@
           </template>
         </template>
         <template #cell(name)="{ item }">
-          <b-link :to="{ name: 'admin.realtyType.change', params: { id: item.id } }" v-html="tableOptions.searchValue ? getValueWithSearchPart(item.name, tableOptions.searchValue) : item.name "></b-link>
+          <b-link :to="{ name: 'admin.realtyType.change', params: { id: item.id } }"
+                  v-html="tableOptions.searchValue ? getValueWithSearchPart(item.name, tableOptions.searchValue) : item.name "></b-link>
         </template>
       </b-table>
     </b-card>
@@ -66,9 +69,7 @@ import {getModule} from "vuex-module-decorators";
 import Notification from "@/store/modules/notification";
 
 
-@Component({
-
-})
+@Component({})
 export default class IndexRealtyType extends Mixins<TableStateController, SearchHelpers>(TableStateController, SearchHelpers) {
   fields = [
     {
@@ -90,13 +91,36 @@ export default class IndexRealtyType extends Mixins<TableStateController, Search
   ]
   items = [] as Array<RealtyType>
 
-  get selectionBtnText (): string { return this.selectedAllRows ? 'Снять выделение' : 'Выбрать все' }
+  get selectionBtnText(): string {
+    return this.selectedAllRows ? 'Снять выделение' : 'Выбрать все'
+  }
 
-  onDelete (): void {
-    RealtyType.destroy(this.selected.map(value => value.id as number)).then(() => {
-      getModule(Notification, this.$store).setData({ title: 'Удаление прошло успешно', variant: 'success' })
-      this.updateTableData();
-    })
+  onDelete(): void {
+    RealtyType.destroy(this.selected.map(value => value.id as number))
+        .then(() => {
+          getModule(Notification, this.$store).setData({title: 'Удаление прошло успешно', variant: 'success'})
+          this.updateTableData();
+        })
+        .catch((err => {
+          const {
+            id,
+            message,
+            allowCheckRelations
+          }: { id: string | null, message: string | null, allowCheckRelations: boolean } = err.response.data
+
+          getModule(Notification, this.$store).setData({
+            title: message as string, variant: 'danger',
+            links: allowCheckRelations ? [
+              {
+                label: 'Просмотреть зависимости',
+                routeName: 'relationship.realtyType',
+                params: {
+                  id: id as string
+                }
+              }
+            ] : []
+          })
+        }))
   }
 
   updateTableData(): Promise<AxiosResponse<Array<RealtyType>>> {

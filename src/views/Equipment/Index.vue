@@ -102,6 +102,25 @@ export default class IndexRealtyType extends Mixins<TableStateController, Search
     Equipment.destroy(this.selected.map(value => value.id as number)).then(() => {
       getModule(Notification, this.$store).setData({ title: 'Удаление прошло успешно', variant: 'success' })
       this.updateTableData();
+    }).catch(err => {
+      const {
+        id,
+        message,
+        allowCheckRelations
+      }: { id: string | null, message: string | null, allowCheckRelations: boolean } = err.response.data
+
+      getModule(Notification, this.$store).setData({
+        title: message as string, variant: 'danger',
+        links: allowCheckRelations ? [
+          {
+            label: 'Просмотреть зависимости',
+            routeName: 'relationship.equipments',
+            params: {
+              id: id as string
+            }
+          }
+        ] : []
+      })
     })
   }
 

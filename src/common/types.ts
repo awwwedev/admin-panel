@@ -1,10 +1,18 @@
 import BaseModel from "@/models/BaseModel";
 
+export type link = {
+    label: string,
+    routeName?: string
+    href?: string
+    params?: { [key: string]: string }
+}
+
 export type notification = {
     title?: string;
     text?: string;
     variant?: string;
-    direction?: number
+    direction?: number,
+    links?: Array<link>
 }
 
 export type option = {
