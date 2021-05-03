@@ -10,22 +10,6 @@
       </div>
     </b-card>
     <b-card class="shadow-sm">
-      <b-form inline class="mb-3" @submit.prevent="onSearch">
-        <b-form-input v-model="tableTemp.searchValue" class="mr-sm-2" placeholder="Поиск"></b-form-input>
-        <b-select v-model="tableTemp.searchField" class="mr-sm-3">
-          <b-select-option :value="null">
-            --- Выберите поле для поиска ---
-          </b-select-option>
-          <b-select-option v-for="(field, idx) in fields"
-                           v-if="field.searchable"
-                           :key="idx"
-                           :value="field.key"
-          >
-            {{ field.label }}
-          </b-select-option>
-        </b-select>
-        <b-button variant="outline-primary" class="my-2 my-sm-0" type="submit">Найти</b-button>
-      </b-form>
       <b-table
           :fields="fields"
           :items="items"
@@ -49,7 +33,7 @@
           </template>
         </template>
         <template #cell(value)="{ item }">
-          <b-link :to="{ name: 'admin.contact.change', params: { id: item.id } }" v-html="tableOptions.searchValue ? getValueWithSearchPart(item.value, tableOptions.searchValue) : item.value "></b-link>
+          <b-link :to="{ name: 'admin.contact.change', params: { id: item.id } }" v-html="item.value"/>
         </template>
         <template #cell(is_rent_department)="{ item }">
           {{ item.is_rent_department ? 'Да' : 'Нет' }}
@@ -107,7 +91,7 @@ export default class Index extends Mixins<TableStateController, SearchHelpers>(T
     },
     {
       key: 'is_rent_department',
-      label: 'Контак филиала',
+      label: 'Контакт филиала',
       searchable: true,
       sortable: true,
     },

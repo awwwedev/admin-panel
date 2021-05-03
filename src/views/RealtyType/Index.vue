@@ -12,22 +12,6 @@
       </div>
     </b-card>
     <b-card class="shadow-sm">
-      <b-form inline class="mb-3" @submit.prevent="onSearch">
-        <b-form-input v-model="tableTemp.searchValue" class="mr-sm-2" placeholder="Поиск"></b-form-input>
-        <b-select v-model="tableTemp.searchField" class="mr-sm-3">
-          <b-select-option :value="null">
-            --- Выберите поле для поиска ---
-          </b-select-option>
-          <b-select-option v-for="(field, idx) in fields"
-                           v-if="field.searchable"
-                           :key="idx"
-                           :value="field.key"
-          >
-            {{ field.label }}
-          </b-select-option>
-        </b-select>
-        <b-button variant="outline-primary" class="my-2 my-sm-0" type="submit">Найти</b-button>
-      </b-form>
       <b-table
           :fields="fields"
           :items="items"

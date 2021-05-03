@@ -120,11 +120,15 @@ export default class RealtyRelations extends Mixins<TableStateController>(TableS
       searchable: true
     },
     {
+      key: 'updated_at',
+      label: 'Изменен',
+      sortable: true,
+    },
+    {
       key: 'created_at',
       label: 'Создан',
       sortable: true,
-      searchable: true
-    }
+    },
   ]
   items = [] as Array<Realty>
   @Inject('basePath') basePath!: string

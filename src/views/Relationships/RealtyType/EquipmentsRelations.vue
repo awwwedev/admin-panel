@@ -17,6 +17,7 @@
         hover
         selectable
         @row-selected="onRowSelected"
+        @sort-changed="onChangeSort"
         ref="table"
         :busy="inRequestState"
     >
@@ -57,15 +58,31 @@ export default class EquipmentsRelations extends Mixins<TableStateController>(Ta
     },
     {
       key: 'id',
-      label: 'ID'
+      label: 'ID',
+      sortable: true,
+      searchable: true
     },
     {
       key: 'realtyTypeName',
-      label: 'Тип'
+      label: 'Тип',
+      sortable: true,
+      searchable: true
     },
     {
       key: 'name',
       label: 'Название',
+      searchable: true,
+      sortable: true,
+    },
+    {
+      key: 'created_at',
+      label: 'Создан',
+      sortable: true,
+    },
+    {
+      key: 'updated_at',
+      label: 'Изменен',
+      sortable: true,
     }
   ]
   @Prop( { required: true, type: Number } ) typeId!: number

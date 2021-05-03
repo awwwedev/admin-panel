@@ -13,7 +13,7 @@
         {{ field.label }}
       </b-select-option>
     </b-select>
-    <b-button variant="outline-primary" class="my-2 my-sm-0" type="button" @click="searching" :disabled="!searchField">Найти</b-button>
+    <b-button v-if="!withoutButtonSubmit" variant="outline-primary" class="my-2 my-sm-0" type="button" @click="searching" :disabled="!searchField">Найти</b-button>
   </b-form>
 </template>
 
@@ -26,7 +26,8 @@ export default class SearchPanel extends Vue {
   searchField = null as null | string
   searchValue = ''
   @Prop({ required: true, type: Array }) columns!: Array<tableColumn>
-  @Prop({ required: true, type: String }) value!: string
+  @Prop({ required: true }) value!: string
+  @Prop({ required: false, type: Boolean, default: false }) withoutButtonSubmit!: string
 
   @Emit('changedField')
   changedField(): string {

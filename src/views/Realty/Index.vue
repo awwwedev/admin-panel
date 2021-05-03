@@ -12,6 +12,7 @@
     </b-card>
     <b-card class="shadow-sm">
       <b-form class="mb-3" @submit.prevent="onSearch" @reset.prevent="onReset">
+        <SearchPanel without-button-submit :columns="fields" @changedField="tableTemp.searchField = $event" v-model="tableTemp.searchValue"/>
         <b-form-group label="Комплектация">
         <b-form-checkbox-group>
             <b-form-checkbox v-for="(equip, idx) in equipments" :key="idx"
@@ -71,8 +72,7 @@
           <b-img fluid width="150" :src="basePath + item.img_path"/>
         </template>
         <template #cell(name)="{ item }">
-          <b-link :to="{ name: 'admin.realty.change', params: { id: item.id } }"
-                  v-html="tableOptions.searchValue ? getValueWithSearchPart(item.name, tableOptions.searchValue) : item.name "></b-link>
+          <b-link :to="{ name: 'admin.realty.change', params: { id: item.id } }" v-html="item.name"></b-link>
         </template>
       </b-table>
       <ItemsCountInfo :info="itemsCountInfo" :total="tableInfo.totalItems"/>
@@ -120,10 +120,11 @@ import Notification from "@/store/modules/notification";
 import Equipment from "@/models/Equipment";
 import RealtyType from "@/models/RealtyType";
 import ItemsCountInfo from "@/components/ItemsCountInfo.vue";
+import SearchPanel from "@/components/SearchPanel.vue";
 
 
 @Component({
-  components: {ItemsCountInfo}
+  components: {SearchPanel, ItemsCountInfo}
 })
 export default class Home extends Mixins<TableStateController, SearchHelpers>(TableStateController, SearchHelpers) {
   fields = [
@@ -165,11 +166,15 @@ export default class Home extends Mixins<TableStateController, SearchHelpers>(Ta
       searchable: true
     },
     {
+      key: 'updated_at',
+      label: 'Изменен',
+      sortable: true,
+    },
+    {
       key: 'created_at',
       label: 'Создан',
       sortable: true,
-      searchable: true
-    }
+    },
   ]
   items = [] as Array<Realty>
   tableOptionsRealty = {
@@ -205,7 +210,7 @@ export default class Home extends Mixins<TableStateController, SearchHelpers>(Ta
   }
 
   onSearch (): void {
-    this.tableOptions = { ...this.tableOptions, ...this.tableOptionsRealty, page: 1 }
+    this.tableOptions = { ...this.tableOptions, ...this.tableOptionsRealty, page: 1, searchField: this.tableTemp.searchField, searchValue: this.tableTemp.searchValue }
   }
 
   onReset (): void {
@@ -214,6 +219,7 @@ export default class Home extends Mixins<TableStateController, SearchHelpers>(Ta
     this.tableOptionsRealty.pricePerMetrMin = this.realtyMinMax.pricePerMetrMin
     this.tableOptionsRealty.equipments = []
     this.tableOptionsRealty.types = []
+    this.tableTemp.searchValue = ''
 
     this.onSearch()
   }
