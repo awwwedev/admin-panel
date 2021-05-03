@@ -1,6 +1,7 @@
 <template>
   <div class="section">
     <h1 class="mb-5">Комплектация</h1>
+    <ModalDeletingConfirm :show="showConfirmModal" @close="showConfirmModal = false" @confirm="onConfirm" @cancel="onCancel"/>
 
     <b-card class="mb-4 shadow-sm">
       <div class="d-flex">
@@ -33,7 +34,7 @@
           </template>
         </template>
         <template #cell(name)="{ item }">
-          <b-link :to="{ name: 'admin.equipment.change', params: { id: item.id } }" v-html="tableOptions.searchValue ? getValueWithSearchPart(item.name, tableOptions.searchValue) : item.name "></b-link>
+          <b-link :to="{ name: 'admin.equipment.change', params: { id: item.id } }" v-html="item.name"/>
         </template>
       </b-table>
       <ItemsCountInfo :total="items.length"/>
@@ -50,10 +51,11 @@ import {getModule} from "vuex-module-decorators";
 import Notification from "@/store/modules/notification";
 import Equipment from "@/models/Equipment";
 import ItemsCountInfo from "@/components/ItemsCountInfo.vue";
+import ModalDeletingConfirm from "@/components/ModalDeletingConfirm.vue";
 
 
 @Component({
-  components: {ItemsCountInfo}
+  components: {ModalDeletingConfirm, ItemsCountInfo}
 })
 export default class IndexRealtyType extends Mixins<TableStateController, SearchHelpers>(TableStateController, SearchHelpers) {
   fields = [
@@ -91,10 +93,18 @@ export default class IndexRealtyType extends Mixins<TableStateController, Search
     }
   ]
   items = [] as Array<Equipment>
+  showConfirmModal = false
 
   get selectionBtnText (): string { return this.selectedAllRows ? 'Снять выделение' : 'Выбрать все' }
 
   onDelete (): void {
+    this.showConfirmModal = true
+  }
+
+  onCancel (): void {
+    this.showConfirmModal = false
+  }
+  onConfirm (): void {
     Equipment.destroy(this.selected.map(value => value.id as number)).then(() => {
       getModule(Notification, this.$store).setData({ title: 'Удаление прошло успешно', variant: 'success' })
       this.updateTableData();
@@ -118,6 +128,7 @@ export default class IndexRealtyType extends Mixins<TableStateController, Search
         ] : []
       })
     })
+    this.showConfirmModal = false
   }
 
   updateTableData(): Promise<AxiosResponse<Array<Equipment>>> {
