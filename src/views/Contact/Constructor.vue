@@ -108,7 +108,9 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
     header: '' as null | string,
     type: '',
     value: '',
-    is_rent_department: 1
+    is_rent_department: 1,
+    created_at:  null as string | null,
+    updated_at: null as string | null
   }
 
   onSubmit (redirect = false): void {
@@ -145,7 +147,15 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
   }
 
   updateFormData(contact: Contact): void {
-    this.formData = { header: contact.header as string, value: contact.value as string, id: contact.id as number, type: contact.type as string, is_rent_department: Number(contact.is_rent_department) }
+    this.formData = {
+      header: contact.header as string,
+      value: contact.value as string,
+      id: contact.id as number,
+      type: contact.type as string,
+      is_rent_department: Number(contact.is_rent_department),
+      created_at: contact.created_at as string,
+      updated_at: contact.updated_at as string
+    }
   }
 
   @Watch('formData.is_rent_department')

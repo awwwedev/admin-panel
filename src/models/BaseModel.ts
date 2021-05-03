@@ -1,4 +1,7 @@
 export default class BaseModel {
+    created_at?: string
+    updated_at?: string
+
     // eslint-disable-next-line
     static prepareFormData (data: any, filter=false): FormData {
         const formData = new FormData;

@@ -68,7 +68,9 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
   formData = {
     id: null as null | number,
     name: '',
-    img_path: null as null | string | File
+    img_path: null as null | string | File,
+    created_at:  null as string | null,
+    updated_at: null as string | null
   }
   temp = {
     previewImagePath: null as string | null,
@@ -104,7 +106,12 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
 
   updateFormData (type: RealtyType): void {
     this.temp = { previewImageModel: null, previewImagePath: type.img_path as string }
-    this.formData = { name: type.name as string, id: type.id as number, img_path: type.img_path as string }
+    this.formData = {
+      name: type.name as string,
+      id: type.id as number,
+      img_path: type.img_path as string,
+      created_at: type.created_at as string,
+      updated_at: type.updated_at as string}
   }
 
   @Watch('temp.previewImageModel')

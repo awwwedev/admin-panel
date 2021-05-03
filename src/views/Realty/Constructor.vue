@@ -336,7 +336,9 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
     photo: [] as Array<File> | Array<string>,
     latitude: null as null | number,
     longitude: null as null | number,
-    newPhoto: [] as Array<File>
+    newPhoto: [] as Array<File>,
+    created_at:  null as string | null,
+    updated_at: null as string | null
   }
   formDataForPreview = {}
   types = [] as Array <RealtyType>

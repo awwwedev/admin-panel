@@ -72,7 +72,9 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
   formData = {
     id: null as null | number,
     name: '',
-    realty_type_id: null as null | number
+    realty_type_id: null as null | number,
+    created_at:  null as string | null,
+    updated_at: null as string | null
   }
 
   onSubmit(redirect = true): void {
@@ -109,7 +111,13 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
   }
 
   updateFormData (equipment: Equipment): void {
-    this.formData = { name: equipment.name as string, id: equipment.id as number, realty_type_id: equipment.realty_type_id as number }
+    this.formData = {
+      name: equipment.name as string,
+      id: equipment.id as number,
+      realty_type_id: equipment.realty_type_id as number,
+      created_at: equipment.created_at as string,
+      updated_at: equipment.updated_at as string
+    }
   }
 
   created(): void {

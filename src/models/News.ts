@@ -4,7 +4,7 @@ import http from "@/common/http";
 import {responseWithPaginator} from "@/common/types";
 import BaseModel from "@/models/BaseModel";
 
-class News extends BaseModel{
+class News extends BaseModel {
     photo?: string;
     header?: string;
     content?: string;

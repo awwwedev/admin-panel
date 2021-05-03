@@ -119,6 +119,8 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
     header: '',
     content: '',
     photo: null as File | string | null,
+    created_at:  null as string | null,
+    updated_at: null as string | null
   }
   temp = {
     previewImagePath: '',
@@ -162,7 +164,9 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
       content: news.content as string,
       header: news.header as string,
       id: news.id as number,
-      photo: news.photo as string
+      photo: news.photo as string,
+      created_at: news.created_at as string,
+      updated_at: news.updated_at as string
     }
   }
 
