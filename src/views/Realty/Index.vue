@@ -75,9 +75,7 @@
                   v-html="tableOptions.searchValue ? getValueWithSearchPart(item.name, tableOptions.searchValue) : item.name "></b-link>
         </template>
       </b-table>
-      <div class="text-secondary mb-3">
-        {{ (tableOptions.perPage * tableOptions.page) }} / {{ tableInfo.totalItems }}
-      </div>
+      <ItemsCountInfo :info="itemsCountInfo" :total="tableInfo.totalItems"/>
       <div class="d-flex justify-content-between align-items-center">
         <b-pagination
             v-model="tableOptions.page"
@@ -121,9 +119,12 @@ import {getModule} from "vuex-module-decorators";
 import Notification from "@/store/modules/notification";
 import Equipment from "@/models/Equipment";
 import RealtyType from "@/models/RealtyType";
+import ItemsCountInfo from "@/components/ItemsCountInfo.vue";
 
 
-@Component({})
+@Component({
+  components: {ItemsCountInfo}
+})
 export default class Home extends Mixins<TableStateController, SearchHelpers>(TableStateController, SearchHelpers) {
   fields = [
     {

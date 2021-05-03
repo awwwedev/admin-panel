@@ -61,6 +61,7 @@
           {{ item.header }}
         </template>
       </b-table>
+      <ItemsCountInfo :total="items.length"/>
     </b-card>
   </div>
 </template>
@@ -74,10 +75,11 @@ import {getModule} from "vuex-module-decorators";
 import Notification from "@/store/modules/notification";
 import Slide from "@/models/Slide";
 import Contact from "@/models/Contact";
+import ItemsCountInfo from "@/components/ItemsCountInfo.vue";
 
 
 @Component({
-
+  components: {ItemsCountInfo}
 })
 export default class Index extends Mixins<TableStateController, SearchHelpers>(TableStateController, SearchHelpers) {
   fields = [

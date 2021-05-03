@@ -1,6 +1,4 @@
 <template>
-<b-container>
-  <h1 class="mb-4 mt-2" v-if="equip">Зависимыости комплектации &laquo;{{ equip.name }}&raquo;</h1>
   <b-card header="Недвижимость" class="mb-4 shadow-sm">
     <div class="mb-2">
       <b-button variant="info" class="mr-3" @click="onSelectAll">{{ selectionBtnText }}</b-button>
@@ -67,14 +65,12 @@
       </b-select>
     </div>
   </b-card>
-</b-container>
 </template>
 
 <script lang="ts">
-import {Component, Mixins} from "vue-property-decorator";
+import {Component, Mixins, Prop} from "vue-property-decorator";
 import TableStateController from "@/mixins/tableStateController";
 import Realty from "@/models/Realty";
-import EquipmentModel from "@/models/Equipment";
 import {AxiosResponse} from "axios";
 import {responseWithPaginator} from "@/common/types";
 import {getModule} from "vuex-module-decorators";
@@ -84,14 +80,12 @@ import ItemsCountInfo from "@/components/ItemsCountInfo.vue";
 @Component({
   components: {ItemsCountInfo}
 })
-export default class Equipment extends Mixins<TableStateController>(TableStateController) {
-  items = [] as Array<Realty>
-  equip = null as null | EquipmentModel
-  basePath = process.env.VUE_APP_URL
-  fields = [    {
-    key: 'selected',
-    label: ''
-  },
+export default class RealtyRelations extends Mixins<TableStateController>(TableStateController) {
+  fields = [
+    {
+      key: 'selected',
+      label: ''
+    },
     {
       key: 'img_path',
       label: ''
@@ -131,14 +125,16 @@ export default class Equipment extends Mixins<TableStateController>(TableStateCo
       sortable: true,
       searchable: true
     }
-    ]
+  ]
+  items = [] as Array<Realty>
+  basePath = process.env.VUE_APP_URL
+  @Prop( { required: true, type: Number } ) typeId!: number
 
-  get selectionBtnText(): string {
-    return this.selectedAllRows ? 'Снять выделение' : 'Выбрать все'
-  }
+  get selectionBtnText(): string { return this.selectedAllRows ? 'Снять выделение' : 'Выбрать все' }
+
 
   updateTableData(): Promise<AxiosResponse<responseWithPaginator<Realty>>> {
-    return Realty.getList({ ...this.tableOptionsCleared, equipments: [ this.$route.params.id ] })
+    return Realty.getList({...this.tableOptionsCleared, types: [this.typeId]})
         .then(response => {
           this.items = response.data.data
 
@@ -152,11 +148,6 @@ export default class Equipment extends Mixins<TableStateController>(TableStateCo
       this.updateTableData();
     })
   }
-
-  created (): void {
-    EquipmentModel.get({ id: this.$route.params.id as unknown as number }).then(res => { this.equip = res.data })
-  }
-
 }
 </script>
 

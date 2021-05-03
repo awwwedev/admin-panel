@@ -7,6 +7,8 @@ export type link = {
     params?: { [key: string]: string }
 }
 
+export type itemCountInfo = { leftBound: number, rightBound: number }
+
 export type notification = {
     title?: string;
     text?: string;

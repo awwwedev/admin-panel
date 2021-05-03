@@ -55,6 +55,7 @@
           <b-link :to="{ name: 'admin.news.change', params: { id: item.id } }" v-html="tableOptions.searchValue ? getValueWithSearchPart(item.header, tableOptions.searchValue) : item.header "></b-link>
         </template>
       </b-table>
+      <ItemsCountInfo :info="itemsCountInfo" :total="tableInfo.totalItems"/>
       <div class="d-flex justify-content-between align-items-center">
         <b-pagination
             v-model="tableOptions.page"
@@ -96,10 +97,11 @@ import {AxiosResponse} from "axios";
 import News from "@/models/News";
 import {getModule} from "vuex-module-decorators";
 import Notification from "@/store/modules/notification";
+import ItemsCountInfo from "@/components/ItemsCountInfo.vue";
 
 
 @Component({
-
+  components: {ItemsCountInfo}
 })
 export default class Index extends Mixins<TableStateController, SearchHelpers>(TableStateController, SearchHelpers) {
   basePath = process.env.VUE_APP_URL

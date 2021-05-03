@@ -55,6 +55,7 @@
                   v-html="tableOptions.searchValue ? getValueWithSearchPart(item.name, tableOptions.searchValue) : item.name "></b-link>
         </template>
       </b-table>
+      <ItemsCountInfo :total="items.length"/>
     </b-card>
   </div>
 </template>
@@ -67,9 +68,12 @@ import SearchHelpers from "@/mixins/searchHelpers";
 import {AxiosResponse} from "axios";
 import {getModule} from "vuex-module-decorators";
 import Notification from "@/store/modules/notification";
+import ItemsCountInfo from "@/components/ItemsCountInfo.vue";
 
 
-@Component({})
+@Component({
+  components: {ItemsCountInfo}
+})
 export default class IndexRealtyType extends Mixins<TableStateController, SearchHelpers>(TableStateController, SearchHelpers) {
   fields = [
     {

@@ -52,6 +52,7 @@
           <b-link :to="{ name: 'admin.slide.change', params: { id: item.id } }" v-html="tableOptions.searchValue ? getValueWithSearchPart(item.header, tableOptions.searchValue) : item.header "></b-link>
         </template>
       </b-table>
+      <ItemsCountInfo :total="items.length"/>
     </b-card>
   </div>
 </template>
@@ -64,10 +65,11 @@ import {AxiosResponse} from "axios";
 import {getModule} from "vuex-module-decorators";
 import Notification from "@/store/modules/notification";
 import Slide from "@/models/Slide";
+import ItemsCountInfo from "@/components/ItemsCountInfo.vue";
 
 
 @Component({
-
+  components: {ItemsCountInfo}
 })
 export default class Index extends Mixins<TableStateController, SearchHelpers>(TableStateController, SearchHelpers) {
   fields = [

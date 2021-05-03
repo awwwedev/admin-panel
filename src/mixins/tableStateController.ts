@@ -1,6 +1,6 @@
 import {Component, Mixins, Ref, Watch} from "vue-property-decorator";
 import {AxiosResponse} from "axios";
-import {responseWithPaginator, tableItem} from "@/common/types";
+import {itemCountInfo, responseWithPaginator, tableItem} from "@/common/types";
 import {BTable} from "bootstrap-vue";
 import BaseModel from "@/models/BaseModel";
 
@@ -28,6 +28,7 @@ export default class TableStateController extends Mixins() {
     }
     selected: Array<tableItem> = []
     selectedAllRows = false
+    items: Array<BaseModel> = []
     @Ref('table') $table!: BTable
 
 
@@ -43,6 +44,15 @@ export default class TableStateController extends Mixins() {
 
             return acc
         }, {} as { [key: string]: any })
+    }
+
+    get itemsCountInfo (): itemCountInfo {
+        const countItemByPage = this.tableOptions.perPage * (this.tableOptions.page - 1)
+
+        return {
+            leftBound: countItemByPage + 1,
+            rightBound: countItemByPage + this.items.length
+        }
     }
 
     updateTableData(): Promise<AxiosResponse<responseWithPaginator>> | null | Promise<AxiosResponse<Array<BaseModel>>> {
