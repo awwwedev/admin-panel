@@ -19,17 +19,15 @@
 </template>
 
 <script lang="ts">
-import {Component, Vue, Prop, Watch, Emit} from "vue-property-decorator";
+import {Component, Vue, Prop, Watch, Emit, Inject} from "vue-property-decorator";
 
 type uploadedImage =  File | null | string
 
 @Component({
-  data: () => ({
-    basePath: process.env.VUE_APP_URL
-  })
 })
 export default class UploadedImage extends Vue {
   imagePath = ''
+  @Inject('basePath') basePath!: string
 
   @Prop({required: true}) image!: uploadedImage
   @Prop({required: false, default: false, type: Boolean}) withDelete!: boolean

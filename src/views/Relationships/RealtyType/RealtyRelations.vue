@@ -68,7 +68,7 @@
 </template>
 
 <script lang="ts">
-import {Component, Mixins, Prop} from "vue-property-decorator";
+import {Component, Inject, Mixins, Prop} from "vue-property-decorator";
 import TableStateController from "@/mixins/tableStateController";
 import Realty from "@/models/Realty";
 import {AxiosResponse} from "axios";
@@ -127,7 +127,7 @@ export default class RealtyRelations extends Mixins<TableStateController>(TableS
     }
   ]
   items = [] as Array<Realty>
-  basePath = process.env.VUE_APP_URL
+  @Inject('basePath') basePath!: string
   @Prop( { required: true, type: Number } ) typeId!: number
 
   get selectionBtnText(): string { return this.selectedAllRows ? 'Снять выделение' : 'Выбрать все' }

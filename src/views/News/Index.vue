@@ -10,22 +10,7 @@
       </div>
     </b-card>
     <b-card class="shadow-sm">
-      <b-form inline class="mb-3" @submit.prevent="omSearch">
-        <b-form-input v-model="tableTemp.searchValue" class="mr-sm-2" placeholder="Поиск"></b-form-input>
-        <b-select v-model="tableTemp.searchField" class="mr-sm-3">
-          <b-select-option :value="null">
-            --- Выберите поле для поиска ---
-          </b-select-option>
-          <b-select-option v-for="(field, idx) in fields"
-                           v-if="field.searchable"
-                           :key="idx"
-                           :value="field.key"
-          >
-            {{ field.label }}
-          </b-select-option>
-        </b-select>
-        <b-button variant="outline-primary" class="my-2 my-sm-0" type="submit">Найти</b-button>
-      </b-form>
+      <SearchPanel :columns="fields" @changedField="tableTemp.searchField = $event" v-model="tableTemp.searchValue" @search="onSearch"/>
       <b-table
           :fields="fields"
           :items="items"
@@ -52,7 +37,7 @@
           <b-img fluid width="150" :src="basePath + item.photo"/>
         </template>
         <template #cell(header)="{ item }">
-          <b-link :to="{ name: 'admin.news.change', params: { id: item.id } }" v-html="tableOptions.searchValue ? getValueWithSearchPart(item.header, tableOptions.searchValue) : item.header "></b-link>
+          <b-link :to="{ name: 'admin.news.change', params: { id: item.id } }" v-html="item.header "></b-link>
         </template>
       </b-table>
       <ItemsCountInfo :info="itemsCountInfo" :total="tableInfo.totalItems"/>
@@ -89,7 +74,7 @@
 </template>
 
 <script lang="ts">
-import {Component, Mixins} from "vue-property-decorator";
+import {Component, Inject, Mixins} from "vue-property-decorator";
 import TableStateController from "@/mixins/tableStateController";
 import {responseWithPaginator} from "@/common/types";
 import SearchHelpers from "@/mixins/searchHelpers";
@@ -98,13 +83,14 @@ import News from "@/models/News";
 import {getModule} from "vuex-module-decorators";
 import Notification from "@/store/modules/notification";
 import ItemsCountInfo from "@/components/ItemsCountInfo.vue";
+import SearchPanel from "@/components/SearchPanel.vue";
 
 
 @Component({
-  components: {ItemsCountInfo}
+  components: {SearchPanel, ItemsCountInfo}
 })
 export default class Index extends Mixins<TableStateController, SearchHelpers>(TableStateController, SearchHelpers) {
-  basePath = process.env.VUE_APP_URL
+  @Inject('basePath') basePath!: string
   fields = [
     {
       key: 'selected',
@@ -129,6 +115,11 @@ export default class Index extends Mixins<TableStateController, SearchHelpers>(T
     {
       key: 'created_at',
       label: 'Создан',
+      sortable: true,
+    },
+    {
+      key: 'updated_at',
+      label: 'Изменен',
       sortable: true,
     }
   ]

@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import {Component, Vue, Watch} from "vue-property-decorator";
+import {Component, Provide, Vue, Watch} from "vue-property-decorator";
 import {mapGetters} from "vuex";
 import {notification} from "@/common/types";
 import {getModule} from "vuex-module-decorators";
@@ -56,6 +56,8 @@ export default class App extends Vue {
   $notificationData!: notification
   $userIsLogged!: boolean
   dismissCounter = 0
+  @Provide('basePath')
+  basePath = process.env.VUE_APP_URL
 
   get allowInitUser(): boolean {
     return this.$cookies.isKey('token')

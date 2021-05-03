@@ -10,7 +10,7 @@
       </div>
     </b-card>
     <b-card class="shadow-sm">
-      <b-form inline class="mb-3" @submit.prevent="omSearch">
+      <b-form inline class="mb-3" @submit.prevent="onSearch">
         <b-form-input v-model="tableTemp.searchValue" class="mr-sm-2" placeholder="Поиск"></b-form-input>
         <b-select v-model="tableTemp.searchField" class="mr-sm-3">
           <b-select-option :value="null">
@@ -48,6 +48,9 @@
             <span>&nbsp;</span>
           </template>
         </template>
+        <template #cell(image)="{ item }">
+          <b-img fluid width="150" :src="basePath + item.image"/>
+        </template>
         <template #cell(header)="{ item }">
           <b-link :to="{ name: 'admin.slide.change', params: { id: item.id } }" v-html="tableOptions.searchValue ? getValueWithSearchPart(item.header, tableOptions.searchValue) : item.header "></b-link>
         </template>
@@ -58,7 +61,7 @@
 </template>
 
 <script lang="ts">
-import {Component, Mixins} from "vue-property-decorator";
+import {Component, Inject, Mixins} from "vue-property-decorator";
 import TableStateController from "@/mixins/tableStateController";
 import SearchHelpers from "@/mixins/searchHelpers";
 import {AxiosResponse} from "axios";
@@ -72,9 +75,15 @@ import ItemsCountInfo from "@/components/ItemsCountInfo.vue";
   components: {ItemsCountInfo}
 })
 export default class Index extends Mixins<TableStateController, SearchHelpers>(TableStateController, SearchHelpers) {
+  @Inject('basePath') basePath!: string
+
   fields = [
     {
       key: 'selected',
+      label: ''
+    },
+    {
+      key: 'image',
       label: ''
     },
     {
@@ -87,6 +96,16 @@ export default class Index extends Mixins<TableStateController, SearchHelpers>(T
       key: 'header',
       label: 'Название',
       searchable: true,
+      sortable: true,
+    },
+    {
+      key: 'created_at',
+      label: 'Создан',
+      sortable: true,
+    },
+    {
+      key: 'updated_at',
+      label: 'Изменен',
       sortable: true,
     }
   ]

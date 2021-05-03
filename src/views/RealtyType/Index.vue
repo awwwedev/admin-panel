@@ -12,7 +12,7 @@
       </div>
     </b-card>
     <b-card class="shadow-sm">
-      <b-form inline class="mb-3" @submit.prevent="omSearch">
+      <b-form inline class="mb-3" @submit.prevent="onSearch">
         <b-form-input v-model="tableTemp.searchValue" class="mr-sm-2" placeholder="Поиск"></b-form-input>
         <b-select v-model="tableTemp.searchField" class="mr-sm-3">
           <b-select-option :value="null">
@@ -52,7 +52,10 @@
         </template>
         <template #cell(name)="{ item }">
           <b-link :to="{ name: 'admin.realtyType.change', params: { id: item.id } }"
-                  v-html="tableOptions.searchValue ? getValueWithSearchPart(item.name, tableOptions.searchValue) : item.name "></b-link>
+                  v-html="item.name "></b-link>
+        </template>
+        <template #cell(img_path)="{ item }">
+          <b-img fluid width="150" :src="basePath + item.img_path"/>
         </template>
       </b-table>
       <ItemsCountInfo :total="items.length"/>
@@ -61,7 +64,7 @@
 </template>
 
 <script lang="ts">
-import {Component, Mixins} from "vue-property-decorator";
+import {Component, Inject, Mixins} from "vue-property-decorator";
 import TableStateController from "@/mixins/tableStateController";
 import RealtyType from "@/models/RealtyType";
 import SearchHelpers from "@/mixins/searchHelpers";
@@ -81,6 +84,10 @@ export default class IndexRealtyType extends Mixins<TableStateController, Search
       label: ''
     },
     {
+      key: 'img_path',
+      label: ''
+    },
+    {
       key: 'id',
       label: 'ID',
       sortable: true,
@@ -91,9 +98,21 @@ export default class IndexRealtyType extends Mixins<TableStateController, Search
       label: 'Название',
       searchable: true,
       sortable: true,
+    },
+
+    {
+      key: 'created_at',
+      label: 'Создан',
+      sortable: true,
+    },
+    {
+      key: 'updated_at',
+      label: 'Изменен',
+      sortable: true,
     }
   ]
   items = [] as Array<RealtyType>
+  @Inject('basePath') basePath!: string
 
   get selectionBtnText(): string {
     return this.selectedAllRows ? 'Снять выделение' : 'Выбрать все'

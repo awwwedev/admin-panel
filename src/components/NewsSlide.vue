@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import {Component, Vue} from 'vue-property-decorator';
+import {Component, Inject, Vue} from 'vue-property-decorator';
 import Ibg from "@/components/Ibg.vue";
 
     @Component({
@@ -33,12 +33,10 @@ import Ibg from "@/components/Ibg.vue";
                 type: String,
                 required: true
             }
-        },
-      data: () => ({
-        basePath: process.env.VUE_APP_URL
-      })
+        }
     })
     export default class NewsSlide extends Vue {
+      @Inject('basePath') basePath!: string
     }
 </script>
 

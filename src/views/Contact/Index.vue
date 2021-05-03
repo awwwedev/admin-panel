@@ -10,7 +10,7 @@
       </div>
     </b-card>
     <b-card class="shadow-sm">
-      <b-form inline class="mb-3" @submit.prevent="omSearch">
+      <b-form inline class="mb-3" @submit.prevent="onSearch">
         <b-form-input v-model="tableTemp.searchValue" class="mr-sm-2" placeholder="Поиск"></b-form-input>
         <b-select v-model="tableTemp.searchField" class="mr-sm-3">
           <b-select-option :value="null">
@@ -115,6 +115,16 @@ export default class Index extends Mixins<TableStateController, SearchHelpers>(T
       key: 'value',
       label: 'Значение',
       searchable: true,
+      sortable: true,
+    },
+    {
+      key: 'created_at',
+      label: 'Создан',
+      sortable: true,
+    },
+    {
+      key: 'updated_at',
+      label: 'Изменен',
       sortable: true,
     }
   ]

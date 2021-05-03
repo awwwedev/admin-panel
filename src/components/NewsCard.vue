@@ -13,16 +13,13 @@
 </template>
 
 <script lang="ts">
-import {Component, Prop, Ref, Vue, Watch} from "vue-property-decorator";
+import {Component, Inject, Prop, Ref, Vue, Watch} from "vue-property-decorator";
 import $ from 'jquery'
 import {removeHtmlTags} from "@/common";
 import Ibg from "@/components/Ibg.vue";
 
 @Component({
   components: {Ibg},
-  data: () => ({
-    basePath: process.env.VUE_APP_URL
-  })
 })
 export default class NewsCard extends Vue {
   @Prop({ required: true }) name!: string
@@ -30,6 +27,7 @@ export default class NewsCard extends Vue {
   @Prop({ required: true }) content!: string
   @Ref('name') refName!: HTMLElement
   @Ref('name-value') refNameValue!: HTMLElement
+  @Inject('basePath') basePath!: string
   isHovered = false
   oldHeight = 0
 

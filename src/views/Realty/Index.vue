@@ -109,7 +109,7 @@
 </template>
 
 <script lang="ts">
-import {Component, Mixins} from "vue-property-decorator";
+import {Component, Inject, Mixins} from "vue-property-decorator";
 import Realty from "@/models/Realty";
 import TableStateController from "@/mixins/tableStateController";
 import {AxiosResponse} from "axios";
@@ -182,7 +182,7 @@ export default class Home extends Mixins<TableStateController, SearchHelpers>(Ta
   realtyMinMax = {} as realtyMinMaxInfo
   equipments = [] as Array<Equipment>
   types = [] as Array<RealtyType>
-  basePath = process.env.VUE_APP_URL
+  @Inject('basePath') basePath!: string
 
   get selectionBtnText(): string {
     return this.selectedAllRows ? 'Снять выделение' : 'Выбрать все'

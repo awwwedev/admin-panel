@@ -57,6 +57,13 @@ export type realtyMinMaxInfo = {
     areaMax: number;
 }
 
+export type tableColumn = {
+    key: string,
+    label: string,
+    searchable?: boolean,
+    sortable?: boolean
+}
+
 export type tableItem = { [key: string]: number | string }
 
 export type objectWIthAnyProperties = { [key: string]: string | Array<number | string> | minMax | number | objectWIthAnyProperties }
