@@ -1,8 +1,7 @@
 <template>
   <div class="section">
     <h1 class="mb-5">Комплектация</h1>
-    <ModalDeletingConfirm :show="showConfirmModal" @close="showConfirmModal = false" @confirm="onConfirm" @cancel="onCancel"/>
-
+    <ModalDeletingConfirm :show="showConfirmModal" @close="showConfirmModal = false" :confirm-handler="onConfirm" @cancel="showConfirmModal = false"/>
     <b-card class="mb-4 shadow-sm">
       <div class="d-flex">
         <b-button variant="primary" class="mr-2" :to="{ name: 'admin.equipment.create' }">Создать</b-button>
@@ -101,9 +100,6 @@ export default class IndexRealtyType extends Mixins<TableStateController, Search
     this.showConfirmModal = true
   }
 
-  onCancel (): void {
-    this.showConfirmModal = false
-  }
   onConfirm (): void {
     Equipment.destroy(this.selected.map(value => value.id as number)).then(() => {
       getModule(Notification, this.$store).setData({ title: 'Удаление прошло успешно', variant: 'success' })

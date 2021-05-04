@@ -1,7 +1,7 @@
 <template>
   <div class="section">
     <h1 class="mb-5">Категория недвижимости</h1>
-
+    <ModalDeletingConfirm :show="showConfirmModal" @close="showConfirmModal = false" :confirm-handler="onConfirm" @cancel="showConfirmModal = false"/>
     <b-card class="mb-4 shadow-sm">
       <div class="d-flex">
         <b-button variant="primary" class="mr-2" :to="{ name: 'admin.contact.create' }">Создать</b-button>
@@ -60,12 +60,14 @@ import Notification from "@/store/modules/notification";
 import Slide from "@/models/Slide";
 import Contact from "@/models/Contact";
 import ItemsCountInfo from "@/components/ItemsCountInfo.vue";
+import ModalDeletingConfirm from "@/components/ModalDeletingConfirm.vue";
 
 
 @Component({
-  components: {ItemsCountInfo}
+  components: {ModalDeletingConfirm, ItemsCountInfo}
 })
 export default class Index extends Mixins<TableStateController, SearchHelpers>(TableStateController, SearchHelpers) {
+  showConfirmModal = false
   fields = [
     {
       key: 'selected',
@@ -116,11 +118,15 @@ export default class Index extends Mixins<TableStateController, SearchHelpers>(T
 
   get selectionBtnText (): string { return this.selectedAllRows ? 'Снять выделение' : 'Выбрать все' }
 
-  onDelete (): void {
+  onConfirm(): void {
     Contact.destroy(this.selected.map(value => value.id as number)).then(() => {
       getModule(Notification, this.$store).setData({ title: 'Удаление прошло успешно', variant: 'success' })
       this.updateTableData();
     })
+  }
+
+  onDelete (): void {
+    this.showConfirmModal = true
   }
 
   updateTableData(): Promise<AxiosResponse<Array<Slide>>> {

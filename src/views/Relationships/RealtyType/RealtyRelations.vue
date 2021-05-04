@@ -1,5 +1,6 @@
 <template>
   <b-card header="Недвижимость" class="mb-4 shadow-sm">
+    <ModalDeletingConfirm :show="showConfirmModal" @close="showConfirmModal = false" :confirm-handler="onConfirm" @cancel="showConfirmModal = false"/>
     <div class="mb-2">
       <b-button variant="info" class="mr-3" @click="onSelectAll">{{ selectionBtnText }}</b-button>
       <b-button variant="danger" class="my-2 my-sm-0" :disabled="!selected.length" @click="onDelete">Удалить
@@ -76,11 +77,13 @@ import {responseWithPaginator} from "@/common/types";
 import {getModule} from "vuex-module-decorators";
 import Notification from "@/store/modules/notification";
 import ItemsCountInfo from "@/components/ItemsCountInfo.vue";
+import ModalDeletingConfirm from "@/components/ModalDeletingConfirm.vue";
 
 @Component({
-  components: {ItemsCountInfo}
+  components: {ModalDeletingConfirm, ItemsCountInfo}
 })
 export default class RealtyRelations extends Mixins<TableStateController>(TableStateController) {
+  showConfirmModal = false
   fields = [
     {
       key: 'selected',
@@ -132,10 +135,9 @@ export default class RealtyRelations extends Mixins<TableStateController>(TableS
   ]
   items = [] as Array<Realty>
   @Inject('basePath') basePath!: string
-  @Prop( { required: true, type: Number } ) typeId!: number
+  @Prop( { required: true, type: [Number, String] } ) typeId!: number
 
   get selectionBtnText(): string { return this.selectedAllRows ? 'Снять выделение' : 'Выбрать все' }
-
 
   updateTableData(): Promise<AxiosResponse<responseWithPaginator<Realty>>> {
     return Realty.getList({...this.tableOptionsCleared, types: [this.typeId]})
@@ -146,11 +148,15 @@ export default class RealtyRelations extends Mixins<TableStateController>(TableS
         })
   }
 
-  onDelete(): void {
+  onConfirm(): void {
     Realty.destroy(this.selected.map(value => value.id as number)).then(() => {
       getModule(Notification, this.$store).setData({title: 'Удаление прошло успешно', variant: 'success'})
       this.updateTableData();
     })
+  }
+
+  onDelete(): void {
+    this.showConfirmModal = true
   }
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div class="section">
     <h1 class="mb-5">Новости</h1>
-
+    <ModalDeletingConfirm :show="showConfirmModal" @close="showConfirmModal = false" :confirm-handler="onConfirm" @cancel="showConfirmModal = false"/>
     <b-card class="mb-4 shadow-sm">
       <div class="d-flex">
         <b-button variant="primary" class="mr-2" :to="{ name: 'admin.news.create' }">Создать</b-button>
@@ -84,13 +84,15 @@ import {getModule} from "vuex-module-decorators";
 import Notification from "@/store/modules/notification";
 import ItemsCountInfo from "@/components/ItemsCountInfo.vue";
 import SearchPanel from "@/components/SearchPanel.vue";
+import ModalDeletingConfirm from "@/components/ModalDeletingConfirm.vue";
 
 
 @Component({
-  components: {SearchPanel, ItemsCountInfo}
+  components: {ModalDeletingConfirm, SearchPanel, ItemsCountInfo}
 })
 export default class Index extends Mixins<TableStateController, SearchHelpers>(TableStateController, SearchHelpers) {
   @Inject('basePath') basePath!: string
+  showConfirmModal = false
   fields = [
     {
       key: 'selected',
@@ -127,11 +129,15 @@ export default class Index extends Mixins<TableStateController, SearchHelpers>(T
 
   get selectionBtnText (): string { return this.selectedAllRows ? 'Снять выделение' : 'Выбрать все' }
 
-  onDelete (): void {
+  onConfirm(): void {
     News.destroy(this.selected.map(value => value.id as number)).then(() => {
       getModule(Notification, this.$store).setData({ title: 'Удаление прошло успешно', variant: 'success' })
       this.updateTableData();
     })
+  }
+
+  onDelete (): void {
+    this.showConfirmModal = true
   }
 
   updateTableData(): Promise<AxiosResponse<responseWithPaginator<News>>> {

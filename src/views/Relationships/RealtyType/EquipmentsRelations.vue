@@ -1,8 +1,9 @@
 <template>
   <b-card header="Комплектация" class="mb-4 shadow-sm">
+    <ModalDeletingConfirm :show="showConfirmModal" @close="showConfirmModal = false" :confirm-handler="onConfirm" @cancel="showConfirmModal = false"/>
     <div class="mb-2">
       <b-button variant="info" class="mr-3" @click="onSelectAll">{{ selectionBtnText }}</b-button>
-      <b-button variant="danger" class="my-2 my-sm-0" :disabled="!selected.length" @click="onDeleteEquips">
+      <b-button variant="danger" class="my-2 my-sm-0" :disabled="!selected.length" @click="onDelete">
         Удалить
         выбранное
       </b-button>
@@ -45,11 +46,13 @@ import {getModule} from "vuex-module-decorators";
 import Notification from "@/store/modules/notification";
 import {AxiosResponse} from "axios";
 import ItemsCountInfo from "@/components/ItemsCountInfo.vue";
+import ModalDeletingConfirm from "@/components/ModalDeletingConfirm.vue";
 
 @Component({
-  components: {ItemsCountInfo}
+  components: {ModalDeletingConfirm, ItemsCountInfo}
 })
 export default class EquipmentsRelations extends Mixins<TableStateController>(TableStateController) {
+  showConfirmModal = false
   items = [] as Array<Equipment>
   fields = [
     {
@@ -85,7 +88,7 @@ export default class EquipmentsRelations extends Mixins<TableStateController>(Ta
       sortable: true,
     }
   ]
-  @Prop( { required: true, type: Number } ) typeId!: number
+  @Prop( { required: true, type: [Number, String] } ) typeId!: number
 
   get selectionBtnText (): string { return this.selectedAllRows ? 'Снять выделение' : 'Выбрать все' }
 
@@ -98,7 +101,7 @@ export default class EquipmentsRelations extends Mixins<TableStateController>(Ta
         })
   }
 
-  onDeleteEquips(): void {
+  onConfirm (): void {
     Equipment.destroy(this.selected.map(value => value.id as number)).then(() => {
       getModule(Notification, this.$store).setData({title: 'Удаление прошло успешно', variant: 'success'})
 
@@ -123,6 +126,10 @@ export default class EquipmentsRelations extends Mixins<TableStateController>(Ta
         ] : []
       })
     })
+  }
+
+  onDelete(): void {
+    this.showConfirmModal = true
   }
 }
 </script>
