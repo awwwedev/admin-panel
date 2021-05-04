@@ -120,7 +120,13 @@ export default class Equipment extends Mixins<TableStateController>(TableStateCo
     },
     {
       key: 'price',
-      label: 'Стоимость',
+      label: 'Стоимость (руб.)',
+      sortable: true,
+      searchable: true
+    },
+    {
+      key: 'discount_sum',
+      label: 'Скидка (руб.)',
       sortable: true,
       searchable: true
     },
@@ -131,11 +137,15 @@ export default class Equipment extends Mixins<TableStateController>(TableStateCo
       searchable: true
     },
     {
+      key: 'updated_at',
+      label: 'Изменен',
+      sortable: true,
+    },
+    {
       key: 'created_at',
       label: 'Создан',
       sortable: true,
-      searchable: true
-    }
+    },
   ]
 
   get selectionBtnText(): string {

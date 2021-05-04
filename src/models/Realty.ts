@@ -17,6 +17,7 @@ export default class Realty extends BaseModel {
     longitude?: number
     price_per_metr?: number
     type_id?: number
+    discount_sum?: number
     photo?: Array<string>
     equipments?: Array<Equipment>
 

@@ -83,6 +83,14 @@
                         :state="getFieldState($v.formData.price_per_metr)"
           ></b-form-input>
         </b-form-group>
+        <b-form-group label="Скидка (руб.)"
+                      label-for="discount"
+        >
+          <b-form-input id="discount"
+                        v-model.number="formData.discount_sum"
+                        type="number"
+          ></b-form-input>
+        </b-form-group>
         <b-form-group label="Итоговая стоимость (руб.)"
                       label-for="price"
         >
@@ -338,12 +346,13 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
     longitude: null as null | number,
     newPhoto: [] as Array<File>,
     created_at:  null as string | null,
-    updated_at: null as string | null
+    updated_at: null as string | null,
+    discount_sum: 0
   }
   formDataForPreview = {}
   types = [] as Array <RealtyType>
   get mainTabName(): string { return this.$route.meta.isCreatePage ? 'Создание' : 'Редактирование' }
-  get totalPrice(): number { return (this.formData.area as number )* (this.formData.price_per_metr as number) }
+  get totalPrice(): number { return (this.formData.area as number ) * (this.formData.price_per_metr as number) - this.formData.discount_sum }
   get uploadedIMageNames(): string { return this.temp.uploadedImages.map(value => value.name).join(', ') }
   get sliderImagesToDisplay (): Array<File|string> {
     if (this.isCreatePage) {
@@ -486,7 +495,6 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
       }, [] as Array<Equipment>)
     }
   }
-
   @Watch('$route.meta.isCreatePage', { immediate: true })
   watchIsCreatePage(isCreatePage: boolean): void {
     if (!isCreatePage) {

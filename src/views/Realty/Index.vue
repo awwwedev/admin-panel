@@ -158,7 +158,13 @@ export default class Home extends Mixins<TableStateController, SearchHelpers>(Ta
     },
     {
       key: 'price',
-      label: 'Стоимость',
+      label: 'Стоимость (руб.)',
+      sortable: true,
+      searchable: true
+    },
+    {
+      key: 'discount_sum',
+      label: 'Скидка (руб.)',
       sortable: true,
       searchable: true
     },

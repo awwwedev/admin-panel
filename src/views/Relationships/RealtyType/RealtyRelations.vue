@@ -112,7 +112,13 @@ export default class RealtyRelations extends Mixins<TableStateController>(TableS
     },
     {
       key: 'price',
-      label: 'Стоимость',
+      label: 'Стоимость (руб.)',
+      sortable: true,
+      searchable: true
+    },
+    {
+      key: 'discount_sum',
+      label: 'Скидка (руб.)',
       sortable: true,
       searchable: true
     },
