@@ -73,7 +73,7 @@
 </template>
 
 <script lang="ts">
-import {Component, Mixins} from "vue-property-decorator";
+import {Component, Inject, Mixins} from "vue-property-decorator";
 import TableStateController from "@/mixins/tableStateController";
 import Realty from "@/models/Realty";
 import EquipmentModel from "@/models/Equipment";
@@ -91,7 +91,7 @@ export default class Equipment extends Mixins<TableStateController>(TableStateCo
   showConfirmModal = false
   items = [] as Array<Realty>
   equip = null as null | EquipmentModel
-  basePath = process.env.VUE_APP_URL
+  @Inject('basePath') basePath!: string
   fields = [
     {
       key: 'selected',

@@ -57,7 +57,7 @@ export default class App extends Vue {
   $userIsLogged!: boolean
   dismissCounter = 0
   @Provide('basePath')
-  basePath = process.env.VUE_APP_URL
+  basePath = process.env.VUE_APP_IMG_PATH
 
   get allowInitUser(): boolean {
     return this.$cookies.isKey('token')
