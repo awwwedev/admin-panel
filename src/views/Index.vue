@@ -114,16 +114,18 @@ export default class Index extends Vue {
   }
 
   isActiveRoute (routeName: string): boolean {
-    return  routeName === (this.$route.name as string).replace(/\.create|\.change/, '')
+    return this.$route.name as unknown as boolean && routeName === (this.$route.name as string).replace(/\.create|\.change/, '')
   }
 
   @Watch('accordionIdx')
   watchAccordionIdx(): void {
-    this.$router.replace({
-      name: this.$route.name as string,
-      query: {...this.$route.query, accordionIdx: String(this.accordionIdx)}
-    }).catch(() => {
-    })
+    this.$router.onReady(() => {
+     this.$router.replace({
+       name: this.$route.name as string,
+       query: {...this.$route.query, accordionIdx: String(this.accordionIdx)}
+     }).catch(() => {
+     })
+   })
   }
 }
 </script>

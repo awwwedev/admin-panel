@@ -80,7 +80,7 @@ export default class App extends Vue {
 
   @Watch('$allowInitUser')
   watchAllowInitUser(): void {
-    if (this.$allowInitUser) {
+    if (this.$allowInitUser && this.$cookies.isKey('token')) {
       http.defaults.headers['Authorization'] = 'Bearer ' + this.$cookies.get('token')
 
       this.$userStore.initUser()
@@ -89,6 +89,8 @@ export default class App extends Vue {
             this.$cookies.remove('token')
             this.$userStore.setAllowInitUser(false)
           })
+    } else {
+      this.$userStore.setAllowInitUser(false)
     }
   }
 
