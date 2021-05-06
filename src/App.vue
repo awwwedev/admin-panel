@@ -37,7 +37,7 @@ import {mapGetters} from "vuex";
 import {notification} from "@/common/types";
 import {getModule} from "vuex-module-decorators";
 import Notification from '@/store/modules/notification'
-import User from "@/store/modules/user";
+import UserStore from "@/store/modules/user";
 import http from "@/common/http";
 import Login from "@/components/Login.vue";
 
@@ -48,19 +48,22 @@ import Login from "@/components/Login.vue";
       $notificationData: 'getData'
     }),
     ...mapGetters('user', {
-      $userIsLogged: 'getIsLogged'
+      $userIsLogged: 'getIsLogged',
+      $allowInitUser: 'getAllowInitUser',
     })
   }
 })
 export default class App extends Vue {
   $notificationData!: notification
   $userIsLogged!: boolean
+  $allowInitUser!: boolean
   dismissCounter = 0
   @Provide('basePath')
   basePath = process.env.VUE_APP_IMG_PATH
+  $userStore!: UserStore
 
-  get allowInitUser(): boolean {
-    return this.$cookies.isKey('token')
+  constructor() {
+    super();
   }
 
   onDismissed(): void {
@@ -75,16 +78,23 @@ export default class App extends Vue {
     }
   }
 
-  created(): void {
-    if (this.allowInitUser) {
+  @Watch('$allowInitUser')
+  watchAllowInitUser(): void {
+    if (this.$allowInitUser) {
       http.defaults.headers['Authorization'] = 'Bearer ' + this.$cookies.get('token')
 
-      getModule(User, this.$store).initUser()
+      this.$userStore.initUser()
           .catch(() => {
             delete http.defaults.headers['Authorization']
             this.$cookies.remove('token')
+            this.$userStore.setAllowInitUser(false)
           })
     }
+  }
+
+  created (): void {
+    this.$userStore = getModule(UserStore, this.$store)
+    this.$userStore.setAllowInitUser(true)
   }
 }
 </script>

@@ -3,7 +3,7 @@
     <b-col sm="12" md="8">
       <b-container>
         <b-form class="w-50 mx-auto" @submit.prevent="onSubmit">
-          <b-overlay :show="!$userIsLogged && ($userInInitState || allowInitUser)" spinner-variant="primary" class="p-1">
+          <b-overlay :show="!$userIsLogged && ($userInInitState || $allowInitUser)" spinner-variant="primary" class="p-1">
             <b-form-group
                 id="email"
                 label="Почта"
@@ -53,6 +53,7 @@ import Notification from "@/store/modules/notification";
 import store from "@/store";
 import http from "@/common/http";
 import {mapGetters} from "vuex";
+import UserStore from "@/store/modules/user";
 
 
 @Component({
@@ -70,23 +71,19 @@ import {mapGetters} from "vuex";
   computed: {
     ...mapGetters('user', {
       $userIsLogged: 'getIsLogged',
-      $userInInitState: 'getInInitState'
+      $userInInitState: 'getInInitState',
+      $allowInitUser: 'getAllowInitUser',
     })
   }
 })
 export default class Login extends Mixins<Validation>(validationMixin, ValidationMixin) {
+  $userIsLogged!: boolean
+  $userInInitState!: boolean
+  $allowInitUser!: boolean
   formData = {
     email: '',
     password: ''
   }
-
-
-  get allowInitUser(): boolean {
-    return this.$cookies.isKey('token')
-  }
-
-  $userIsLogged!: boolean
-  $userInInitState!: boolean
 
   onSubmit(): void {
     this.$v.$touch()

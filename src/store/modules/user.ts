@@ -9,6 +9,7 @@ export default class User extends VuexModule {
     user: UserModel = new UserModel()
     isLogged = false
     inInitState = false
+    allowInitUser = false
 
     get getUser(): UserModel {
         return this.user
@@ -18,6 +19,9 @@ export default class User extends VuexModule {
     }
     get getInInitState(): boolean {
         return this.inInitState
+    }
+    get getAllowInitUser(): boolean {
+        return this.allowInitUser
     }
 
     @Mutation
@@ -31,6 +35,10 @@ export default class User extends VuexModule {
     @Mutation
     setInInitState(inLoginState: boolean): void {
         this.inInitState = inLoginState
+    }
+    @Mutation
+    setAllowInitUser(allowInitUser: boolean): void {
+        this.allowInitUser = allowInitUser
     }
 
     @Action
