@@ -64,6 +64,8 @@ import Dates from "@/components/constructor/Dates.vue";
 })
 export default class Constructor extends Mixins<Validation, ValidationMixin, ConstructorHelpers>(validationMixin, ValidationMixin, ConstructorHelpers) {
   entityName = 'типа недвижимости'
+  entityNamePrefixCreate = 'Создание нового '
+  entityNamePrefixChange = 'Редактирование '
 
   formData = {
     id: null as null | number,

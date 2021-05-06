@@ -1,6 +1,6 @@
 module.exports = {
     publicPath: process.env.NODE_ENV === 'production'
-        ? process.env.VUE_APP_BASE_PATH
+        ? process.env.VUE_APP_PUBLIC_PATH
         : '/admin/',
     transpileDependencies: ['vuex-module-decorators'],
     configureWebpack: {

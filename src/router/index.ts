@@ -6,12 +6,12 @@ Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
   {
-    path: '/admin/login',
+    path: 'login',
     name: 'admin.login',
     component: () => import('@/components/Login.vue')
   },
   {
-    path: '/admin',
+    path: '',
     component: () => import('@/views/Index.vue'),
     children: [
       {
@@ -203,7 +203,7 @@ const routes: Array<RouteConfig> = [
 
 const router = new VueRouter({
   mode: 'history',
-  base: process.env.VUE_APP_PUBLIC_PATH,
+  base: process.env.VUE_APP_BASE_PATH,
   routes
 })
 

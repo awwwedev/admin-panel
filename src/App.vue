@@ -87,6 +87,8 @@ export default class App extends Vue {
           .catch(() => {
             delete http.defaults.headers['Authorization']
             this.$cookies.remove('token')
+          })
+          .finally(() => {
             this.$userStore.setAllowInitUser(false)
           })
     } else {
