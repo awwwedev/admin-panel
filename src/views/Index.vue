@@ -40,10 +40,29 @@
                 </b-card>
                 <b-card no-body>
                   <template #header>
-                    <span type="button" class="d-block" @click="accordionIdx = 2">Пользователь</span>
+                    <span type="button" class="d-block" @click="accordionIdx = 2">Управление пользователями</span>
                   </template>
                   <b-collapse id="collapseNavContent" :visible="accordionIdx === 2">
                     <b-list-group>
+                      <b-list-group-item v-for="(link, idx) in navLinks2" :key="idx">
+                        <template v-if="!isActiveRoute(link.routeName)">
+                          <b-link class="d-block" type="button" :to="{ name: link.routeName, query: { accordionIdx } }">{{ link.label }}</b-link>
+                        </template>
+                        <template v-else>
+                          <span class="d-block" :class="{ 'mb-2': $route.name.includes(link.routeName) }">{{ link.label }}</span>
+                          <b-list-group>
+                            <b-list-group-item :active="!$route.meta.hasOwnProperty('isCreatePage')" :to="{ name: link.routeName, query: { accordionIdx } }">
+                              Все записи
+                            </b-list-group-item>
+                            <b-list-group-item :to="{ name: link.routeName + '.create', query: { accordionIdx } }" :active="$route.meta.isCreatePage">
+                              Создание
+                            </b-list-group-item>
+                            <b-list-group-item :active="$route.meta.hasOwnProperty('isCreatePage') && !$route.meta.isCreatePage" disabled>
+                              Изменение
+                            </b-list-group-item>
+                          </b-list-group>
+                        </template>
+                      </b-list-group-item>
                     </b-list-group>
                   </b-collapse>
                 </b-card>
@@ -97,6 +116,12 @@ export default class Index extends Vue {
     {
       routeName: 'admin.contact',
       label: 'Контакты'
+    }
+  ]
+  navLinks2 = [
+    {
+      routeName: 'admin.user',
+      label: 'Пользователь'
     }
   ]
 

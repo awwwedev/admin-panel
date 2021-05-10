@@ -196,6 +196,33 @@ const routes: Array<RouteConfig> = [
             component: () => import('@/views/Relationships/Equipment.vue')
           }
         ]
+      },
+      {
+        path: 'user',
+        component: PathThrough,
+        children: [
+          {
+            name: 'admin.user',
+            path: '',
+            component: () => import('@/views/User/Index.vue')
+          },
+          {
+            name: 'admin.user.create',
+            path: 'create',
+            meta: {
+              isCreatePage: true
+            },
+            component: () => import('@/views/User/Constructor.vue')
+          },
+          {
+            name: 'admin.user.change',
+            path: ':id/change',
+            meta: {
+              isCreatePage: false
+            },
+            component: () => import('@/views/User/Constructor.vue')
+          }
+        ]
       }
     ]
   }

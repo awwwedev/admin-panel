@@ -53,7 +53,6 @@ import Notification from "@/store/modules/notification";
 import store from "@/store";
 import http from "@/common/http";
 import {mapGetters} from "vuex";
-import UserStore from "@/store/modules/user";
 
 
 @Component({
