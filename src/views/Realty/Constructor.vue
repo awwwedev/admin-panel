@@ -171,6 +171,7 @@
                      :price="formData.price_per_metr"
                      :id="formData.id + temp.previewImagePath"
                      disable-link
+                     :discount="formData.discount_sum"
             />
           </ymap-marker>
 
@@ -220,7 +221,7 @@ import ValidationMixin from "@/mixins/validation";
 import {required, minValue, requiredIf} from "vuelidate/lib/validators";
 import UploadedImage from "@/components/UploadedImage.vue";
 import bus from "@/common/bus";
-import Balloon from "@/components/RealtyCard2.vue";
+import Balloon from "@/git-modules/common/src/components/RealtyCard2.vue";
 import PreviewTab2 from "@/views/Realty/PreviewTab2.vue";
 import PreviewTab3 from "@/views/Realty/PreviewTab3.vue";
 import {getModule} from "vuex-module-decorators";
@@ -352,7 +353,7 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
   formDataForPreview = {}
   types = [] as Array <RealtyType>
   get mainTabName(): string { return this.$route.meta.isCreatePage ? 'Создание' : 'Редактирование' }
-  get totalPrice(): number { return (this.formData.area as number ) * (this.formData.price_per_metr as number) - this.formData.discount_sum }
+  get totalPrice(): number { return Math.ceil((this.formData.area as number ) * (this.formData.price_per_metr as number) - this.formData.discount_sum) }
   get uploadedIMageNames(): string { return this.temp.uploadedImages.map(value => value.name).join(', ') }
   get sliderImagesToDisplay (): Array<File|string> {
     if (this.isCreatePage) {
@@ -422,6 +423,7 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
       this.formData = {...this.formData, ...realty, equipments: realty.equipments?.map(value => value.id) as Array<number>}
       this.formData.newPhoto = []
       this.formData.img_path = realty.img_path as string
+      this.formData.type_id = realty.type_id as number
       this.formData.photo = realty.photo as Array<string>
     })
   }
@@ -482,7 +484,7 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
       photo = [...this.formData.photo, ...photo]
     }
 
-    const realtyTypeName = this.types.find(value => value.id === (this.formData.type_id as unknown as number))
+    const realtyTypeName = this.types.find(value => value.id === (Number(this.formData.type_id)))
 
     this.formDataForPreview = {
       ...this.formData,

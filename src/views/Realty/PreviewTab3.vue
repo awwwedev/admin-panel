@@ -1,14 +1,14 @@
 <template>
-  <ViewRealty :view-realty="formData"/>
+  <RealtyView :view-realty="formData"/>
 </template>
 
 <script lang="ts">
-import ViewRealty from "@/views/Realty/ViewRealty/ViewRealty.vue"
 import {Component, Prop, Vue} from "vue-property-decorator";
+import RealtyView from "@/git-modules/common/src/components/RealtyView.vue";
 
 
 @Component({
-  components: {ViewRealty}
+  components: {RealtyView}
 })
 export default class PreviewTab3 extends Vue {
   @Prop({ required: true }) formData!: { [key: string]: string | number | Array<string> | Array<File> | File }

@@ -6,6 +6,8 @@
                   :area="formData.area"
                   :price="formData.price_per_metr"
                   :title="formData.name"
+                  :discount="formData.discount_sum"
+                  :total-price="formData.price"
       />
     </b-card>
     <b-card header="Карта" class="shadow-sm mb-3">
@@ -15,7 +17,9 @@
                      :area="formData.area"
                      :price="formData.price_per_metr"
                      :description="formData.description"
-                     :name="formData.name"/>
+                     :name="formData.name"
+                     :discount="formData.discount_sum"
+        />
       </b-card>
     </b-card>
   </div>
@@ -23,8 +27,8 @@
 
 <script lang="ts">
 import {Component, Prop, Vue} from "vue-property-decorator";
-import RealtyCard from "@/components/RealtyCard.vue";
-import RealtyCard2 from "@/components/RealtyCard2.vue";
+import RealtyCard from "@/git-modules/common/src/components/RealtyCard.vue";
+import RealtyCard2 from "@/git-modules/common/src/components/RealtyCard2.vue";
 
 
 @Component({

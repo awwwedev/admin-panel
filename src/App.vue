@@ -58,8 +58,9 @@ export default class App extends Vue {
   $userIsLogged!: boolean
   $allowInitUser!: boolean
   dismissCounter = 0
-  @Provide('basePath')
-  basePath = process.env.VUE_APP_IMG_PATH
+  @Provide('basePath') basePath = process.env.VUE_APP_IMG_PATH
+  @Provide('imageBasePath') imageBasePath = process.env.VUE_APP_IMG_PATH
+
   $userStore!: UserStore
 
   constructor() {

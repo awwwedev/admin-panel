@@ -1,0 +1,3 @@
+[submodule "src/git-modules/common"]
+	path = src/git-modules/common
+	url = https://github.com/awwwedev/commonComponents.git
