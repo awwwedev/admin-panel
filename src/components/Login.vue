@@ -2,6 +2,7 @@
   <b-row class="h-100 align-items-center justify-content-center m-0">
     <b-col sm="12" md="8">
       <b-container>
+          <h1 class="text-center">Администрирование</h1>
         <b-form class="w-50 mx-auto" @submit.prevent="onSubmit">
           <b-overlay :show="!$userIsLogged && ($userInInitState || $allowInitUser)" spinner-variant="primary" class="p-1">
             <b-form-group

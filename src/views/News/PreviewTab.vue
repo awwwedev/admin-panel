@@ -22,7 +22,7 @@
 <script lang="ts">
 import {Component, Prop, Vue} from "vue-property-decorator";
 import NewsSlide from "@/components/NewsSlide.vue";
-import NewsCard from "@/components/NewsCard.vue";
+import NewsCard from "@/git-modules/common/src/components/NewsCard.vue";
 
 @Component({
   components: {NewsCard, NewsSlide}
