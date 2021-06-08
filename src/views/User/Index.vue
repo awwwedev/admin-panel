@@ -25,7 +25,11 @@
           <b-link :to="{ name: 'admin.user.change', params: { id: item.id } }" v-html="item.email "></b-link>
         </template>
         <template #cell(actions)="{ item }">
+          <b-button variant="info" :to="{ name: 'admin.user.chat', params: { id: item.id } }">Сообщеия</b-button>
           <b-button variant="danger" @click="onDeleteSingle(item)">Удалить</b-button>
+        </template>
+        <template #cell(hasNewMessage)="{ item }">
+          {{ item.hasNewMessage ? 'Да' : 'Нет' }}
         </template>
       </b-table>
       <ItemsCountInfo :total="items.length"/>
@@ -71,6 +75,10 @@ export default class Index extends Mixins<TableStateController, SearchHelpers>(T
       sortable: true,
     },
     {
+      key: 'hasNewMessage',
+      label: 'Новые сообщения'
+    },
+    {
       key: 'created_at',
       label: 'Создан',
       sortable: true,
@@ -110,7 +118,10 @@ export default class Index extends Mixins<TableStateController, SearchHelpers>(T
   }
 
   updateTableData(): Promise<AxiosResponse<Array<User>>> {
-    return User.getList(this.tableOptionsCleared)
+    return User.getList({
+      ...this.tableOptionsCleared,
+      withHasNewMessage: true
+    })
         .then(response => {
           this.items = response.data
 

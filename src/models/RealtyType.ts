@@ -4,14 +4,6 @@ import http from "@/common/http";
 import BaseModel from "@/models/BaseModel";
 
 export default class RealtyType extends BaseModel {
-    constructor(data: {id?: number | string, name?: string}) {
-        super()
-
-        this.id = data.id
-        this.name = data.name
-    }
-
-    id?: number | string
     name?: string
     img_path?: string
 

@@ -221,6 +221,14 @@ const routes: Array<RouteConfig> = [
               isCreatePage: false
             },
             component: () => import('@/views/User/Constructor.vue')
+          },
+          {
+            name: 'admin.user.chat',
+            path: ':id/chat',
+            meta: {
+              isCreatePage: false
+            },
+            component: () => import('@/views/User/Chat.vue')
           }
         ]
       }
