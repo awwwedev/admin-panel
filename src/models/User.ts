@@ -24,16 +24,6 @@ export default class User extends BaseModel{
         }
 
     }
-    static getMessages(params: { user_id: number, [key: string]: any }): Promise<AxiosResponse<Array<TicketMessage>>> {
-        if (process.env.VUE_APP_USE_LOCAL_API === 'false') {
-            return http.get<Array<TicketMessage>>(`user/${params.user_id}/messages`, { params })
-        } else {
-            return new Promise<AxiosResponse<Array<TicketMessage>>>((resolve) => {
-                resolve({ data: api.User }as AxiosResponse<Array<TicketMessage>>)
-            })
-        }
-
-    }
 
     static get(params: { id: number; [key: string]: string | number }): Promise<AxiosResponse<User>> {
         if (process.env.VUE_APP_USE_LOCAL_API === 'false') {
