@@ -11,12 +11,20 @@
       <b-card class="mb-3 shadow-sm" header="Описание">
         <b-form-group label="Название"
                       label-for="name"
-                      description="Должно быть коротким для корректного отображения в карточках"
                       :invalid-feedback="getValidationMessage($v.formData.name)"
         >
           <b-form-input id="name"
                         v-model.trim="formData.name"
                         :state="getFieldState($v.formData.name)"
+          />
+        </b-form-group>
+        <b-form-group label="Краткое описание"
+                      label-for="short_description"
+                      :invalid-feedback="getValidationMessage($v.formData.short_description)"
+        >
+          <b-textarea id="short_description"
+                        v-model.trim="formData.short_description"
+                        :state="getFieldState($v.formData.short_description)"
           />
         </b-form-group>
         <b-form-group label="Описание"
@@ -265,6 +273,9 @@ import {removeHtmlTags} from "@/common";
         latitude: {
           required
         },
+        short_description: {
+          required
+        },
         img_path: {
           required
         },
@@ -346,6 +357,7 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
     latitude: null as null | number,
     longitude: null as null | number,
     newPhoto: [] as Array<File>,
+    short_description:  '',
     created_at:  null as string | null,
     updated_at: null as string | null,
     discount_sum: 0
@@ -399,12 +411,14 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
             .then((response) => {
               getModule(Notification, this.$store).setData({ title: 'Запись успешно создана', variant: 'success' })
               this.$router.push({ name: 'admin.realty.change', params: { id: response.data.id as unknown as string } })
+              this.$v.$reset()
             })
       } else {
         request = Realty.update(this.formData)
             .then((response) => {
               this.initFormData(response.data)
               getModule(Notification, this.$store).setData({ title: 'Запись успешно изменена', variant: 'success' })
+              this.$v.$reset()
             })
       }
       request.then(() => {
