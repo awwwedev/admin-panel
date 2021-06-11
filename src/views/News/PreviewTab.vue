@@ -4,7 +4,7 @@
     <NewsSlide :id="formData.id"
                :photo="formData.photo"
                :header="formData.header"
-               :content="formData.content"
+               :content="formData.short_description"
     />
   </b-card>
     <b-card class="shadow-sm mb-3 ">
@@ -12,7 +12,7 @@
                 style="width: 400px; height: 300px"
                 :img-path="formData.photo"
                 :name="formData.header"
-                :content="formData.content"
+                :content="formData.short_description"
       />
   </b-card>
 

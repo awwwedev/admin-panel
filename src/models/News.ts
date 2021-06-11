@@ -8,6 +8,7 @@ class News extends BaseModel {
     photo?: string;
     header?: string;
     content?: string;
+    short_description?: string;
     id?: number;
 
     static getList(options: { [key: string]: any } = { page: 1 }): Promise<AxiosResponse<responseWithPaginator<News>>> {

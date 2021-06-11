@@ -17,6 +17,15 @@
                         :state="getFieldState($v.formData.header)"
           />
         </b-form-group>
+        <b-form-group label="Краткое описание"
+                      label-for="short_description"
+                      :invalid-feedback="getValidationMessage($v.formData.short_description)"
+        >
+          <b-textarea id="short_description"
+                        v-model.trim="formData.short_description"
+                        :state="getFieldState($v.formData.short_description)"
+          />
+        </b-form-group>
         <b-form-group label="Описание"
                       label-for="description"
                       :invalid-feedback="getValidationMessage($v.formData.content)"
@@ -77,6 +86,9 @@ import PreviewTab from "@/views/News/PreviewTab.vue";
       content: {
         required
       },
+      short_description: {
+        required
+      },
     },
   },
   data: () => ({
@@ -118,6 +130,7 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
     id: null as null | number,
     header: '',
     content: '',
+    short_description: '',
     photo: null as File | string | null,
     created_at:  null as string | null,
     updated_at: null as string | null
@@ -139,12 +152,14 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
             .then((response) => {
               getModule(Notification, this.$store).setData({title: 'Запись успешно создана', variant: 'success'})
               this.$router.push({name: 'admin.news.change', params: {id: response.data.id as unknown as string}})
+              this.$v.$reset()
             })
       } else {
         request = News.update(this.formData)
             .then((response) => {
               getModule(Notification, this.$store).setData({title: 'Запись успешно изменена', variant: 'success'})
               this.updateFormData(response.data)
+              this.$v.$reset()
             })
       }
       request.then(() => {
@@ -165,6 +180,7 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
       header: news.header as string,
       id: news.id as number,
       photo: news.photo as string,
+      short_description: news.short_description as string,
       created_at: news.created_at as string,
       updated_at: news.updated_at as string
     }
