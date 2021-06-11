@@ -173,7 +173,7 @@
           >
             <Balloon slot="balloon"
                      :area="formData.area"
-                     :description="formData.description"
+                     :description="formData.short_description"
                      :img-path="temp.previewImagePath"
                      :name="formData.name"
                      :price="formData.price_per_metr"
