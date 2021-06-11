@@ -80,9 +80,10 @@
           </b-col>
         </b-row>
       </b-card>
-      <b-card class="mb-3 shadow-sm" header="Привилегии">
+      <b-card class="mb-3 shadow-sm" header="Пароль и роль">
         <b-row cols-sm="1" cols-md="3">
           <b-col>
+            <b-form-group label-for="role" label="Роль">
             <b-select
                 id="role_id"
                 v-model="formData.role_id"
@@ -95,6 +96,20 @@
                 {{ role.displayName }}
               </b-select-option>
             </b-select>
+            </b-form-group>
+          </b-col>
+          <b-col>
+            <b-form-group label="Пароль"
+                          label-for="pass"
+                          type="text"
+                          :invalid-feedback="getValidationMessage($v.formData.password)"
+                          :description="isCreatePage ? '' : 'Для сохранения текщего пароля оставьте пустым'"
+            >
+              <b-form-input id="pass"
+                            v-model.trim="formData.password"
+                            :state="getFieldState($v.formData.password)"
+              />
+            </b-form-group>
           </b-col>
         </b-row>
       </b-card>
@@ -108,7 +123,7 @@ import {Component, Mixins, Watch} from "vue-property-decorator";
 import ConstructorHelpers from "@/mixins/constructorHelpers";
 import {Validation, validationMixin} from "vuelidate";
 import ValidationMixin from "@/mixins/validation";
-import {required, email} from "vuelidate/lib/validators";
+import {required, email, requiredIf, minLength} from "vuelidate/lib/validators";
 import ConstructorActions from "@/components/widget/ConstructorActions.vue";
 import UploadedImage from "@/components/UploadedImage.vue";
 import {getModule} from "vuex-module-decorators";
@@ -121,33 +136,42 @@ import {capitalize} from "@/common/utils";
 
 @Component({
   components: {Dates, UploadedImage, ConstructorActions},
-  validations: {
-    temp: {
-      name: {
-        required
+  validations() {
+    return {
+      temp: {
+        name: {
+          required
+        },
+        patronymic: {
+          required
+        },
+        surname: {
+          required
+        }
       },
-      patronymic: {
-        required
+      formData: {
+        email: {
+          required,
+          email
+        },
+        name: {
+          required
+        },
+        phone: {
+          required
+        },
+        role_id: {
+          required
+        },
+        password: {
+          minLength: minLength(6),
+          requiredIf: requiredIf(() => {
+            return this.$route.meta.isCreatePage
+          }),
+        },
       },
-      surname: {
-        required
-      }
-    },
-    formData: {
-      email: {
-        required,
-        email
-      },
-      name: {
-        required
-      },
-      phone: {
-        required
-      },
-      role_id: {
-        required
-      },
-    },
+    }
+
   }
 })
 export default class Constructor extends Mixins<Validation, ValidationMixin, ConstructorHelpers>(validationMixin, ValidationMixin, ConstructorHelpers) {
@@ -160,6 +184,7 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
     name: '',
     email: '',
     phone: '',
+    password: '' as string | null,
     role_id: null as null | number,
     created_at:  null as string | null,
     updated_at: null as string | null
@@ -191,6 +216,7 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
             .then((response) => {
               getModule(Notification, this.$store).setData({title: 'Запись успешно создана', variant: 'success'})
               this.$router.push({name: 'admin.user.change', params: {id: response.data.id as unknown as string}})
+              this.$v.$reset
             })
       } else {
         request = User.update(this.formData)
@@ -222,6 +248,7 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
       email: user.email as string,
       phone: user.phone as string,
       role_id: user.role_id as number,
+      password: '',
       created_at: user.created_at as string,
       updated_at: user.updated_at as string
     }

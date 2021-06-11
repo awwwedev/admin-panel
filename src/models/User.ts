@@ -2,7 +2,7 @@ import {AxiosResponse} from "axios";
 import http from "@/common/http";
 import api from "@/common/myApi.json";
 import BaseModel from "@/models/BaseModel";
-import TicketMessage from "@/models/TicketMessage";
+
 
 export default class User extends BaseModel{
 

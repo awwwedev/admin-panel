@@ -16,6 +16,8 @@ export default class Validation extends Mixins() {
         // @ts-ignore
         else if (field.$params.email && !field.email) return 'Не верный формат почты'
         // @ts-ignore
+        else if (field.$params.minLength && !field.minLength) return `Поле должно содержать больше ${field.$params.minLength.min} символов`
+        // @ts-ignore
         else if (field.$params.minValue && !field.minValue) return `Значение должно быть больше чем ${field.$params.minValue.min}`
         else return ''
     }
