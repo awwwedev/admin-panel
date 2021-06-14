@@ -1,7 +1,7 @@
 <template>
-  <b-form inline class="mb-3">
-    <b-form-input v-model="searchValue" class="mr-sm-2" placeholder="Поиск" :disabled="!searchField"></b-form-input>
-    <b-select v-model="searchField" class="mr-sm-3">
+  <b-form inline class="mb-3" @reset="onReset">
+    <b-form-input v-model="searchValue" class="mr-sm-2 mt-2" placeholder="Поиск" :disabled="!searchField"></b-form-input>
+    <b-select v-model="searchField" class="mr-sm-3 mt-2">
       <b-select-option :value="null">
         --- Выберите поле для поиска ---
       </b-select-option>
@@ -13,7 +13,10 @@
         {{ field.label }}
       </b-select-option>
     </b-select>
-    <b-button v-if="!withoutButtonSubmit" variant="outline-primary" class="my-2 my-sm-0" type="button" @click="searching" :disabled="!searchField">Найти</b-button>
+    <div class="d-flex mt-2">
+      <b-button v-if="!withoutButtonSubmit" variant="outline-primary" class="mr-1" type="button" @click="searching" :disabled="!searchField">Найти</b-button>
+      <b-button v-if="!withoutButtonReset" variant="outline-danger" class="" type="reset" :disabled="!searchField">Сбросить</b-button>
+    </div>
   </b-form>
 </template>
 
@@ -27,7 +30,18 @@ export default class SearchPanel extends Vue {
   searchValue = ''
   @Prop({ required: true, type: Array }) columns!: Array<tableColumn>
   @Prop({ required: true }) value!: string
-  @Prop({ required: false, type: Boolean, default: false }) withoutButtonSubmit!: string
+  @Prop({ required: false, type: Boolean, default: false }) withoutButtonSubmit!: boolean
+  @Prop({ required: false, type: Boolean, default: false }) withoutButtonReset!: boolean
+
+  onReset(): void {
+    if (!this.searchField) return
+
+    this.searchValue = ''
+    this.searchField = null
+
+    this.changedValue()
+    this.searching()
+  }
 
   @Emit('changedField')
   changedField(): string {

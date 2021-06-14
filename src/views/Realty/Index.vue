@@ -38,7 +38,7 @@
 
     <template #filters>
       <b-form class="mb-3" @submit.prevent="onSearch" @reset.prevent="onReset">
-        <SearchPanel without-button-submit :columns="columns" @changedField="tableTemp.searchField = $event" v-model="tableTemp.searchValue"/>
+        <SearchPanel without-button-submit without-button-reset :columns="columns" @changedField="tableTemp.searchField = $event" v-model="tableTemp.searchValue"/>
         <b-form-group label="Комплектация">
           <b-form-checkbox-group>
             <b-form-checkbox v-for="(equip, idx) in equipments" :key="idx"
@@ -115,8 +115,7 @@ export default class Home extends Mixins<TableStateController, SearchHelpers>(Ta
     },
     {
       key: 'realtyTypeName',
-      label: 'Тип',
-      searchable: true
+      label: 'Тип'
     },
     {
       key: 'area',

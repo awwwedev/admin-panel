@@ -2,10 +2,17 @@
   <div class="wrapper">
     <div class="grid">
       <div class="grid__side-bar">
-        <b-sidebar class="" visible no-close-on-route-change no-close-on-backdrop no-close-on-esc no-header-close
+        <div v-if="!visibleSideBar" class="pre-sidebar">
+          <span class="pre-sidebar__btn" @click="visibleSideBar = true"><b-icon icon="list" scale="2"/></span>
+        </div>
+        <b-sidebar ref="sidebar"  v-model="visibleSideBar" :backdrop="windowWidth < 850" no-close-on-route-change :no-close-on-backdrop="windowWidth > 850" no-close-on-esc no-header-close
                    :z-index="2" shadow>
-          <template #title>
-            <span class="d-block mb-sm-0 mb-md-5 "></span>
+          <template #header>
+            <div class="pt-1 d-flex justify-content-end align-items-end w-100" >
+              <span class="px-2 cursor-pointer" @click="visibleSideBar = false">
+                <b-icon icon="x" scale="2"/>
+              </span>
+            </div>
           </template>
           <div class="px-2">
             <nav class="mb-3">
@@ -16,7 +23,7 @@
                   </template>
                   <b-collapse :visible="accordionIdx === 1">
                     <b-list-group>
-                      <b-list-group-item v-for="(link, idx) in navLinks" :key="idx">
+                      <b-list-group-item @click="visibleSideBar = false" v-for="(link, idx) in navLinks" :key="idx">
                         <template v-if="!isActiveRoute(link.routeName)">
                           <b-link class="d-block" type="button" :to="{ name: link.routeName, query: { accordionIdx } }">{{ link.label }}</b-link>
                         </template>
@@ -44,7 +51,7 @@
                   </template>
                   <b-collapse id="collapseNavContent" :visible="accordionIdx === 2">
                     <b-list-group>
-                      <b-list-group-item v-for="(link, idx) in navLinks2" :key="idx">
+                      <b-list-group-item @click="visibleSideBar = false" v-for="(link, idx) in navLinks2" :key="idx">
                         <template v-if="!isActiveRoute(link.routeName)">
                           <b-link class="d-block" type="button" :to="{ name: link.routeName, query: { accordionIdx } }">{{ link.label }}</b-link>
                         </template>
@@ -77,21 +84,25 @@
         </b-sidebar>
       </div>
       <div class="grid__content">
-        <router-view class="d-flex justify-content-center flex-column"/>
+          <router-view class="d-flex justify-content-center flex-column"/>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import {Component, Vue, Watch} from "vue-property-decorator";
+  import {Component, Ref, Vue, Watch} from "vue-property-decorator";
 import {getModule} from "vuex-module-decorators";
 import User from "@/store/modules/user";
 import http from "@/common/http";
+  import {BSidebar} from "bootstrap-vue";
 
 @Component({})
 export default class Index extends Vue {
+  @Ref('sidebar') refSidebar!: BSidebar
   accordionIdx = 1
+  visibleSideBar = false
+  windowWidth = 0
   navLinks = [
     {
       routeName: 'admin.realty',
@@ -125,21 +136,31 @@ export default class Index extends Vue {
     }
   ]
 
+  onResize(): void {
+    this.windowWidth = window.innerWidth
+    this.visibleSideBar = this.windowWidth > 850
+  }
   onLogout(): void {
     getModule(User, this.$store).logout()
 
     delete http.defaults.headers['Authorization']
     this.$cookies.remove('token')
   }
+  isActiveRoute (routeName: string): boolean {
+    return this.$route.name as unknown as boolean && routeName === (this.$route.name as string).replace(/\.create|\.change/, '')
+  }
+
 
   created(): void {
     const accordionIdx = this.$route.query.accordionIdx
 
     this.accordionIdx = accordionIdx ? Number(accordionIdx) : 1
-  }
 
-  isActiveRoute (routeName: string): boolean {
-    return this.$route.name as unknown as boolean && routeName === (this.$route.name as string).replace(/\.create|\.change/, '')
+    addEventListener('resize', this.onResize)
+    this.onResize()
+  }
+  beforeDestroy(): void {
+    removeEventListener('resize', this.onResize)
   }
 
   @Watch('accordionIdx')
@@ -157,16 +178,32 @@ export default class Index extends Vue {
 
 <style scoped lang="stylus">
 
+  .cursor-pointer
+    cursor pointer
+
+  .pre-sidebar
+    height 100%
+
+    &__btn
+      display block
+      padding 15px
+      cursor pointer
+
 .spinner
   height 50px
   width 50px
 
 .grid
   height 100%
+  width 100%
   display grid
   grid-template-columns 320px 1fr
   grid-template-areas "side-bar content"
   grid-column-gap 15px
+
+  @media (max-width 850px)
+    grid-template-columns 50px 1fr
+    grid-column-gap 0
 
   &__side-bar
     width 100%
@@ -175,4 +212,5 @@ export default class Index extends Vue {
   &__content
     grid-area content
     padding-right 15px
+    overflow-x hidden
 </style>

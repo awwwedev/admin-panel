@@ -3,20 +3,20 @@
         <h1 class="mb-5">{{ pageTitle }}</h1>
         <ModalDeletingConfirm :show="showConfirmModal" @close="showConfirmModal = false" @confirm="onDelete" @cancel="showConfirmModal = false"/>
         <b-card class="mb-4 shadow-sm">
-            <div class="d-flex">
-                <b-button variant="primary" class="mr-2" :to="{ name: routeNameCreate }">Создать</b-button>
-                <b-button variant="info" class="mr-3" @click="onSelectAll">{{ selectionBtnText }}</b-button>
-                <b-button variant="danger" class="my-2 my-sm-0" :disabled="!selected.length" @click="onOpenConfirm">Удалить выбранное</b-button>
+            <div class="d-flex flex-column flex-md-row">
+                <b-button variant="primary" class="mr-md-2 mr-sm-0 my-1" :to="{ name: routeNameCreate }">Создать</b-button>
+                <b-button variant="info" class="mr-md-3 mr-sm-0 my-1" @click="onSelectAll">{{ selectionBtnText }}</b-button>
+                <b-button variant="danger" class=" my-1" :disabled="!selected.length" @click="onOpenConfirm">Удалить выбранное</b-button>
             </div>
         </b-card>
-        <b-card class="shadow-sm">
+        <b-card class="shadow-sm table-container">
             <slot name="filters">
                 <SearchPanel :columns="columns" @changedField="tableTemp.searchField = $event" v-model="tableTemp.searchValue" @search="onSearch"/>
             </slot>
             <b-table
                     :fields="columns"
                     :items="items"
-                    responsive="md"
+                    :responsive="true"
                     select-mode="multi"
                     striped
                     hover
@@ -114,6 +114,8 @@
   }
 </script>
 
-<style scoped>
+<style scoped lang="stylus">
+    .table-container
+        max-width 100%
 
 </style>
