@@ -2,7 +2,6 @@
   <EntityIndexPageLayout :columns="columns"
                          :items="items"
                          page-title="Комплектация"
-                         with-paginate
                          :selected-all-rows="selectedAllRows" :selected="selected"
                          route-name-change="admin.slide.change" route-name-create="admin.slide.create"
                          :in-request-state="inRequestState"

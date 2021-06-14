@@ -1,5 +1,5 @@
 export default class BaseModel {
-    id?: number
+    id?: number | string
     created_at?: string
     updated_at?: string
 

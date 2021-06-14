@@ -105,12 +105,14 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
             .then((response) => {
               getModule(Notification, this.$store).setData({title: 'Запись успешно создана', variant: 'success'})
               this.$router.push({name: 'admin.slide.change', params: {id: response.data.id as unknown as string}})
+              this.$v.$reset()
             })
       } else {
         request = Slide.update(this.formData)
             .then((response) => {
               getModule(Notification, this.$store).setData({title: 'Запись успешно изменена', variant: 'success'})
               this.updateFormData(response.data)
+              this.$v.$reset()
             })
       }
       request.then(() => {

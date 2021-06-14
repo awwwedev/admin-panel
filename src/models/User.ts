@@ -2,6 +2,7 @@ import {AxiosResponse} from "axios";
 import http from "@/common/http";
 import api from "@/common/myApi.json";
 import BaseModel from "@/models/BaseModel";
+import RealtyObject from "@/models/1c/RealtyObject";
 
 
 export default class User extends BaseModel{
@@ -13,6 +14,7 @@ export default class User extends BaseModel{
     phone?: string
     role_id?: number
     updated_at?: string
+    objects?: Array<RealtyObject>
 
     static getList(options: { [key: string]: any } = { page: 1 }): Promise<AxiosResponse<Array<User>>> {
         if (process.env.VUE_APP_USE_LOCAL_API === 'false') {
@@ -36,10 +38,10 @@ export default class User extends BaseModel{
     }
 
     static create (params: { [key: string]: any }): Promise<AxiosResponse<User>> {
-        return http.post<User>('user', User.prepareFormData(params))
+        return http.post<User>('user', params)
     }
     static update (params: { [key: string]: any }): Promise<AxiosResponse<User>> {
-        return http.post<User>('user/' + params.id, User.prepareFormData({...params, "_method": "PUT"}))
+        return http.post<User>('user/' + params.id, {...params, "_method": "PUT"})
     }
     static destroy (data: { [key: string]: any }): Promise<AxiosResponse> {
         return http.delete('user', { params: { id: data } })
