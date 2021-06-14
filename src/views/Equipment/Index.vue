@@ -1,44 +1,34 @@
 <template>
-  <div class="section">
-    <h1 class="mb-5">Комплектация</h1>
-    <ModalDeletingConfirm :show="showConfirmModal" @close="showConfirmModal = false" :confirm-handler="onConfirm" @cancel="showConfirmModal = false"/>
-    <b-card class="mb-4 shadow-sm">
-      <div class="d-flex">
-        <b-button variant="primary" class="mr-2" :to="{ name: 'admin.equipment.create' }">Создать</b-button>
-        <b-button variant="info" class="mr-3" @click="onSelectAll">{{ selectionBtnText }}</b-button>
-        <b-button variant="danger" class="my-2 my-sm-0" :disabled="!selected.length" @click="onDelete">Удалить выбранное</b-button>
-      </div>
-    </b-card>
-    <b-card class="shadow-sm">
-      <b-table
-          :fields="fields"
-          :items="items"
-          responsive="md"
-          select-mode="multi"
-          striped
-          hover
-          selectable
-          sort-icon-left
-          @row-selected="onRowSelected"
-          @sort-changed="onChangeSort"
-          ref="table"
-          :busy="inRequestState"
-      >
-        <template #cell(selected)="{ rowSelected }">
-          <template v-if="rowSelected">
-            <span>&check;</span>
-          </template>
-          <template v-else>
-            <span>&nbsp;</span>
-          </template>
-        </template>
-        <template #cell(name)="{ item }">
-          <b-link :to="{ name: 'admin.equipment.change', params: { id: item.id } }" v-html="item.name"/>
-        </template>
-      </b-table>
-      <ItemsCountInfo :total="items.length"/>
-    </b-card>
-  </div>
+  <EntityIndexPageLayout :columns="columns"
+                         :items="items"
+                         page-title="Комплектация"
+                         with-paginate
+                         :selected-all-rows="selectedAllRows" :selected="selected"
+                         route-name-change="admin.slide.change" route-name-create="admin.slide.create"
+                         :in-request-state="inRequestState"
+                         :table-info="tableInfo" :table-temp="tableTemp"
+                         :update-items-collback="updateTableData"
+                         @deleteItem="onDelete"
+                         @changeSort="onChangeSort"
+                         @selectAll="onSelectAll"
+                         @rowSelected="onRowSelected"
+                         @search="onSearch"
+                         :items-count-info="itemsCountInfo"
+                         :table-options="tableOptions"
+                         ref="EntityIndexPageLayout"
+  >
+    <template #cell(selected)="{ rowSelected }">
+      <template v-if="rowSelected">
+        <span>&check;</span>
+      </template>
+      <template v-else>
+        <span>&nbsp;</span>
+      </template>
+    </template>
+    <template #cell(name)="{ item }">
+      <b-link :to="{ name: 'admin.equipment.change', params: { id: item.id } }" v-html="item.name"/>
+    </template>
+  </EntityIndexPageLayout>
 </template>
 
 <script lang="ts">
@@ -51,13 +41,14 @@ import Notification from "@/store/modules/notification";
 import Equipment from "@/models/Equipment";
 import ItemsCountInfo from "@/components/ItemsCountInfo.vue";
 import ModalDeletingConfirm from "@/components/ModalDeletingConfirm.vue";
+import EntityIndexPageLayout from "@/components/EntityIndexPageLayout.vue";
 
 
 @Component({
-  components: {ModalDeletingConfirm, ItemsCountInfo}
+  components: {EntityIndexPageLayout, ModalDeletingConfirm, ItemsCountInfo}
 })
 export default class IndexRealtyType extends Mixins<TableStateController, SearchHelpers>(TableStateController, SearchHelpers) {
-  fields = [
+  columns = [
     {
       key: 'selected',
       label: ''
@@ -92,15 +83,8 @@ export default class IndexRealtyType extends Mixins<TableStateController, Search
     }
   ]
   items = [] as Array<Equipment>
-  showConfirmModal = false
-
-  get selectionBtnText (): string { return this.selectedAllRows ? 'Снять выделение' : 'Выбрать все' }
 
   onDelete (): void {
-    this.showConfirmModal = true
-  }
-
-  onConfirm (): void {
     Equipment.destroy(this.selected.map(value => value.id as number)).then(() => {
       getModule(Notification, this.$store).setData({ title: 'Удаление прошло успешно', variant: 'success' })
       this.updateTableData();
@@ -124,7 +108,6 @@ export default class IndexRealtyType extends Mixins<TableStateController, Search
         ] : []
       })
     })
-    this.showConfirmModal = false
   }
 
   updateTableData(): Promise<AxiosResponse<Array<Equipment>>> {
@@ -134,6 +117,10 @@ export default class IndexRealtyType extends Mixins<TableStateController, Search
 
           return response
         })
+  }
+
+  mounted(): void {
+    this.$table = this.$refLayout.$table
   }
 }
 </script>

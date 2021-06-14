@@ -3,6 +3,7 @@ import {AxiosResponse} from "axios";
 import {itemCountInfo, responseWithPaginator, tableItem} from "@/common/types";
 import {BTable} from "bootstrap-vue";
 import BaseModel from "@/models/BaseModel";
+import EntityIndexPageLayout from "@/components/EntityIndexPageLayout.vue";
 
 
 @Component({})
@@ -29,7 +30,8 @@ export default class TableStateController extends Mixins() {
     selected: Array<tableItem> = []
     selectedAllRows = false
     items: Array<BaseModel> = []
-    @Ref('table') $table!: BTable
+    $table!: BTable
+    @Ref('EntityIndexPageLayout') $refLayout!: EntityIndexPageLayout
 
 
     get tableOptionsCleared (): { [key: string]: any } {

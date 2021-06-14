@@ -1,21 +1,46 @@
 <template>
-  <div class="section">
-    <h1 class="mb-5">Недвижимость</h1>
-    <ModalDeletingConfirm :show="showConfirmModal" @close="showConfirmModal = false" :confirm-handler="onConfirm" @cancel="showConfirmModal = false"/>
-    <b-card class="mb-4 shadow-sm">
-      <div class="d-flex">
-        <b-button variant="primary" class="mr-2" :to="{ name: 'admin.realty.create' }">Создать</b-button>
-        <b-button variant="info" class="mr-3" @click="onSelectAll">{{ selectionBtnText }}</b-button>
-        <b-button variant="danger" class="my-2 my-sm-0" :disabled="!selected.length" @click="onDelete">Удалить
-          выбранное
-        </b-button>
-      </div>
-    </b-card>
-    <b-card class="shadow-sm">
+  <EntityIndexPageLayout :columns="columns"
+                         :items="items"
+                         page-title="Недвижимость"
+                         with-paginate
+                         :selected-all-rows="selectedAllRows" :selected="selected"
+                         route-name-change="admin.slide.change" route-name-create="admin.slide.create"
+                         :in-request-state="inRequestState"
+                         :table-info="tableInfo" :table-temp="tableTemp"
+                         :update-items-collback="updateTableData"
+                         @deleteItem="onDelete"
+                         @changeSort="onChangeSort"
+                         @selectAll="onSelectAll"
+                         @rowSelected="onRowSelected"
+                         @search="onSearch"
+                         :items-count-info="itemsCountInfo"
+                         :table-options="tableOptions"
+                         ref="EntityIndexPageLayout"
+  >
+    <template #cell(selected)="{ rowSelected }">
+      <template v-if="rowSelected">
+        <span>&check;</span>
+      </template>
+      <template v-else>
+        <span>&nbsp;</span>
+      </template>
+    </template>
+    <template #cell(img_path)="{ item }">
+      <b-img fluid width="150" :src="basePath + item.img_path"/>
+    </template>
+    <template #cell(is_published)="{ item }">
+      <b-badge v-if="item.is_published" variant="success">Опубликовано</b-badge>
+      <b-badge v-else variant="danger">Неопубликовано</b-badge>
+    </template>
+    <template #cell(name)="{ item }">
+      <b-link :to="{ name: 'admin.realty.change', params: { id: item.id } }" v-html="item.name"></b-link>
+    </template>
+
+    <template #filters>
       <b-form class="mb-3" @submit.prevent="onSearch" @reset.prevent="onReset">
-        <SearchPanel without-button-submit :columns="fields" @changedField="tableTemp.searchField = $event" v-model="tableTemp.searchValue"/>
+        <SearchPanel without-button-submit :columns="columns" @changedField="tableTemp.searchField = $event" v-model="tableTemp.searchValue"/>
         <b-form-group label="Комплектация">
-        <b-form-checkbox-group>
+          <b-form-checkbox-group>
             <b-form-checkbox v-for="(equip, idx) in equipments" :key="idx"
                              v-model="tableOptionsRealty.equipments"
                              :value="equip.id">
@@ -47,66 +72,8 @@
         <b-button variant="outline-primary" class="mr-1" type="submit">Найти</b-button>
         <b-button variant="outline-danger" class="" type="reset">Сбросить</b-button>
       </b-form>
-      <b-table
-          sort-icon-left
-          :fields="fields"
-          :items="items"
-          responsive="md"
-          select-mode="multi"
-          striped
-          hover
-          selectable
-          @row-selected="onRowSelected"
-          @sort-changed="onChangeSort"
-          ref="table"
-          :busy="inRequestState"
-      >
-        <template #cell(selected)="{ rowSelected }">
-          <template v-if="rowSelected">
-            <span>&check;</span>
-          </template>
-          <template v-else>
-            <span>&nbsp;</span>
-          </template>
-        </template>
-        <template #cell(img_path)="{ item }">
-          <b-img fluid width="150" :src="basePath + item.img_path"/>
-        </template>
-        <template #cell(name)="{ item }">
-          <b-link :to="{ name: 'admin.realty.change', params: { id: item.id } }" v-html="item.name"></b-link>
-        </template>
-      </b-table>
-      <ItemsCountInfo :info="itemsCountInfo" :total="tableInfo.totalItems"/>
-      <div class="d-flex justify-content-between align-items-center">
-        <b-pagination
-            v-model="tableOptions.page"
-            :total-rows="tableInfo.totalItems"
-            :per-page="tableOptions.perPage"
-        />
-
-        <b-select v-model="tableTemp.perPage" style="width: auto">
-          <b-select-option :value="10">
-            10
-          </b-select-option>
-          <b-select-option :value="25">
-            25
-          </b-select-option>
-          <b-select-option :value="50">
-            50
-          </b-select-option>
-          <b-select-option :value="75">
-            75
-          </b-select-option>
-          <b-select-option :value="100">
-            100
-          </b-select-option>
-          <b-select-option :value="'all'">
-            ВСЕ
-          </b-select-option>
-        </b-select>
-      </div>
-    </b-card>
-  </div>
+    </template>
+  </EntityIndexPageLayout>
 </template>
 
 <script lang="ts">
@@ -123,14 +90,15 @@ import RealtyType from "@/models/RealtyType";
 import ItemsCountInfo from "@/components/ItemsCountInfo.vue";
 import SearchPanel from "@/components/SearchPanel.vue";
 import ModalDeletingConfirm from "@/components/ModalDeletingConfirm.vue";
+import EntityIndexPageLayout from "@/components/EntityIndexPageLayout.vue";
 
 
 @Component({
-  components: {ModalDeletingConfirm, SearchPanel, ItemsCountInfo}
+  components: {EntityIndexPageLayout, ModalDeletingConfirm, SearchPanel, ItemsCountInfo}
 })
 export default class Home extends Mixins<TableStateController, SearchHelpers>(TableStateController, SearchHelpers) {
   showConfirmModal = false
-  fields = [
+  columns = [
     {
       key: 'selected',
       label: ''
@@ -175,6 +143,11 @@ export default class Home extends Mixins<TableStateController, SearchHelpers>(Ta
       searchable: true
     },
     {
+      key: 'is_published',
+      label: 'Статус',
+      sortable: true,
+    },
+    {
       key: 'updated_at',
       label: 'Изменен',
       sortable: true,
@@ -198,22 +171,19 @@ export default class Home extends Mixins<TableStateController, SearchHelpers>(Ta
   types = [] as Array<RealtyType>
   @Inject('basePath') basePath!: string
 
-  get selectionBtnText(): string {
-    return this.selectedAllRows ? 'Снять выделение' : 'Выбрать все'
-  }
-
-  onConfirm (): void {
+  onDelete (): void {
     Realty.destroy(this.selected.map(value => value.id as number)).then(() => {
       getModule(Notification, this.$store).setData({title: 'Удаление прошло успешно', variant: 'success'})
       this.updateTableData();
     })
   }
 
-  onDelete(): void {
-    this.showConfirmModal = true
-  }
-
   updateTableData(): Promise<AxiosResponse<responseWithPaginator<Realty>>> {
+    if (this.$table) {
+      this.$table.clearSelected()
+      this.selectedAllRows = false
+    }
+
     return Realty.getList(this.tableOptionsCleared)
         .then(response => {
           this.items = response.data.data
@@ -250,6 +220,10 @@ export default class Home extends Mixins<TableStateController, SearchHelpers>(Ta
       this.tableOptionsRealty.areaMin = this.realtyMinMax.areaMin
       this.tableOptionsRealty.pricePerMetrMin = this.realtyMinMax.pricePerMetrMin
     })
+  }
+
+  mounted(): void {
+    this.$table = this.$refLayout.$table
   }
 }
 </script>

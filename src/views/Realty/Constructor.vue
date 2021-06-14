@@ -160,6 +160,7 @@
                     ref="map"
                     class="map"
                     @click="onMapClick"
+                    :key="formData.id"
         >
           <ymap-marker v-if="formData.latitude && formData.longitude"
               :coords="[formData.latitude, formData.longitude]"
@@ -169,7 +170,7 @@
               @balloonclose="bus.$emit('yandex-map::close-balloon-' + formData.id)"
               :marker-id="formData.id"
               ref="marker"
-              :key="temp.previewImagePath"
+              :key="formData.id + temp.previewImagePath"
           >
             <Balloon slot="balloon"
                      :area="formData.area"
@@ -207,6 +208,11 @@
           </b-form-group>
         </div>
       </b-card>
+      <b-checkbox-group class="mb-1">
+        <b-checkbox v-model="temp.is_published" :value="1" :unchecked-value="0">
+          Публикация
+        </b-checkbox>
+      </b-checkbox-group>
       <ConstructorActions :cancel-to="{ name: 'admin.realty' }" :is-create-page="isCreatePage" @submit="onSubmit"/>
     </b-form>
     <PreviewTab2 v-if="activeTab === 1"
@@ -341,7 +347,8 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
     uploadedImagesModel: [] as Array<File>,
     uploadedImages: [] as Array<File>,
     equipments: [] as Array<Equipment>,
-    type_id: 0
+    type_id: 0,
+    is_published: [0] as Array<number>
   }
   formData = {
     id: -1,
@@ -360,7 +367,8 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
     short_description:  '',
     created_at:  null as string | null,
     updated_at: null as string | null,
-    discount_sum: 0
+    discount_sum: 0,
+    is_published: false
   }
   formDataForPreview = {}
   types = [] as Array <RealtyType>
@@ -432,9 +440,10 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
   }
 
   initFormData (realty: Realty): void {
-    this.temp = { type_id: realty.type_id as number, equipments: realty.equipments as Array<Equipment>, center: [realty.latitude as number, realty.longitude as number], uploadedImages: [], uploadedImagesModel: [], previewImagePath: realty.img_path as string, previewImageModel: null}
+    this.temp = { type_id: realty.type_id as number, is_published: realty.is_published ? [1] : [],  equipments: realty.equipments as Array<Equipment>, center: [realty.latitude as number, realty.longitude as number], uploadedImages: [], uploadedImagesModel: [], previewImagePath: realty.img_path as string, previewImageModel: null}
+
     this.$nextTick(() => {
-      this.formData = {...this.formData, ...realty, equipments: realty.equipments?.map(value => value.id) as Array<number>}
+      this.formData = {...this.formData, ...realty, equipments: realty.equipments?.map(value => value.id) as Array<number>, is_published: realty.is_published as boolean}
       this.formData.newPhoto = []
       this.formData.img_path = realty.img_path as string
       this.formData.type_id = realty.type_id as number
@@ -481,6 +490,10 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
   @Watch('temp.previewImageModel')
   watchTempPreviewImageModel(file: File): void {
     this.formData.img_path = file
+  }
+  @Watch('temp.is_published')
+  watchTempIsPublished(value: Array<number>): void {
+    this.formData.is_published = !!value.length
   }
   @Watch('temp.previewImagePath')
   @Watch('formData', { immediate: true, deep: true })

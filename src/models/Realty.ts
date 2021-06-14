@@ -18,6 +18,7 @@ export default class Realty extends BaseModel {
     price_per_metr?: number
     type_id?: number
     discount_sum?: number
+    is_published?: boolean
     photo?: Array<string>
     equipments?: Array<Equipment>
 

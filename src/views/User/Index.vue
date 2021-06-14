@@ -1,44 +1,38 @@
 <template>
-  <div class="section">
-    <h1 class="mb-5">Слайды</h1>
-    <ModalDeletingConfirm :show="showConfirmModal" @close="onClose" :confirm-handler="onConfirm" @cancel="onClose"/>
-    <b-card class="mb-4 shadow-sm">
-      <div class="d-flex">
-        <b-button variant="primary" class="mr-2" :to="{ name: 'admin.user.create' }">Создать</b-button>
-        <b-button variant="info" class="mr-3" @click="onSelectAll">{{ selectionBtnText }}</b-button>
-      </div>
-    </b-card>
-    <b-card class="shadow-sm">
-      <b-table
-          :fields="fields"
-          :items="items"
-          responsive="md"
-          select-mode="multi"
-          striped
-          hover
-          sort-icon-left
-          @sort-changed="onChangeSort"
-          ref="table"
-          :busy="inRequestState"
-      >
-        <template #cell(email)="{ item }">
-          <b-link :to="{ name: 'admin.user.change', params: { id: item.id } }" v-html="item.email "></b-link>
-        </template>
-        <template #cell(actions)="{ item }">
-          <b-button variant="info" :to="{ name: 'admin.user.chat', params: { id: item.id } }">Сообщеия</b-button>
-          <b-button variant="danger" @click="onDeleteSingle(item)">Удалить</b-button>
-        </template>
-        <template #cell(hasNewMessage)="{ item }">
-          {{ item.hasNewMessage ? 'Да' : 'Нет' }}
-        </template>
-      </b-table>
-      <ItemsCountInfo :total="items.length"/>
-    </b-card>
-  </div>
+  <EntityIndexPageLayout :columns="columns"
+                         :items="items"
+                         page-title="Пользователь"
+                         with-paginate
+                         :selected-all-rows="selectedAllRows" :selected="selected"
+                         route-name-change="admin.slide.change" route-name-create="admin.slide.create"
+                         :in-request-state="inRequestState"
+                         :table-info="tableInfo" :table-temp="tableTemp"
+                         :update-items-collback="updateTableData"
+                         @deleteItem="onDelete"
+                         @changeSort="onChangeSort"
+                         @selectAll="onSelectAll"
+                         @rowSelected="onRowSelected"
+                         @search="onSearch"
+                         :items-count-info="itemsCountInfo"
+                         :table-options="tableOptions"
+                         ref="EntityIndexPageLayout"
+  >
+    <template #cell(email)="{ item }">
+      <b-link :to="{ name: 'admin.user.change', params: { id: item.id } }" v-html="item.email "></b-link>
+    </template>
+    <template #cell(actions)="{ item }">
+      <b-button variant="info" :to="{ name: 'admin.user.chat', params: { id: item.id } }">Сообщеия</b-button>
+      <b-button variant="danger" @click="onDeleteSingle(item)">Удалить</b-button>
+    </template>
+    <template #cell(hasNewMessage)="{ item }">
+      {{ item.hasNewMessage ? 'Да' : 'Нет' }}
+    </template>
+
+  </EntityIndexPageLayout>
 </template>
 
 <script lang="ts">
-import {Component, Inject, Mixins} from "vue-property-decorator";
+  import {Component, Inject, Mixins} from "vue-property-decorator";
 import TableStateController from "@/mixins/tableStateController";
 import SearchHelpers from "@/mixins/searchHelpers";
 import {AxiosResponse} from "axios";
@@ -47,15 +41,15 @@ import Notification from "@/store/modules/notification";
 import ItemsCountInfo from "@/components/ItemsCountInfo.vue";
 import ModalDeletingConfirm from "@/components/ModalDeletingConfirm.vue";
 import User from "@/models/User";
+import EntityIndexPageLayout from "@/components/EntityIndexPageLayout.vue";
 
 
 @Component({
-  components: {ModalDeletingConfirm, ItemsCountInfo}
+  components: {EntityIndexPageLayout, ModalDeletingConfirm, ItemsCountInfo}
 })
 export default class Index extends Mixins<TableStateController, SearchHelpers>(TableStateController, SearchHelpers) {
   @Inject('basePath') basePath!: string
-  showConfirmModal = false
-  fields = [
+  columns = [
     {
       key: 'name',
       label: 'ФИО',
@@ -96,9 +90,8 @@ export default class Index extends Mixins<TableStateController, SearchHelpers>(T
   items = [] as Array<User>
   userToDelete = null as null | User
 
-  get selectionBtnText (): string { return this.selectedAllRows ? 'Снять выделение' : 'Выбрать все' }
-
-  onConfirm (): void {
+  onDelete (): void {
+    console.log(this.userToDelete)
     User.destroySingle(this.userToDelete?.id as number).then(() => {
       getModule(Notification, this.$store).setData({ title: 'Удаление прошло успешно', variant: 'success' })
       this.updateTableData();
@@ -107,14 +100,9 @@ export default class Index extends Mixins<TableStateController, SearchHelpers>(T
     })
   }
 
-  onClose (): void {
-    this.showConfirmModal = false
-    this.userToDelete = null
-  }
-
   onDeleteSingle (user: User): void {
     this.userToDelete = user
-    this.showConfirmModal = true
+    this.$refLayout.onOpenConfirm()
   }
 
   updateTableData(): Promise<AxiosResponse<Array<User>>> {
@@ -127,6 +115,10 @@ export default class Index extends Mixins<TableStateController, SearchHelpers>(T
 
           return response
         })
+  }
+
+  mounted(): void {
+    this.$table = this.$refLayout.$table
   }
 }
 </script>
