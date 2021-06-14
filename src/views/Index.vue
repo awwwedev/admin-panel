@@ -9,7 +9,7 @@
                    :z-index="2" shadow>
           <template #header>
             <div class="pt-1 d-flex justify-content-end align-items-end w-100" >
-              <span class="px-2 cursor-pointer" @click="visibleSideBar = false">
+              <span v-if="windowWidth < 850" class="px-2 cursor-pointer" @click="visibleSideBar = false">
                 <b-icon icon="x" scale="2"/>
               </span>
             </div>
@@ -23,7 +23,7 @@
                   </template>
                   <b-collapse :visible="accordionIdx === 1">
                     <b-list-group>
-                      <b-list-group-item @click="visibleSideBar = false" v-for="(link, idx) in navLinks" :key="idx">
+                      <b-list-group-item @click="visibleSideBar = windowWidth > 850" v-for="(link, idx) in navLinks" :key="idx">
                         <template v-if="!isActiveRoute(link.routeName)">
                           <b-link class="d-block" type="button" :to="{ name: link.routeName, query: { accordionIdx } }">{{ link.label }}</b-link>
                         </template>
@@ -51,7 +51,7 @@
                   </template>
                   <b-collapse id="collapseNavContent" :visible="accordionIdx === 2">
                     <b-list-group>
-                      <b-list-group-item @click="visibleSideBar = false" v-for="(link, idx) in navLinks2" :key="idx">
+                      <b-list-group-item @click="visibleSideBar = windowWidth > 850" v-for="(link, idx) in navLinks2" :key="idx">
                         <template v-if="!isActiveRoute(link.routeName)">
                           <b-link class="d-block" type="button" :to="{ name: link.routeName, query: { accordionIdx } }">{{ link.label }}</b-link>
                         </template>
