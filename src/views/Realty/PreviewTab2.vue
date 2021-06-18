@@ -16,7 +16,7 @@
                      :img-path="formData.img_path"
                      :area="formData.area"
                      :price="formData.price_per_metr"
-                     :description="formData.description"
+                     :description="formData.short_description"
                      :name="formData.name"
                      :discount="formData.discount_sum"
         />

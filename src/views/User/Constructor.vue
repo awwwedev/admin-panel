@@ -177,9 +177,8 @@
     }
   })
   export default class Constructor extends Mixins<Validation, ValidationMixin, ConstructorHelpers>(validationMixin, ValidationMixin, ConstructorHelpers) {
-    entityName = 'пользователя'
-    entityNamePrefixCreate = 'Создание '
-    entityNamePrefixChange = 'Изменение '
+    entityNameCreate = 'Создание пользователя'
+    entityNameChange = 'Изменение пользователя'
     roles = [] as Array<Role>
     @ProvideReactive('userData') formData = {
       id: null as null | number,

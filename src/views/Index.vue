@@ -110,7 +110,7 @@ export default class Index extends Vue {
     },
     {
       routeName: 'admin.realtyType',
-      label: 'Категории недвижимости'
+      label: 'Тип недвижимости'
     },
     {
       routeName: 'admin.equipment',

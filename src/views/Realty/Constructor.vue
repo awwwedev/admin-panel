@@ -335,7 +335,8 @@ import {removeHtmlTags} from "@/common";
   })
 })
 export default class Constructor extends Mixins<Validation, ValidationMixin, ConstructorHelpers>(validationMixin, ValidationMixin, ConstructorHelpers) {
-  entityName = 'недвижимости'
+  entityNameCreate = 'Создание недвижимости'
+  entityNameChange = 'Изменение недвижимости'
   zoom = 19
   allowSetNameByDesc = true
   activeTab = 0

@@ -1,6 +1,6 @@
 <template>
   <b-container>
-    <h1 class="mb-4 mt-2" v-if="realtyType">Зависимыости типа недвижимости &laquo;{{ realtyType.name }}&raquo;</h1>
+    <h1 class="mb-4 mt-2" v-if="realtyType">Зависимости типа недвижимости &laquo;{{ realtyType.name }}&raquo;</h1>
     <EquipmentsRelations :type-id="$route.params.id"/>
     <RealtyRelations :type-id="$route.params.id"/>
   </b-container>

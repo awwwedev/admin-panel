@@ -1,9 +1,9 @@
 <template>
   <EntityIndexPageLayout :columns="columns"
                          :items="items"
-                         page-title="Тип недвижимости"
+                         page-title="Типы недвижимости"
                          :selected-all-rows="selectedAllRows" :selected="selected"
-                         route-name-change="admin.slide.change" route-name-create="admin.slide.create"
+                         route-name-change="admin.realtyType.change" route-name-create="admin.realtyType.create"
                          :in-request-state="inRequestState"
                          :table-info="tableInfo" :table-temp="tableTemp"
                          :update-items-collback="updateTableData"

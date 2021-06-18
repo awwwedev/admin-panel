@@ -1,9 +1,9 @@
 <template>
   <EntityIndexPageLayout :columns="columns"
                          :items="items"
-                         page-title="Пользователь"
+                         page-title="Пользователи"
                          :selected-all-rows="selectedAllRows" :selected="selected"
-                         route-name-change="admin.slide.change" route-name-create="admin.slide.create"
+                         route-name-change="admin.user.change" route-name-create="admin.user.create"
                          :in-request-state="inRequestState"
                          :table-info="tableInfo" :table-temp="tableTemp"
                          :update-items-collback="updateTableData"

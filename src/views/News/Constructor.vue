@@ -124,7 +124,8 @@ import PreviewTab from "@/views/News/PreviewTab.vue";
   })
 })
 export default class Constructor extends Mixins<Validation, ValidationMixin, ConstructorHelpers>(validationMixin, ValidationMixin, ConstructorHelpers) {
-  entityName = 'новости'
+  entityNameCreate = 'Создание новости'
+  entityNameChange = 'Изменение новости'
   activeTab = 0
   formData = {
     id: null as null | number,

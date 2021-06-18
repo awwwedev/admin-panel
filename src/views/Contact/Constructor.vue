@@ -92,7 +92,8 @@ type type = {
   }
 })
 export default class Constructor extends Mixins<Validation, ValidationMixin, ConstructorHelpers>(validationMixin, ValidationMixin, ConstructorHelpers) {
-  entityName = 'слайда'
+  entityNameCreate = 'Создание контакта'
+  entityNameChange = 'Изменение контакта'
   types = [
     {
       id: 'email',

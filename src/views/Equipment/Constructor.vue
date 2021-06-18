@@ -66,7 +66,8 @@ import Dates from "@/components/constructor/Dates.vue";
   }
 })
 export default class Constructor extends Mixins<Validation, ValidationMixin, ConstructorHelpers>(validationMixin, ValidationMixin, ConstructorHelpers) {
-  entityName = 'комплектация недвижимости'
+  entityNameCreate = 'Создание комплектации недвижимости'
+  entityNameChange = 'Изменение комплектации недвижимости'
   types = [] as Array<RealtyType>
 
   formData = {

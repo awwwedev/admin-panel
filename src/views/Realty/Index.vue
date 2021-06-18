@@ -1,10 +1,10 @@
 <template>
   <EntityIndexPageLayout :columns="columns"
                          :items="items"
-                         page-title="Недвижимость"
+                         page-title="Недвижимости"
                          with-paginate
                          :selected-all-rows="selectedAllRows" :selected="selected"
-                         route-name-change="admin.slide.change" route-name-create="admin.slide.create"
+                         route-name-change="admin.realty.change" route-name-create="admin.realty.create"
                          :in-request-state="inRequestState"
                          :table-info="tableInfo" :table-temp="tableTemp"
                          :update-items-collback="updateTableData"

@@ -7,7 +7,7 @@
                :content="formData.short_description"
     />
   </b-card>
-    <b-card class="shadow-sm mb-3 ">
+    <b-card class="shadow-sm mb-3 " header="Карточка">
       <NewsCard :id="formData.id"
                 style="width: 400px; height: 300px"
                 :img-path="formData.photo"
