@@ -52,11 +52,14 @@
             </b-select-option>
           </b-select>
         </b-form-group>
-        <b-form-group label="Оснащение"
+        <b-form-group label="Комплектация"
                       label-for="equipment"
-                      v-if="equipments.length && formData.type_id"
+                      v-if="formData.type_id"
         >
-          <b-checkbox-group
+          <p class="text-sm text-secondary" v-if="!equipments.length">
+            Нет доступных вариантов
+          </p>
+          <b-checkbox-group v-else
               id="equipment"
           >
             <b-checkbox v-for="(equipment, idx) in equipments"
