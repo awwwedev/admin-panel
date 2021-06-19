@@ -7,7 +7,9 @@
     <template v-else>
       <b-button variant="primary" class="mr-2" @click.prevent="onSubmit">Сохранить</b-button>
       <b-button variant="success" class="mr-2" @click.prevent="onSubmit(false)">Применить</b-button>
-      <b-button :to="cancelTo" class="mr-2" variant="secondary">Отмена</b-button>
+
+      <b-button v-if="$route.query.pathToBack" :to="$route.query.pathToBack" class="mr-2" variant="secondary">Отмена</b-button>
+      <b-button v-else :to="cancelTo" class="mr-2" variant="secondary">Отмена</b-button>
     </template>
   </div>
 </template>

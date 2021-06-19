@@ -1,7 +1,7 @@
 <template>
   <div class="mx-auto chat">
     <b-card class="mt-3 shadow-sm">
-      <PerfectScrollbar class="ps" ref="ps">
+      <PerfectScrollbar v-if="messages.length" class="ps" ref="ps">
         <b-list-group ref="message-container">
           <b-list-group-item v-for="message in messages" :key="message.id">
             <b-media>
@@ -14,6 +14,7 @@
           </b-list-group-item>
         </b-list-group>
       </PerfectScrollbar>
+      <p v-else>С этим пользователем у вас пока нет сообщений</p>
     </b-card>
     <b-card class="mt-3 shadow-sm" ref="text-editor-container">
       <b-form-group label="Сообщеие"
@@ -26,6 +27,9 @@
       </b-form-group>
       <b-button variant="primary" class="mr-1" @click="onSendMessage">
         Отправить
+      </b-button>
+      <b-button variant="success" class="mr-2" @click="onChecked" :disabled="disableCheckBtn">
+        Просмотрено
       </b-button>
       <b-button variant="secondary" :to="{ name: 'admin.user' }">
         Назад
@@ -45,6 +49,7 @@ import {Validation, validationMixin} from "vuelidate";
 import ValidationMixin from "@/mixins/validation";
 import {required} from "vuelidate/lib/validators";
 import $ from 'jquery'
+import Ticket from "@/models/Ticket";
 
 
 @Component({
@@ -94,28 +99,44 @@ export default class Chat extends Mixins<Validation, ValidationMixin>(validation
   @Ref('message-container') $refMessageContainer!: HTMLElement
   @Ref('text-editor') $refTextEditor!: Vue
   messages = [] as Array<TicketMessage>
+  ticket = null as Ticket | null
   formData = {
     message: ''
   }
 
+  get disableCheckBtn(): boolean {
+    return [Ticket.STATE_OPEN, Ticket.STATE_CLOSED].includes(this.ticket?.status as number) || !this.messages.length
+  }
+
+  scroll(): void {
+    window.scrollTo({
+      top: window.innerHeight,
+      behavior: 'smooth'
+    })
+  }
   updateState(): void {
     this.formData.message = ''
-    this.$v.$reset()
 
     TicketMessage.getList({ ticket_user_id: Number(this.$route.params.id), sortType: 'desc', sortField: 'created_at' })
         .then(res => {
           this.messages = res.data
-          $(this.$refPs.$el).height(window.innerHeight * 0.40)
-          $(this.$refTextEditor.$el).find('#textarea').height(window.innerHeight * 0.20)
-
-          this.$nextTick(() => {
-            console.log(this.$refMessageContainer.clientHeight)
-            this.$refPs.$el.scrollTop = this.$refMessageContainer.clientHeight
-          })
+          this.$v.$reset()
+          this.$nextTick(() => this.scroll())
         })
 
+    Ticket.get({ user_id: Number(this.$route.params.id) }).then(res => {
+      this.ticket = res.data
+    })
   }
 
+  onChecked(): void {
+    Ticket.update({
+      id: this.ticket?.id as number,
+      status: Ticket.STATE_OPEN
+    }).then(() => {
+      this.$router.push({ name: 'admin.user' })
+    })
+  }
   onSendMessage(): void {
     this.$v.$touch()
 

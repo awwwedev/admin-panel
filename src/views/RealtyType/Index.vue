@@ -31,6 +31,9 @@
     <template #cell(img_path)="{ item }">
       <b-img fluid width="150" :src="basePath + item.img_path"/>
     </template>
+    <template #cell(actions)="{ item }">
+      <b-button variant="info" :to="{ name: 'relationship.realtyType', params: { id: item.id } }">Недвижимость и комплектация</b-button>
+    </template>
   </EntityIndexPageLayout>
 </template>
 
@@ -82,6 +85,10 @@ export default class IndexRealtyType extends Mixins<TableStateController, Search
       key: 'updated_at',
       label: 'Изменен',
       sortable: true,
+    },
+    {
+      key: 'actions',
+      label: ''
     }
   ]
   items = [] as Array<RealtyType>

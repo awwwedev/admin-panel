@@ -4,7 +4,7 @@
         <ModalDeletingConfirm :show="showConfirmModal" @close="showConfirmModal = false" @confirm="onDelete" @cancel="showConfirmModal = false"/>
         <b-card class="mb-4 shadow-sm">
             <div class="d-flex flex-column flex-md-row">
-                <b-button variant="primary" class="mr-md-2 mr-sm-0 my-1" :to="{ name: routeNameCreate }">Создать</b-button>
+                <b-button v-if="!disableCreationBtn" variant="primary" class="mr-md-2 mr-sm-0 my-1" :to="{ name: routeNameCreate }">Создать</b-button>
                 <b-button variant="info" class="mr-md-3 mr-sm-0 my-1" @click="onSelectAll">{{ selectionBtnText }}</b-button>
                 <b-button variant="danger" class=" my-1" :disabled="!selected.length" @click="onOpenConfirm">Удалить выбранное</b-button>
             </div>
@@ -13,24 +13,27 @@
             <slot name="filters">
                 <SearchPanel :columns="columns" @changedField="tableTemp.searchField = $event" v-model="tableTemp.searchValue" @search="onSearch"/>
             </slot>
-            <b-table
-                    :fields="columns"
-                    :items="items"
-                    :responsive="true"
-                    select-mode="multi"
-                    striped
-                    hover
-                    selectable
-                    @row-selected="onRowSelected"
-                    @sort-changed="onChangeSort"
-                    sort-icon-left
-                    ref="table"
-                    :busy="inRequestState"
-            >
-                <template v-for="column in columns" v-slot:[getSlotName(column.key)]="{ item }">
-                    <slot :name="`cell(${column.key})`" :item="item"/>
-                </template>
-            </b-table>
+            <div class="table">
+                <b-table
+                  :fields="columns"
+                  :items="items"
+                  responsive="true"
+                  select-mode="multi"
+                  striped
+                  hover
+                  selectable
+                  @row-selected="onRowSelected"
+                  @sort-changed="onChangeSort"
+                  sort-icon-left
+                  ref="table"
+                  :busy="inRequestState"
+                >
+                    <template v-for="column in columns" v-slot:[getSlotName(column.key)]="{ item }">
+                        <slot :name="`cell(${column.key})`" :item="item"/>
+                    </template>
+                </b-table>
+            </div>
+
                 <ItemsCountInfo v-if="tableInfo.totalItems" :info="itemsCountInfo" :total="tableInfo.totalItems"/>
                 <ItemsCountInfo v-else :total="items.length"/>
             <div v-if="withPaginate" class="d-flex justify-content-between align-items-center">
@@ -78,12 +81,13 @@
     components: {SearchPanel, ItemsCountInfo, ModalDeletingConfirm}
   })
   export default class EntityIndexPageLayout extends Vue {
-      @Ref('table') $table!: BTable
-      @Prop({ type: Boolean, default: false }) withPaginate!: boolean
+    @Ref('table') $table!: BTable
+    @Prop({ type: Boolean, default: false }) withPaginate!: boolean
     @Prop({ required: true, type: String }) pageTitle!: string
     @Prop({ required: true, type: String }) routeNameChange!: string
     @Prop({ required: true, type: String }) routeNameCreate!: string
     @Prop({ required: true, type: Boolean }) selectedAllRows!: boolean
+    @Prop({ type: Boolean, default: false }) disableCreationBtn!: boolean
     @Prop({ required: true, type: Boolean }) inRequestState!: boolean
     @Prop({ required: true, type: Object }) itemsCountInfo!: itemCountInfo
     @Prop({ required: true, type: Object }) tableTemp!: Array<objectWIthAnyProperties>
@@ -118,4 +122,8 @@
     .table-container
         max-width 100%
 
+    ::v-deep .table
+
+        & .table-responsive-true
+            overflow-x auto !important
 </style>

@@ -177,6 +177,25 @@ const routes: Array<RouteConfig> = [
         ]
       },
       {
+        path: 'orders',
+        component: PathThrough,
+        children: [
+          {
+            name: 'admin.order',
+            path: '',
+            component: () => import('@/views/Requests/Index.vue')
+          },
+          {
+            name: 'admin.order.change',
+            path: ':id/change',
+            meta: {
+              isCreatePage: false
+            },
+            component: () => import('@/views/Requests/Constructor.vue')
+          }
+        ]
+      },
+      {
         path: 'relationship',
         component: PathThrough,
         children: [

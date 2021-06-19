@@ -13,6 +13,7 @@ export default class User extends BaseModel{
     name?: string
     phone?: string
     role_id?: number
+    ticketStatus?: number
     updated_at?: string
     objects?: Array<RealtyObject>
 

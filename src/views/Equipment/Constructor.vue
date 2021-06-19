@@ -101,7 +101,8 @@ export default class Constructor extends Mixins<Validation, ValidationMixin, Con
       }
       request.then(() => {
         if (redirect) {
-          this.$router.push({name: 'admin.equipment'})
+          if (this.$route.query.pathAfterSubmit) this.$router.push(this.$route.query.pathAfterSubmit as string)
+          else this.$router.push({ name: 'admin.equipment' })
         }
       })
     } else {

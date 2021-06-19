@@ -27,6 +27,9 @@
     <template #cell(name)="{ item }">
       <b-link :to="{ name: 'admin.equipment.change', params: { id: item.id } }" v-html="item.name"/>
     </template>
+    <template #cell(actions)="{ item }">
+      <b-button variant="info" :to="{ name: 'relationship.equipments', params: { id: item.id } }">Недвижимость</b-button>
+    </template>
   </EntityIndexPageLayout>
 </template>
 
@@ -79,6 +82,10 @@ export default class IndexRealtyType extends Mixins<TableStateController, Search
       key: 'updated_at',
       label: 'Изменен',
       sortable: true,
+    },
+    {
+      key: 'actions',
+      label: ''
     }
   ]
   items = [] as Array<Equipment>

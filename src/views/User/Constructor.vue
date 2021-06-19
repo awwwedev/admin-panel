@@ -69,10 +69,10 @@
           <b-col>
             <b-form-group label="Email"
                           label-for="email"
-                          type="email"
                           :invalid-feedback="getValidationMessage($v.formData.email)"
             >
               <b-form-input id="name"
+                            type="email"
                             v-model.trim="formData.email"
                             :state="getFieldState($v.formData.email)"
               />

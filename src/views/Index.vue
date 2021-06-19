@@ -105,6 +105,10 @@ export default class Index extends Vue {
   windowWidth = 0
   navLinks = [
     {
+      routeName: 'admin.order',
+      label: 'Заявки'
+    },
+    {
       routeName: 'admin.realty',
       label: 'Недвижимость'
     },

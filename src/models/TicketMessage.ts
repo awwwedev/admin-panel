@@ -6,6 +6,7 @@ import api from "@/common/myApi.json";
 export default class TicketMessage extends BaseModel {
     message!: string
     author!: string
+    ticket_id!: number
 
     static getList(params: { ticket_user_id: number, [key: string]: any }): Promise<AxiosResponse<Array<TicketMessage>>> {
         if (process.env.VUE_APP_USE_LOCAL_API === 'false') {

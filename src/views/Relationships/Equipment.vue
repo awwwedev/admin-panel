@@ -14,7 +14,6 @@
           sort-icon-left
           :fields="fields"
           :items="items"
-          responsive="md"
           select-mode="multi"
           striped
           hover
@@ -23,6 +22,7 @@
           @sort-changed="onChangeSort"
           ref="table"
           :busy="inRequestState"
+          :responsive="true"
       >
         <template #cell(selected)="{ rowSelected }">
           <template v-if="rowSelected">
@@ -36,7 +36,7 @@
           <b-img fluid width="150" :src="basePath + item.img_path"/>
         </template>
         <template #cell(name)="{ item }">
-          <b-link :to="{ name: 'admin.realty.change', params: { id: item.id } }">{{ item.name }}</b-link>
+          <b-link :to="{ name: 'admin.realty.change', params: { id: item.id }, query: { pathToBack: $route.fullPath, pathAfterSubmit: $route.fullPath } }">{{ item.name }}</b-link>
         </template>
       </b-table>
       <ItemsCountInfo :info="itemsCountInfo" :total="tableInfo.totalItems"/>
@@ -182,6 +182,8 @@ export default class Equipment extends Mixins<TableStateController>(TableStateCo
 }
 </script>
 
-<style scoped>
+<style scoped lang="stylus">
+  ::v-deep .table-responsive-true
+    overflow-x auto !important
 
 </style>

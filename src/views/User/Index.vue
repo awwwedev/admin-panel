@@ -23,8 +23,10 @@
       <b-button variant="info" :to="{ name: 'admin.user.chat', params: { id: item.id } }">Сообщеия</b-button>
       <b-button variant="danger" @click="onDeleteSingle(item)">Удалить</b-button>
     </template>
-    <template #cell(hasNewMessage)="{ item }">
-      {{ item.hasNewMessage ? 'Да' : 'Нет' }}
+    <template #cell(ticketStatus)="{ item }">
+      <b-badge v-if="item.ticketStatus === 0" variant="success">Есть новые</b-badge>
+      <b-badge v-else-if="item.ticketStatus === 1" variant="primary">Просмотрены</b-badge>
+      <b-badge v-else-if="item.ticketStatus === 2" variant="danger">В ожидании ответа</b-badge>
     </template>
 
   </EntityIndexPageLayout>
@@ -68,8 +70,8 @@ export default class Index extends Mixins<TableStateController, SearchHelpers>(T
       sortable: true,
     },
     {
-      key: 'hasNewMessage',
-      label: 'Новые сообщения'
+      key: 'ticketStatus',
+      label: 'Статус сообщений'
     },
     {
       key: 'created_at',
