@@ -5,8 +5,8 @@
         <b-card class="mb-4 shadow-sm">
             <div class="d-flex flex-column flex-md-row">
                 <b-button v-if="!disableCreationBtn" variant="primary" class="mr-md-2 mr-sm-0 my-1" :to="{ name: routeNameCreate }">Создать</b-button>
-                <b-button variant="info" class="mr-md-3 mr-sm-0 my-1" @click="onSelectAll">{{ selectionBtnText }}</b-button>
-                <b-button variant="danger" class=" my-1" :disabled="!selected.length" @click="onOpenConfirm">Удалить выбранное</b-button>
+                <b-button v-if="!disableMultipleDeletionBtn" variant="info" class="mr-md-3 mr-sm-0 my-1" @click="onSelectAll">{{ selectionBtnText }}</b-button>
+                <b-button v-if="!disableMultipleDeletionBtn" variant="danger" class=" my-1" :disabled="!selected.length" @click="onOpenConfirm">Удалить выбранное</b-button>
             </div>
         </b-card>
         <b-card class="shadow-sm table-container">
@@ -21,7 +21,7 @@
                   select-mode="multi"
                   striped
                   hover
-                  selectable
+                  :selectable="!disableMultipleDeletionBtn"
                   @row-selected="onRowSelected"
                   @sort-changed="onChangeSort"
                   sort-icon-left
@@ -88,6 +88,7 @@
     @Prop({ required: true, type: String }) routeNameCreate!: string
     @Prop({ required: true, type: Boolean }) selectedAllRows!: boolean
     @Prop({ type: Boolean, default: false }) disableCreationBtn!: boolean
+    @Prop({ type: Boolean, default: false }) disableMultipleDeletionBtn!: boolean
     @Prop({ required: true, type: Boolean }) inRequestState!: boolean
     @Prop({ required: true, type: Object }) itemsCountInfo!: itemCountInfo
     @Prop({ required: true, type: Object }) tableTemp!: Array<objectWIthAnyProperties>

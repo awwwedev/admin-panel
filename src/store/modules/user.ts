@@ -42,10 +42,10 @@ export default class User extends VuexModule {
     }
 
     @Action
-    login (credentials: { email: string, password: string }): Promise<AxiosResponse<{ token: string }>> {
+    login (credentials: { email: string, password: string }): Promise<AxiosResponse<{ token: string, isAdmin: boolean }>> {
         this.setInInitState(true)
 
-        return http.post<{ token: string }>('login', credentials)
+        return http.post<{ token: string, isAdmin: boolean }>('login', credentials)
             .finally(() => {
                 this.setInInitState(false)
             })

@@ -93,6 +93,16 @@ export default class Login extends Mixins<Validation>(validationMixin, Validatio
 
       userModule.login(this.formData)
           .then((response) => {
+            if (!response.data.isAdmin) {
+              getModule(Notification, store).setData({
+                text: 'У вас нет доступа к этому разделу',
+                title: 'Ошибка авторизации',
+                variant: 'danger'
+              })
+              return
+            }
+
+
             const token = response.data.token
 
             this.$cookies.set('token', token)

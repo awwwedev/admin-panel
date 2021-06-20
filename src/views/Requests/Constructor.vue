@@ -35,6 +35,7 @@
           />
         </b-form-group>
         <b-link v-if="formData.realtie_id" :to="{ name: 'admin.realty.change', params: { id: formData.realtie_id }, query: { pathToBack: $route.fullPath, pathAfterSubmit: $route.fullPath } }">Недвижимость</b-link>
+        <b-badge variant="danger" v-else>Недвижимость была удалена</b-badge>
       </b-card>
       <b-checkbox v-model="temp.checked" :value="1" :unchecked-value="0">Просмотрено</b-checkbox>
       <ConstructorActions :cancel-to="{ name: 'admin.order' }" :is-create-page="isCreatePage" @submit="onSubmit"/>

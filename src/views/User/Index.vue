@@ -15,6 +15,7 @@
                          :items-count-info="itemsCountInfo"
                          :table-options="tableOptions"
                          ref="EntityIndexPageLayout"
+                         disable-multiple-deletion-btn
   >
     <template #cell(email)="{ item }">
       <b-link :to="{ name: 'admin.user.change', params: { id: item.id } }" v-html="item.email "></b-link>

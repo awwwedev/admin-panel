@@ -1,6 +1,6 @@
 <template>
   <b-card header="Недвижимость" class="mb-4 shadow-sm">
-    <ModalDeletingConfirm :show="showConfirmModal" @close="showConfirmModal = false" :confirm-handler="onConfirm" @cancel="showConfirmModal = false"/>
+    <ModalDeletingConfirm :show="showConfirmModal" @close="showConfirmModal = false" @confirm="onConfirm" @cancel="showConfirmModal = false"/>
     <div class="mb-2">
       <b-button variant="info" class="mr-3" @click="onSelectAll">{{ selectionBtnText }}</b-button>
       <b-button variant="danger" class="my-2 my-sm-0" :disabled="!selected.length" @click="onDelete">Удалить
@@ -69,7 +69,7 @@
 </template>
 
 <script lang="ts">
-import {Component, Inject, Mixins, Prop} from "vue-property-decorator";
+  import {Component, Inject, Mixins, Prop, Ref} from "vue-property-decorator";
 import TableStateController from "@/mixins/tableStateController";
 import Realty from "@/models/Realty";
 import {AxiosResponse} from "axios";
@@ -78,11 +78,13 @@ import {getModule} from "vuex-module-decorators";
 import Notification from "@/store/modules/notification";
 import ItemsCountInfo from "@/components/ItemsCountInfo.vue";
 import ModalDeletingConfirm from "@/components/ModalDeletingConfirm.vue";
+  import {BTable} from "bootstrap-vue";
 
 @Component({
   components: {ModalDeletingConfirm, ItemsCountInfo}
 })
 export default class RealtyRelations extends Mixins<TableStateController>(TableStateController) {
+  @Ref('table') $refTable!: BTable
   showConfirmModal = false
   fields = [
     {
@@ -156,6 +158,7 @@ export default class RealtyRelations extends Mixins<TableStateController>(TableS
 
   onConfirm(): void {
     Realty.destroy(this.selected.map(value => value.id as number)).then(() => {
+      this.showConfirmModal = false
       getModule(Notification, this.$store).setData({title: 'Удаление прошло успешно', variant: 'success'})
       this.updateTableData();
     })
@@ -163,6 +166,10 @@ export default class RealtyRelations extends Mixins<TableStateController>(TableS
 
   onDelete(): void {
     this.showConfirmModal = true
+  }
+
+  mounted(): void {
+    this.$table = this.$refTable
   }
 }
 </script>

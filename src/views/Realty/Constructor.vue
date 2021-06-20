@@ -155,7 +155,7 @@
         </b-form-group>
       </b-card>
       <b-card class="mb-3 shadow-sm" header="Карта">
-        <yandex-map :coords="temp.center"
+        <yandex-map :coords="formData.latitude && formData.longitude ? [formData.latitude, formData.longitude] : temp.center"
                     :zoom="zoom"
                     :behaviors="['drag', 'scrollZoom', 'multiTouch']"
                     :controls="['zoomControl', 'searchControl']"
@@ -173,7 +173,7 @@
               @balloonclose="bus.$emit('yandex-map::close-balloon-' + formData.id)"
               :marker-id="formData.id"
               ref="marker"
-              :key="formData.id + temp.previewImagePath"
+              :key="formData.id + temp.previewImagePath + formData.latitude + formData.longitude"
           >
             <Balloon slot="balloon"
                      :area="formData.area"
@@ -194,8 +194,9 @@
                         :invalid-feedback="getValidationMessage($v.formData.latitude)"
           >
             <b-form-input id="latitude"
-                          v-model.number="formData.latitude"
+                          v-model.lazy="formData.latitude"
                           type="number"
+                          step="0.001"
                           :state="getFieldState($v.formData.latitude)"
             ></b-form-input>
           </b-form-group>
@@ -204,8 +205,9 @@
                         :invalid-feedback="getValidationMessage($v.formData.longitude)"
           >
             <b-form-input id="latitude"
-                          v-model.number="formData.longitude"
+                          v-model.lazy="formData.longitude"
                           type="number"
+                          step="0.001"
                           :state="getFieldState($v.formData.longitude)"
             ></b-form-input>
           </b-form-group>

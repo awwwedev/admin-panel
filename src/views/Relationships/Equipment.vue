@@ -1,7 +1,7 @@
 <template>
   <b-container>
     <h1 class="mb-4 mt-2" v-if="equip">Зависимыости комплектации &laquo;{{ equip.name }}&raquo;</h1>
-    <ModalDeletingConfirm :show="showConfirmModal" @close="showConfirmModal = false" :confirm-handler="onConfirm"
+    <ModalDeletingConfirm :show="showConfirmModal" @close="showConfirmModal = false" @confirm="onConfirm"
                           @cancel="showConfirmModal = false"/>
     <b-card header="Недвижимость" class="mb-4 shadow-sm">
       <div class="mb-2">
@@ -73,7 +73,7 @@
 </template>
 
 <script lang="ts">
-import {Component, Inject, Mixins} from "vue-property-decorator";
+  import {Component, Inject, Mixins, Ref} from "vue-property-decorator";
 import TableStateController from "@/mixins/tableStateController";
 import Realty from "@/models/Realty";
 import EquipmentModel from "@/models/Equipment";
@@ -83,11 +83,13 @@ import {getModule} from "vuex-module-decorators";
 import Notification from "@/store/modules/notification";
 import ItemsCountInfo from "@/components/ItemsCountInfo.vue";
 import ModalDeletingConfirm from "@/components/ModalDeletingConfirm.vue";
+  import {BTable} from "bootstrap-vue";
 
 @Component({
   components: {ModalDeletingConfirm, ItemsCountInfo}
 })
 export default class Equipment extends Mixins<TableStateController>(TableStateController) {
+  @Ref('table') $refTable!: BTable
   showConfirmModal = false
   items = [] as Array<Realty>
   equip = null as null | EquipmentModel
@@ -163,6 +165,7 @@ export default class Equipment extends Mixins<TableStateController>(TableStateCo
 
   onConfirm(): void {
     Realty.destroy(this.selected.map(value => value.id as number)).then(() => {
+      this.showConfirmModal = false
       getModule(Notification, this.$store).setData({title: 'Удаление прошло успешно', variant: 'success'})
       this.updateTableData();
     })
@@ -177,6 +180,10 @@ export default class Equipment extends Mixins<TableStateController>(TableStateCo
     EquipmentModel.get({id: this.$route.params.id as unknown as number}).then(res => {
       this.equip = res.data
     })
+  }
+
+  mounted(): void {
+    this.$table = this.$refTable
   }
 
 }
