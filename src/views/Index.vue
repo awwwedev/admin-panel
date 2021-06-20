@@ -33,11 +33,11 @@
                             <b-list-group-item :active="!$route.meta.hasOwnProperty('isCreatePage')" :to="{ name: link.routeName, query: { accordionIdx } }">
                               Все записи
                             </b-list-group-item>
-                            <b-list-group-item :to="{ name: link.routeName + '.create', query: { accordionIdx } }" :active="$route.meta.isCreatePage">
+                            <b-list-group-item v-if="!link.noCreatePage" :to="{ name: link.routeName + '.create', query: { accordionIdx } }" :active="$route.meta.isCreatePage">
                               Создание
                             </b-list-group-item>
                             <b-list-group-item :active="$route.meta.hasOwnProperty('isCreatePage') && !$route.meta.isCreatePage" disabled>
-                              Изменение
+                              {{ link.changeRouteLabel ? link.changeRouteLabel : 'Изменение' }}
                             </b-list-group-item>
                           </b-list-group>
                         </template>
@@ -106,7 +106,9 @@ export default class Index extends Vue {
   navLinks = [
     {
       routeName: 'admin.order',
-      label: 'Заявки'
+      label: 'Заявки',
+      noCreatePage: true,
+      changeRouteLabel: 'Просмотр'
     },
     {
       routeName: 'admin.realty',
