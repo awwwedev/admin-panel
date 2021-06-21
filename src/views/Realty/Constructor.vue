@@ -173,7 +173,7 @@
               @balloonclose="bus.$emit('yandex-map::close-balloon-' + formData.id)"
               :marker-id="formData.id"
               ref="marker"
-              :key="formData.id + temp.previewImagePath + formData.latitude + formData.longitude"
+              :key="temp.previewImagePath + JSON.stringify(formData)"
           >
             <Balloon slot="balloon"
                      :area="formData.area"

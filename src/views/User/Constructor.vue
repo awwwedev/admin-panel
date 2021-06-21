@@ -113,7 +113,7 @@
           </b-col>
         </b-row>
       </b-card>
-      <Objects1c v-if="false" v-model="formData.objects"/>
+      <Objects1c v-if="formData.id" v-model="formData.objects"/>
     </b-form>
     <ConstructorActions :cancel-to="{ name: 'admin.user' }" :is-create-page="isCreatePage" @submit="onSubmit"/>
   </div>
